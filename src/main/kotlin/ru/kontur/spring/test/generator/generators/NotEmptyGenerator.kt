@@ -1,6 +1,7 @@
 package ru.kontur.spring.test.generator.generators
 
 import ru.kontur.spring.test.generator.ValidationParamResolver
+import ru.kontur.spring.test.generator.utils.generateMap
 
 /**
  * @author Konstantin Volivach
@@ -10,7 +11,7 @@ class NotEmptyGenerator<T> : ValidationParamResolver<T> {
         when (param) {
             is Map<*, *> -> {
                 if (param.isEmpty()) {
-                    //TODO generate map
+                    TODO("Generate map")
                 }
             }
             is Collection<*> -> {
