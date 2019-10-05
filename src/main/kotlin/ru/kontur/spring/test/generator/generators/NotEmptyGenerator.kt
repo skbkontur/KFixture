@@ -1,13 +1,14 @@
 package ru.kontur.spring.test.generator.generators
 
 import ru.kontur.spring.test.generator.ValidationParamResolver
-import ru.kontur.spring.test.generator.utils.generateMap
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
 
 /**
  * @author Konstantin Volivach
  */
-class NotEmptyGenerator<T> : ValidationParamResolver<T> {
-    override fun process(param: T): T {
+class NotEmptyGenerator : ValidationParamResolver {
+    override fun <T> process(param: T, clazz: KClass<*>, type: KType): T {
         when (param) {
             is Map<*, *> -> {
                 if (param.isEmpty()) {
