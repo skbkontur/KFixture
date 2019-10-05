@@ -8,16 +8,15 @@ Version 1.0
 * Generate data for all javax validation annotations.
 * Provide an interface to define custom rules for validation.
 * Valid param go through chain of validation.
+* Suite of test utils for generation parameters and so on.
 
 #### How it works:
 
+You just inheritance from annotation and define your own behavior
 ```kotlin
-class NotEmptyRule: SomeAnnotation {
-    fun correctParam(param: String): String {
-        if (param.isEmpty()) {
-            return generateSomeWortds()
-        }
-        return param
+class NotEmptyGenerator : ValidationParamResolver {
+    override fun <T> process(param: T, clazz: KClass<*>, type: KType): T {
+        TODO("your implementation")
     }
 }
 ```
