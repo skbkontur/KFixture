@@ -1,6 +1,7 @@
 package ru.kontur.spring.test.generator.generators
 
 import ru.kontur.spring.test.generator.ValidationParamResolver
+import ru.kontur.spring.test.generator.exceptions.NoSuchCaseException
 import ru.kontur.spring.test.generator.utils.generateCollection
 import ru.kontur.spring.test.generator.utils.generateMap
 import ru.kontur.spring.test.generator.utils.generateString
@@ -29,7 +30,7 @@ class NotEmptyGenerator : ValidationParamResolver {
                 }
             }
             else -> {
-                TODO("Not implemented, contact developers")
+                throw NoSuchCaseException("case not found for param=${param}")
             }
         }
         return param
