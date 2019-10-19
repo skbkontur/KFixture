@@ -62,8 +62,8 @@ fun makeRandomInstance(classRef: KClass<*>, type: KType): Any? {
     for (constructor in constructors) {
         try {
             val arguments = constructor.parameters
-                    .map { makeRandomInstanceForParam(it.type, classRef, type) }
-                    .toTypedArray()
+                .map { makeRandomInstanceForParam(it.type, classRef, type) }
+                .toTypedArray()
 
             return constructor.call(*arguments)
         } catch (e: Throwable) {
@@ -91,11 +91,12 @@ fun generatePrimitiveValue(kclass: KClass<*>): Any {
             generateRandomChar()
         }
         String::class -> {
-            generateString(Random.nextInt())
+            generateString(Random.nextInt(100))
         }
         else -> {
             throw NoPrimitiveTypeException(
-                    "No such primitive type define, please contact authors type=${kclass.simpleName}")
+                "No such primitive type define, please contact authors type=${kclass.simpleName}"
+            )
         }
     }
 }

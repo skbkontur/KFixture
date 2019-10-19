@@ -12,21 +12,26 @@ import kotlin.reflect.KType
  * @author Konstantin Volivach
  */
 class NotEmptyGenerator : ValidationParamResolver {
-    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType): T {
+    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType): Any {
         when (clazz) {
             Map::class -> {
                 if (generatedParam == null || generatedParam is Map<*, *> && generatedParam.isEmpty()) {
-                    return generateMap(DEFAULT_SIZE, clazz, type) as T
+                    return generateMap(DEFAULT_SIZE, clazz, type)
                 }
             }
             Collection::class -> {
                 if (generatedParam == null || generatedParam is Collection<*> && generatedParam.isEmpty()) {
-                    return generateCollection(DEFAULT_SIZE, clazz, type) as T
+                    return generateCollection(DEFAULT_SIZE, clazz, type)
+                }
+            }
+            List::class -> {
+                if (generatedParam == null || generatedParam is Collection<*> && generatedParam.isEmpty()) {
+                    return generateCollection(DEFAULT_SIZE, clazz, type)
                 }
             }
             String::class -> {
-                if (generatedParam == null && generatedParam is String || generatedParam is String && generatedParam.isEmpty()) {
-                    return generateString(DEFAULT_SIZE) as T
+                if (generatedParam == null || generatedParam is String || generatedParam is String && generatedParam.isEmpty()) {
+                    return generateString(DEFAULT_SIZE)
                 }
             }
             else -> {
