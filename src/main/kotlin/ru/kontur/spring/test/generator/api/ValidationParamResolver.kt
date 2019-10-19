@@ -1,4 +1,4 @@
-package ru.kontur.spring.test.generator
+package ru.kontur.spring.test.generator.api
 
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -8,5 +8,5 @@ import kotlin.reflect.KType
  */
 interface ValidationParamResolver {
 
-    fun <T> process(param: T, clazz: KClass<*>, type: KType): T
+    fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType): T
 }

@@ -10,7 +10,7 @@ class GenerateParameterResolver : ParameterResolver {
         return parameterContext.parameter.annotations.map { it::class }.contains(Generate::class)
     }
 
-    override fun resolveParameter(parameterContext: ParameterContext?, extensionContext: ExtensionContext?): Any {
+    override fun resolveParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Any {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

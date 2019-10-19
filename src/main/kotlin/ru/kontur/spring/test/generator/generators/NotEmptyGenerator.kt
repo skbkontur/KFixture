@@ -1,6 +1,6 @@
 package ru.kontur.spring.test.generator.generators
 
-import ru.kontur.spring.test.generator.ValidationParamResolver
+import ru.kontur.spring.test.generator.api.ValidationParamResolver
 import ru.kontur.spring.test.generator.exceptions.NoSuchCaseException
 import ru.kontur.spring.test.generator.utils.generateCollection
 import ru.kontur.spring.test.generator.utils.generateMap
@@ -12,28 +12,28 @@ import kotlin.reflect.KType
  * @author Konstantin Volivach
  */
 class NotEmptyGenerator : ValidationParamResolver {
-    override fun <T> process(param: T, clazz: KClass<*>, type: KType): T {
-        when (param) {
-            is Map<*, *> -> {
-                if (param.isEmpty()) {
-                    generateMap(DEFAULT_SIZE, clazz, type)
+    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType): T {
+        when (clazz) {
+            Map::class -> {
+                if (generatedParam == null || generatedParam is Map<*, *> && generatedParam.isEmpty()) {
+                    return generateMap(DEFAULT_SIZE, clazz, type) as T
                 }
             }
-            is Collection<*> -> {
-                if (param.isEmpty()) {
-                    generateCollection(DEFAULT_SIZE, clazz, type)
+            Collection::class -> {
+                if (generatedParam == null || generatedParam is Collection<*> && generatedParam.isEmpty()) {
+                    return generateCollection(DEFAULT_SIZE, clazz, type) as T
                 }
             }
-            is String -> {
-                if (param.isEmpty()) {
-                    generateString(DEFAULT_SIZE)
+            String::class -> {
+                if (generatedParam == null && generatedParam is String || generatedParam is String && generatedParam.isEmpty()) {
+                    return generateString(DEFAULT_SIZE) as T
                 }
             }
             else -> {
-                throw NoSuchCaseException("case not found for param=${param}")
+                throw NoSuchCaseException("case not found for param=${clazz.simpleName}")
             }
         }
-        return param
+        return generatedParam!!
     }
 
     private companion object {
