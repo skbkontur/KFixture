@@ -26,6 +26,13 @@ class NotEmptyGenerator {
         val param: Map<String, String>
     )
 
+    data class DifficultClass(
+        @field:NotEmpty
+        val param: String,
+        val param1: SimpleClassWithCollection,
+        val param2: SimpleClassWithMap
+    )
+
     @Test
     fun test2(@Generate test: SimpleClassWithAnnotation) {
         Assertions.assertNotNull(test.param)
@@ -40,5 +47,12 @@ class NotEmptyGenerator {
     @Test
     fun generateMap(@Generate test: SimpleClassWithMap) {
         assertTrue(test.param.isNotEmpty())
+    }
+
+    @Test
+    fun generateDifficultClass(@Generate test: DifficultClass) {
+        assertTrue(test.param.isNotEmpty())
+        assertTrue(test.param1.param.isNotEmpty())
+        assertTrue(test.param2.param.isNotEmpty())
     }
 }

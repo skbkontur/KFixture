@@ -28,7 +28,7 @@ class ClassProcessor {
             val constructor = clazz.constructors.toMutableList()[0]
             val arguments = constructor.parameters.map { param ->
                 val newAnnotation =
-                    clazz.java.declaredFields.filter { it.name == param.name }.firstOrNull()?.annotations?.get(0)
+                    clazz.java.declaredFields.filter { it.name == param.name }.firstOrNull()?.annotations?.getOrNull(0)
                 generateParam(param.type.classifier as KClass<*>, param.type, newAnnotation)
             }.toTypedArray()
             println("Recursion call")
