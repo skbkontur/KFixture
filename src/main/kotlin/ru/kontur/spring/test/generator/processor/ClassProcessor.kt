@@ -4,9 +4,11 @@ import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterContext
 import ru.kontur.spring.test.generator.api.ValidateAnnotation
 import ru.kontur.spring.test.generator.exceptions.NoSuchValidAnnotationException
+import ru.kontur.spring.test.generator.generators.EmailGenerator
 import ru.kontur.spring.test.generator.generators.NotEmptyGenerator
 import ru.kontur.spring.test.generator.utils.makeRandomInstance
 import ru.kontur.spring.test.generator.utils.toKType
+import javax.validation.constraints.Email
 import javax.validation.constraints.NotEmpty
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -46,6 +48,10 @@ class ClassProcessor {
             when (annotation.annotationClass) {
                 NotEmpty::class -> {
                     val generator = NotEmptyGenerator()
+                    return generator.process(null, clazz, type)
+                }
+                Email::class -> {
+                    val generator = EmailGenerator()
                     return generator.process(null, clazz, type)
                 }
                 ValidateAnnotation::class -> {
