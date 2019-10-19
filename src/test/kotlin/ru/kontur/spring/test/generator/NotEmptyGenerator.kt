@@ -1,7 +1,6 @@
 package ru.kontur.spring.test.generator
 
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -22,14 +21,24 @@ class NotEmptyGenerator {
         val param: List<String>
     )
 
+    data class SimpleClassWithMap(
+        @field:NotEmpty
+        val param: Map<String, String>
+    )
+
     @Test
-    fun test2(@Generate test: TestGenerator.SimpleClassWithAnnotation) {
+    fun test2(@Generate test: SimpleClassWithAnnotation) {
         Assertions.assertNotNull(test.param)
-        Assertions.assertTrue(test.param.isNotEmpty())
+        assertTrue(test.param.isNotEmpty())
     }
 
     @Test
     fun generateList(@Generate test: SimpleClassWithCollection) {
+        assertTrue(test.param.isNotEmpty())
+    }
+
+    @Test
+    fun generateMap(@Generate test: SimpleClassWithMap) {
         assertTrue(test.param.isNotEmpty())
     }
 }
