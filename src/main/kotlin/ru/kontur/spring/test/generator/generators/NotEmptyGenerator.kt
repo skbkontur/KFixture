@@ -38,7 +38,7 @@ class NotEmptyGenerator : ValidationParamResolver {
                 throw NoSuchCaseException("case not found for param=${clazz.simpleName}")
             }
         }
-        return generatedParam!!
+        return generatedParam
     }
 
     private companion object {
