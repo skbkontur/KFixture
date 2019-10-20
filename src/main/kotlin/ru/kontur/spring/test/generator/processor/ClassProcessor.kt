@@ -54,6 +54,7 @@ class ClassProcessor {
                     val generator = EmailGenerator()
                     return generator.process(null, clazz, type)
                 }
+
                 ValidateAnnotation::class -> {
                     TODO("тут будет код")
                 }
