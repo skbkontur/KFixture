@@ -65,6 +65,10 @@ class ClassProcessor {
                     val generator = NotBlankGenerator()
                     return generator.process(null, clazz, type)
                 }
+                Negative::class -> {
+                    val generator = NegativeGenerator()
+                    return generator.process(null, clazz, type)
+                }
                 ValidateAnnotation::class -> {
                     TODO("тут будет код")
                 }
