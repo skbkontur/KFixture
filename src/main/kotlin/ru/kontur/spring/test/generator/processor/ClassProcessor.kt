@@ -4,16 +4,10 @@ import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterContext
 import ru.kontur.spring.test.generator.api.ValidateAnnotation
 import ru.kontur.spring.test.generator.exceptions.NoSuchValidAnnotationException
-import ru.kontur.spring.test.generator.generators.EmailGenerator
-import ru.kontur.spring.test.generator.generators.MaxGenerator
-import ru.kontur.spring.test.generator.generators.MinGenerator
-import ru.kontur.spring.test.generator.generators.NotEmptyGenerator
+import ru.kontur.spring.test.generator.generators.*
 import ru.kontur.spring.test.generator.utils.makeRandomInstance
 import ru.kontur.spring.test.generator.utils.toKType
-import javax.validation.constraints.Email
-import javax.validation.constraints.Max
-import javax.validation.constraints.Min
-import javax.validation.constraints.NotEmpty
+import javax.validation.constraints.*
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
@@ -65,6 +59,10 @@ class ClassProcessor {
                 Max::class -> {
                     val value = (annotation as Max).value
                     val generator = MaxGenerator(value)
+                    return generator.process(null, clazz, type)
+                }
+                NotBlank::class -> {
+                    val generator = NotBlankGenerator()
                     return generator.process(null, clazz, type)
                 }
                 ValidateAnnotation::class -> {
