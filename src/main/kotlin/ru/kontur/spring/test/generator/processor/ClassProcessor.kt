@@ -5,10 +5,14 @@ import org.junit.jupiter.api.extension.ParameterContext
 import ru.kontur.spring.test.generator.api.ValidateAnnotation
 import ru.kontur.spring.test.generator.exceptions.NoSuchValidAnnotationException
 import ru.kontur.spring.test.generator.generators.EmailGenerator
+import ru.kontur.spring.test.generator.generators.MaxGenerator
+import ru.kontur.spring.test.generator.generators.MinGenerator
 import ru.kontur.spring.test.generator.generators.NotEmptyGenerator
 import ru.kontur.spring.test.generator.utils.makeRandomInstance
 import ru.kontur.spring.test.generator.utils.toKType
 import javax.validation.constraints.Email
+import javax.validation.constraints.Max
+import javax.validation.constraints.Min
 import javax.validation.constraints.NotEmpty
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -17,7 +21,6 @@ import kotlin.reflect.KType
  * @author Konstantin Volivach
  */
 class ClassProcessor {
-
     fun generate(parameterContext: ParameterContext, extensionContext: ExtensionContext): Any {
         val type = parameterContext.parameter.type
         return generateParam(type.kotlin, type.toKType(), null)
@@ -54,7 +57,16 @@ class ClassProcessor {
                     val generator = EmailGenerator()
                     return generator.process(null, clazz, type)
                 }
-
+                Min::class -> {
+                    val value = (annotation as Min).value
+                    val generator = MinGenerator(value)
+                    return generator.process(null, clazz, type)
+                }
+                Max::class -> {
+                    val value = (annotation as Max).value
+                    val generator = MaxGenerator(value)
+                    return generator.process(null, clazz, type)
+                }
                 ValidateAnnotation::class -> {
                     TODO("тут будет код")
                 }
