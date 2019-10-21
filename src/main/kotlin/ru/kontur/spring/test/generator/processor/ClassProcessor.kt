@@ -69,6 +69,14 @@ class ClassProcessor {
                     val generator = NegativeGenerator()
                     return generator.process(null, clazz, type)
                 }
+                AssertFalse::class -> {
+                    val generator = AssertFalseGenerator()
+                    return generator.process(null, clazz, type)
+                }
+                AssertTrue::class -> {
+                    val generator = AssertTrueGenerator()
+                    return generator.process(null, clazz, type)
+                }
                 ValidateAnnotation::class -> {
                     TODO("тут будет код")
                 }
