@@ -3,17 +3,16 @@ package ru.kontur.spring.test.generator.generators
 import ru.kontur.spring.test.generator.api.ValidationParamResolver
 import java.math.BigDecimal
 import java.math.BigInteger
+import javax.validation.constraints.DecimalMax
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
-class DecimalMaxGenerator(
-    private val max: String,
-    private val inclusive: Boolean
-) : ValidationParamResolver {
+class DecimalMaxGenerator : ValidationParamResolver {
 
     // TODO think about template
-    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType): Any {
-        val maxDecimal = BigDecimal(max)
+    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any {
+        val decimalMax = annotation as DecimalMax
+        val maxDecimal = BigDecimal(decimalMax.value)
         val value = if (generatedParam == null) {
             null
         } else {

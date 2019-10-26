@@ -3,16 +3,16 @@ package ru.kontur.spring.test.generator.generators
 import ru.kontur.spring.test.generator.api.ValidationParamResolver
 import java.math.BigDecimal
 import java.math.BigInteger
+import javax.validation.constraints.Max
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
 /**
  * @author Konstantin Volivach
  */
-class MaxGenerator(
-    private val max: Long
-) : ValidationParamResolver {
-    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType): Any {
+class MaxGenerator : ValidationParamResolver {
+    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any {
+        val max = (annotation as Max).value
         when (clazz) {
             BigDecimal::class -> {
                 if (generatedParam == null || generatedParam is BigDecimal && generatedParam > BigDecimal(max)) {

@@ -8,5 +8,5 @@ import kotlin.reflect.KType
  */
 interface ValidationParamResolver {
 
-    fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType): Any
+    fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any
 }

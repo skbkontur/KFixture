@@ -3,15 +3,14 @@ package ru.kontur.spring.test.generator.generators
 import ru.kontur.spring.test.generator.api.ValidationParamResolver
 import java.math.BigDecimal
 import java.math.BigInteger
+import javax.validation.constraints.DecimalMin
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
-class DecimalMinGenerator(
-    private val min: String,
-    private val inclusive: Boolean
-) : ValidationParamResolver {
-    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType): Any {
-        val minDecimal = BigDecimal(min)
+class DecimalMinGenerator : ValidationParamResolver {
+    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any {
+        val decimalMin = annotation as DecimalMin
+        val minDecimal = BigDecimal(decimalMin.value)
         val value = if (generatedParam != null) {
             BigDecimal(generatedParam.toString())
         } else {
