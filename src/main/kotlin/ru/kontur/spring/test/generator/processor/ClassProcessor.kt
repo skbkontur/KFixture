@@ -43,6 +43,28 @@ class ClassProcessor {
             )!!
         } else {
             when (annotation.annotationClass) {
+                AssertFalse::class -> {
+                    val generator = AssertFalseGenerator()
+                    return generator.process(null, clazz, type)
+                }
+                AssertTrue::class -> {
+                    val generator = AssertTrueGenerator()
+                    return generator.process(null, clazz, type)
+                }
+                DecimalMax::class -> {
+                    val value = (annotation as DecimalMax)
+                    val generator = DecimalMaxGenerator(value.value, value.inclusive)
+                    return generator.process(null, clazz, type)
+                }
+                DecimalMin::class -> {
+                    val value = (annotation as DecimalMin)
+                    val generator = DecimalMaxGenerator(value.value, value.inclusive)
+                    return generator.process(null, clazz, type)
+                }
+                Digits::class -> {
+                    val generator = DigitsGenerator()
+                    return generator.process(null, clazz, type)
+                }
                 NotEmpty::class -> {
                     val generator = NotEmptyGenerator()
                     return generator.process(null, clazz, type)
@@ -67,14 +89,6 @@ class ClassProcessor {
                 }
                 Negative::class -> {
                     val generator = NegativeGenerator()
-                    return generator.process(null, clazz, type)
-                }
-                AssertFalse::class -> {
-                    val generator = AssertFalseGenerator()
-                    return generator.process(null, clazz, type)
-                }
-                AssertTrue::class -> {
-                    val generator = AssertTrueGenerator()
                     return generator.process(null, clazz, type)
                 }
                 ValidateAnnotation::class -> {
