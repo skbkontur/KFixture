@@ -14,7 +14,7 @@ class EmailGenerator : ValidationParamResolver {
         const val DEFAULT_NUMBER = 10
     }
 
-    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType): Any {
+    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any {
         when (clazz) {
             String::class.java -> {
                 return generateEmail()

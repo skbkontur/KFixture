@@ -13,7 +13,7 @@ class NotBlankGenerator : ValidationParamResolver {
         const val DEFAULT_SIZE = 10
     }
 
-    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType): Any {
+    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any {
         when (clazz) {
             String::class -> {
                 if (generatedParam == null || generatedParam is String && generatedParam.isBlank()) {
