@@ -1,11 +1,18 @@
 package ru.kontur.spring.test.generator.generators
 
+import com.mifmif.common.regex.Generex
 import ru.kontur.spring.test.generator.api.ValidationParamResolver
+import javax.validation.constraints.Pattern
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
+/**
+ * @author Konstantin Volivach
+ */
 class PatternGenerator : ValidationParamResolver {
     override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val patternAnnotation = annotation as Pattern
+        val generex = Generex(patternAnnotation.regexp)
+        return generex.getMatchedString(0)
     }
 }
