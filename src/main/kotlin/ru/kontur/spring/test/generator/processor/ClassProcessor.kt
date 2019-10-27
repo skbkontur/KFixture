@@ -56,7 +56,6 @@ class ClassProcessor {
                     clazz.java.declaredFields.firstOrNull { it.name == param.name }?.annotations?.getOrNull(0)
                 generateParam(param.type.classifier as KClass<*>, param.type, newAnnotation)
             }.toTypedArray()
-            println("Recursion call")
             constructor.call(*arguments)
         }
     }
