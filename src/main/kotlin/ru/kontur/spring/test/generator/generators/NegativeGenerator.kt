@@ -14,7 +14,7 @@ class NegativeGenerator : ValidationParamResolver {
         const val DEFAULT_MINUS = -1L
     }
 
-    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any {
+    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any? {
         if (generatedParam == null) {
             return DEFAULT_MINUS
         }

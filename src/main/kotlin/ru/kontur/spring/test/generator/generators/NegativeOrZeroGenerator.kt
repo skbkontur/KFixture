@@ -11,7 +11,7 @@ class NegativeOrZeroGenerator : ValidationParamResolver {
         const val DEFAULT_VALUE = 0L
     }
 
-    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any {
+    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any? {
         if (generatedParam == null) {
             return DEFAULT_VALUE
         }

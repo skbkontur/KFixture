@@ -14,7 +14,7 @@ import kotlin.reflect.KType
 
 class FutureGenerator : ValidationParamResolver {
 
-    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any {
+    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any? {
         val futureAnnotation = annotation as Future
 
         when (clazz) {

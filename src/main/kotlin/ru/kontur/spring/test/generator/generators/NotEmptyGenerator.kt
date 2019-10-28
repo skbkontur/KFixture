@@ -12,7 +12,7 @@ import kotlin.reflect.KType
  * @author Konstantin Volivach
  */
 class NotEmptyGenerator : ValidationParamResolver {
-    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any {
+    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any? {
         when (clazz) {
             Map::class -> {
                 if (generatedParam == null || generatedParam is Map<*, *> && generatedParam.isEmpty()) {

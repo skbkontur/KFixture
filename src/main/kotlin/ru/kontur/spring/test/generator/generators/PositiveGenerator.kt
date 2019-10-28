@@ -14,13 +14,13 @@ class PositiveGenerator : ValidationParamResolver {
         private const val DEFAULT_VALUE = 10
     }
 
-    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any {
+    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any? {
         val value =
-            if (generatedParam != null && generatedParam is Number && generatedParam.toDouble() > 0) {
-                generatedParam
-            } else {
-                BigDecimal(DEFAULT_VALUE)
-            }
+                if (generatedParam != null && generatedParam is Number && generatedParam.toDouble() > 0) {
+                    generatedParam
+                } else {
+                    BigDecimal(DEFAULT_VALUE)
+                }
         when (clazz) {
             BigDecimal::class -> {
                 return value
@@ -51,6 +51,6 @@ class PositiveGenerator : ValidationParamResolver {
                 return value.toDouble()
             }
         }
-        return generatedParam!!
+        return generatedParam
     }
 }

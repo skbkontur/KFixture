@@ -10,7 +10,7 @@ import kotlin.reflect.KType
 class DecimalMaxGenerator : ValidationParamResolver {
 
     // TODO think about template
-    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any {
+    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any? {
         val decimalMax = annotation as DecimalMax
         val maxDecimal = BigDecimal(decimalMax.value)
         val value = if (generatedParam == null) {
