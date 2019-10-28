@@ -1,11 +1,59 @@
 package ru.kontur.spring.test.generator.generators
 
 import ru.kontur.spring.test.generator.api.ValidationParamResolver
+import java.math.BigDecimal
+import java.math.BigInteger
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
 class NegativeOrZeroGenerator : ValidationParamResolver {
+    companion object {
+        const val DEFAULT_VALUE = 0L
+    }
+
     override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (generatedParam == null) {
+            return DEFAULT_VALUE
+        }
+
+        when (clazz) {
+            BigDecimal::class -> {
+                if (generatedParam is BigDecimal && generatedParam.toLong() > 0L) {
+                    return BigDecimal(DEFAULT_VALUE)
+                }
+            }
+            BigInteger::class -> {
+                if (generatedParam is BigInteger && generatedParam.toLong() > 0L) {
+                    return BigInteger.valueOf(DEFAULT_VALUE)
+                }
+            }
+            Byte::class -> {
+                if (generatedParam is Byte && generatedParam > 0) {
+                    return DEFAULT_VALUE.toByte()
+                }
+            }
+            Short::class -> {
+                if (generatedParam is Short && generatedParam.toShort() > 0) {
+                    return DEFAULT_VALUE.toShort()
+                }
+            }
+            Long::class -> {
+                if (generatedParam is Long && generatedParam.toLong() > 0L) {
+                    return DEFAULT_VALUE
+                }
+            }
+            Float::class -> {
+                if (generatedParam is Float && generatedParam.toFloat() > 0f) {
+                    return DEFAULT_VALUE.toFloat()
+                }
+            }
+            Double::class -> {
+                if (generatedParam is Double && generatedParam.toDouble() > 0.0) {
+                    return DEFAULT_VALUE.toDouble()
+                }
+            }
+        }
+
+        return generatedParam
     }
 }
