@@ -11,7 +11,7 @@ import kotlin.reflect.KType
  * @author Konstantin Volivach
  */
 class MaxGenerator : ValidationParamResolver {
-    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any {
+    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any? {
         val max = (annotation as Max).value
         when (clazz) {
             BigDecimal::class -> {

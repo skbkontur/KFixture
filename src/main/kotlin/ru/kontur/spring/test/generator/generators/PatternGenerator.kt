@@ -10,7 +10,7 @@ import kotlin.reflect.KType
  * @author Konstantin Volivach
  */
 class PatternGenerator : ValidationParamResolver {
-    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any {
+    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any? {
         val patternAnnotation = annotation as Pattern
         val generex = Generex(patternAnnotation.regexp)
         return generex.getMatchedString(0)
