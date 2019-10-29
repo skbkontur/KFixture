@@ -44,7 +44,7 @@ class DecimalMinGenerator : ValidationParamResolver {
             String::class -> {
                 result.toString()
             }
-            else -> value!!
+            else -> value
         }
     }
 }

@@ -45,6 +45,6 @@ class MinGenerator : ValidationParamResolver {
                 }
             }
         }
-        return generatedParam!!
+        return generatedParam
     }
 }
