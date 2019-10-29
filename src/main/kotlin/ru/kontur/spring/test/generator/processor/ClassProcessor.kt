@@ -2,10 +2,8 @@ package ru.kontur.spring.test.generator.processor
 
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterContext
-import ru.kontur.spring.test.generator.api.ValidateAnnotation
 import ru.kontur.spring.test.generator.api.ValidationParamResolver
 import ru.kontur.spring.test.generator.exceptions.NoSuchValidAnnotationException
-import ru.kontur.spring.test.generator.generators.*
 import ru.kontur.spring.test.generator.utils.makeRandomInstance
 import ru.kontur.spring.test.generator.utils.toKType
 import java.lang.RuntimeException
@@ -16,32 +14,15 @@ import kotlin.reflect.KType
 /**
  * @author Konstantin Volivach
  */
-class ClassProcessor {
+class ClassProcessor(private val userPath: String) {
     // TODO scan and this generators
-    private val generators: Map<KClass<out Annotation>, ValidationParamResolver> = mapOf(
-        AssertFalse::class to AssertFalseGenerator(),
-        AssertTrue::class to AssertTrueGenerator(),
-        DecimalMax::class to DecimalMaxGenerator(),
-        DecimalMin::class to DecimalMinGenerator(),
-        Digits::class to DigitsGenerator(),
-        Email::class to EmailGenerator(),
-        Future::class to FutureGenerator(),
-        FutureOrPresent::class to FutureOrPresentGenerator(),
-        Max::class to MaxGenerator(),
-        Min::class to MinGenerator(),
-        Negative::class to NegativeGenerator(),
-        NegativeOrZero::class to NegativeOrZeroGenerator(),
-        NotBlank::class to NotBlankGenerator(),
-        NotEmpty::class to NotEmptyGenerator(),
-        NotNull::class to NotNullGenerator(),
-        Null::class to NullGenerator(),
-        Past::class to PastGenerator(),
-        PastOrPresent::class to PastOrPresentGenerator(),
-        Pattern::class to PatternGenerator(),
-        Positive::class to PositiveGenerator(),
-        PositiveOrZero::class to PositiveOrZeroGenerator(),
-        Size::class to SizeGenerator()
-    )
+    private val generators: Map<KClass<out Annotation>, ValidationParamResolver>
+
+    init {
+        val customAnnotationProcessor = GeneratorAnnotationScanner(userPath)
+        val validatorsMap = customAnnotationProcessor.getValidatorsMap()
+        generators = validatorsMap
+    }
 
     private val defaultPriority: Map<KClass<out Annotation>, Long> = mapOf(
         AssertFalse::class to 0L,
@@ -67,14 +48,6 @@ class ClassProcessor {
         PositiveOrZero::class to 0L,
         Size::class to 0L
     )
-
-    private val usersGenerators: Map<KClass<out Annotation>, ValidationParamResolver>
-
-    init {
-        val customAnnotationProcessor = CustomAnnotationProcessor("")
-        val validatorsMap = customAnnotationProcessor.getValidatorsMap()
-        usersGenerators = validatorsMap
-    }
 
     fun generate(parameterContext: ParameterContext, extensionContext: ExtensionContext): Any {
         val type = parameterContext.parameter.type
@@ -108,16 +81,9 @@ class ClassProcessor {
             }
             var generatedParam: Any? = null
             for (annotation in sorted) {
-                generatedParam = if (annotation.annotationClass == ValidateAnnotation::class) {
-                    val generator = usersGenerators[annotation.annotationClass]
-                        ?: throw NoSuchValidAnnotationException("Please annotate your validate annotation with ValidateAnnotation class")
-                    generator.process(generatedParam, clazz, type, annotation)
-                } else {
-                    val generator = generators[annotation.annotationClass]
-                        ?: throw NoSuchValidAnnotationException("Please annotate your validate annotation with ValidateAnnotation class")
-                    generator.process(generatedParam, clazz, type, annotation)
-
-                }
+                val generator = generators[annotation.annotationClass]
+                    ?: throw NoSuchValidAnnotationException("Please annotate your validate annotation with ValidateAnnotation class")
+                generatedParam = generator.process(generatedParam, clazz, type, annotation)
             }
         }
     }
