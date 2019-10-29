@@ -21,6 +21,6 @@ class NotBlankGenerator : ValidationParamResolver {
                 }
             }
         }
-        return generatedParam!!
+        return generatedParam
     }
 }

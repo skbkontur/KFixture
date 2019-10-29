@@ -46,7 +46,7 @@ class DecimalMaxGenerator : ValidationParamResolver {
             String::class -> {
                 result.toString()
             }
-            else -> value!!
+            else -> value
         }
     }
 }

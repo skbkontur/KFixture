@@ -45,6 +45,6 @@ class MaxGenerator : ValidationParamResolver {
                 }
             }
         }
-        return generatedParam!!
+        return generatedParam
     }
 }
