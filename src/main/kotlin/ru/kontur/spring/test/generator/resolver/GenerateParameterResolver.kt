@@ -8,7 +8,7 @@ import ru.kontur.spring.test.generator.processor.ClassProcessor
 
 class GenerateParameterResolver : ParameterResolver {
 
-    private val processor = ClassProcessor()
+    private val processor = ClassProcessor("")
 
     override fun supportsParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Boolean {
         return parameterContext.parameter.annotations.filter { it is Generate }.isNotEmpty()
