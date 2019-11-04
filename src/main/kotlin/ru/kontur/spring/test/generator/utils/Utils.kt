@@ -1,10 +1,12 @@
 package ru.kontur.spring.test.generator.utils
 
 import ru.kontur.spring.test.generator.exceptions.NoPrimitiveTypeException
+import java.lang.RuntimeException
 import kotlin.random.Random
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeParameter
+import kotlin.reflect.full.starProjectedType
 
 /**
  * @author Konstantin Volivach
@@ -37,22 +39,33 @@ fun generateCollection(numOfElements: Int, classRef: KClass<*>, type: KType): An
 
 fun makeRandomInstanceForParam(paramType: KType, classRef: KClass<*>, type: KType): Any {
     val classifier = paramType.classifier
+
+    if ((classifier as? KClass<*>) != null && classifier.java.isEnum) {
+        return makeEnum(classifier)
+    }
+
     return when (classifier) {
         is KClass<*> -> {
-            generatePrimitiveValue(classifier)
+            makeRandomInstance(classifier, type) ?: throw RuntimeException("Not generated")
         }
         is KTypeParameter -> {
             val typeParamterName = classifier.name
             val typeParameterId = classRef.typeParameters.indexOfFirst { it.name == typeParamterName }
             val parameterType = type.arguments[typeParameterId].type ?: getKType<Any>()
-            generatePrimitiveValue(parameterType.classifier as KClass<*>)
+            generatePrimitiveValue(parameterType.classifier as KClass<*>, type)
+                ?: throw RuntimeException("Not generated")
         }
         else -> throw IllegalArgumentException("Type of classifier $classifier is not supported")
     }
 }
 
+fun makeEnum(clazz: KClass<*>): Any {
+    val x = Random.nextInt(clazz.java.enumConstants.size)
+    return clazz.java.enumConstants[x]
+}
+
 fun makeRandomInstance(classRef: KClass<*>, type: KType): Any? {
-    val primitive = generatePrimitiveValue(classRef)
+    val primitive = generatePrimitiveValue(classRef, type)
     if (primitive != null) {
         return primitive
     }
@@ -76,7 +89,7 @@ fun makeRandomInstance(classRef: KClass<*>, type: KType): Any? {
 }
 
 
-fun generatePrimitiveValue(kclass: KClass<*>): Any {
+fun generatePrimitiveValue(kclass: KClass<*>, type: KType?): Any? {
     return when (kclass) {
         Double::class -> {
             Random.nextDouble()
@@ -93,10 +106,9 @@ fun generatePrimitiveValue(kclass: KClass<*>): Any {
         String::class -> {
             generateString(Random.nextInt(100))
         }
-        else -> {
-            throw NoPrimitiveTypeException(
-                "No such primitive type define, please contact authors type=${kclass.simpleName}"
-            )
+        List::class -> {
+            generateCollection(10, kclass, type!!)
         }
+        else -> null
     }
 }
