@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import ru.kontur.spring.test.generator.annotations.Generate
+import ru.kontur.spring.test.generator.data.TestModel
 import ru.kontur.spring.test.generator.resolver.GenerateParameterResolver
 import javax.validation.constraints.NotEmpty
 
@@ -15,8 +16,27 @@ class TestGenerator {
         val param: String
     )
 
+    enum class TestEnum {
+        EN
+    }
+
+    data class ClassWithEmum(
+        val type: TestEnum
+    )
+
+
     @Test
     fun test(@Generate test: SimpleClass) {
         assertNotNull(test.param)
+    }
+
+    @Test
+    fun testWithEnum(@Generate data: ClassWithEmum) {
+        assertNotNull(data)
+    }
+
+    @Test
+    fun testWithTestData1(@Generate data: TestModel) {
+        assertNotNull(data)
     }
 }

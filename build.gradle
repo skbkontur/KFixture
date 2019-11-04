@@ -5,7 +5,7 @@ plugins {
     id "maven-publish"
 }
 
-version '1.0-SNAPSHOT'
+version '0.1.0.2'
 
 repositories {
     mavenCentral()
@@ -36,7 +36,7 @@ publishing {
             }
             groupId 'ru.kontur'
             artifactId 'spring-test-data-generator'
-            version '0.1.0'
+            version project.version
         }
     }
 }
@@ -53,8 +53,8 @@ bintray {
         licenses = ['MIT']
         vcsUrl = 'https://github.com/skbkontur/spring-test-data-generator'
         version {
-            name = '1.0.0'
-            desc = '1.0.0'
+            name = project.version
+            desc = project.version
             released = new Date()
         }
     }
