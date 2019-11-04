@@ -8,8 +8,10 @@ import ru.kontur.spring.test.generator.utils.makeRandomInstance
 import ru.kontur.spring.test.generator.utils.toKType
 import java.lang.RuntimeException
 import javax.validation.constraints.*
+import kotlin.random.Random
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
+import kotlin.reflect.jvm.isAccessible
 
 /**
  * @author Konstantin Volivach
@@ -56,16 +58,21 @@ class ClassProcessor(private val userPath: String) {
     }
 
     private fun generateParam(clazz: KClass<*>, type: KType, annotation: List<Annotation>?): Any? {
-        return if (clazz.isSimple()) {
-            processSimpleType(clazz, type, annotation)
-        } else {
-            val constructor = clazz.constructors.toMutableList()[0]
-            val arguments = constructor.parameters.map { param ->
-                val newAnnotation =
-                    clazz.java.declaredFields.firstOrNull { it.name == param.name }?.annotations?.toList()
-                generateParam(param.type.classifier as KClass<*>, param.type, newAnnotation)
-            }.toTypedArray()
-            constructor.call(*arguments)
+        return when {
+            clazz.isSimple() -> processSimpleType(clazz, type, annotation)
+            clazz.java.isEnum -> {
+                val x = Random.nextInt(clazz.java.enumConstants.size)
+                clazz.java.enumConstants[x]
+            }
+            else -> {
+                val constructor = clazz.constructors.toMutableList()[0]
+                val arguments = constructor.parameters.map { param ->
+                    val newAnnotation =
+                        clazz.java.declaredFields.firstOrNull { it.name == param.name }?.annotations?.toList()
+                    generateParam(param.type.classifier as KClass<*>, param.type, newAnnotation)
+                }.toTypedArray()
+                constructor.call(*arguments)
+            }
         }
     }
 
