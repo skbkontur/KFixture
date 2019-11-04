@@ -2,16 +2,17 @@ package ru.kontur.spring.test.generator.processor
 
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterContext
+import ru.kontur.spring.test.generator.api.ValidationConstructor
 import ru.kontur.spring.test.generator.api.ValidationParamResolver
+import ru.kontur.spring.test.generator.constructors.UUIDConstructor
 import ru.kontur.spring.test.generator.exceptions.NoSuchValidAnnotationException
-import ru.kontur.spring.test.generator.utils.makeRandomInstance
-import ru.kontur.spring.test.generator.utils.toKType
+import ru.kontur.spring.test.generator.utils.*
 import java.lang.RuntimeException
+import java.util.*
 import javax.validation.constraints.*
 import kotlin.random.Random
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
-import kotlin.reflect.jvm.isAccessible
 
 /**
  * @author Konstantin Volivach
@@ -19,6 +20,9 @@ import kotlin.reflect.jvm.isAccessible
 class ClassProcessor(private val userPath: String) {
     // TODO scan and this generators
     private val generators: Map<KClass<out Annotation>, ValidationParamResolver>
+    private val constructors: Map<KClass<*>, ValidationConstructor<*>> = mapOf(
+        UUID::class to UUIDConstructor()
+    )
 
     init {
         val customAnnotationProcessor = GeneratorAnnotationScanner(userPath)
@@ -65,20 +69,24 @@ class ClassProcessor(private val userPath: String) {
                 clazz.java.enumConstants[x]
             }
             else -> {
-                val constructor = clazz.constructors.toMutableList()[0]
-                val arguments = constructor.parameters.map { param ->
-                    val newAnnotation =
-                        clazz.java.declaredFields.firstOrNull { it.name == param.name }?.annotations?.toList()
-                    generateParam(param.type.classifier as KClass<*>, param.type, newAnnotation)
-                }.toTypedArray()
-                constructor.call(*arguments)
+                if (constructors.containsKey(clazz)) {
+                    constructors[clazz]?.call()
+                } else {
+                    val constructor = clazz.constructors.toMutableList()[0]
+                    val arguments = constructor.parameters.map { param ->
+                        val newAnnotation =
+                            clazz.java.declaredFields.firstOrNull { it.name == param.name }?.annotations?.toList()
+                        generateParam(param.type.classifier as KClass<*>, param.type, newAnnotation)
+                    }.toTypedArray()
+                    constructor.call(*arguments)
+                }
             }
         }
     }
 
     private fun processSimpleType(clazz: KClass<*>, type: KType, annotationList: List<Annotation>?): Any? {
         return when {
-            annotationList == null -> makeRandomInstance(
+            annotationList == null || annotationList.isEmpty() -> generatePrimitiveValue(
                 clazz,
                 type
             )
@@ -95,11 +103,13 @@ class ClassProcessor(private val userPath: String) {
                     generatedParam = generator.process(generatedParam, clazz, type, annotation)
                 }
             }
-            else -> makeRandomInstance(clazz, type)
+            else -> {
+                generateParam(clazz, type, annotationList)
+            }
         }
     }
 
     private fun KClass<*>.isSimple(): Boolean {
-        return this == Int::class || this == String::class || this == Boolean::class || this == List::class || this == Map::class
+        return this == Int::class || this == Long::class || this == String::class || this == Boolean::class || this == List::class || this == Map::class
     }
 }
