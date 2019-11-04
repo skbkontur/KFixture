@@ -70,21 +70,25 @@ class ClassProcessor(private val userPath: String) {
     }
 
     private fun processSimpleType(clazz: KClass<*>, type: KType, annotationList: List<Annotation>?): Any? {
-        return if (annotationList == null) {
-            makeRandomInstance(
+        return when {
+            annotationList == null -> makeRandomInstance(
                 clazz,
                 type
             )
-        } else {
-            val sorted = annotationList.sortedBy {
-                return@sortedBy defaultPriority[it.annotationClass]
+            annotationList.any {
+                generators.keys.contains(it::class)
+            } -> {
+                val sorted = annotationList.sortedBy {
+                    return@sortedBy defaultPriority[it.annotationClass]
+                }
+                var generatedParam: Any? = null
+                for (annotation in sorted) {
+                    val generator = generators[annotation.annotationClass]
+                        ?: throw NoSuchValidAnnotationException("Please annotate your validate annotation with ValidateAnnotation class")
+                    generatedParam = generator.process(generatedParam, clazz, type, annotation)
+                }
             }
-            var generatedParam: Any? = null
-            for (annotation in sorted) {
-                val generator = generators[annotation.annotationClass]
-                    ?: throw NoSuchValidAnnotationException("Please annotate your validate annotation with ValidateAnnotation class")
-                generatedParam = generator.process(generatedParam, clazz, type, annotation)
-            }
+            else -> makeRandomInstance(clazz, type)
         }
     }
 
