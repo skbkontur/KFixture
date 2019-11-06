@@ -13,19 +13,20 @@ import kotlin.reflect.KClass
  * @author Konstantin Volivach
  * Scan users code and get validations and resolvers for them
  */
-class GeneratorAnnotationScanner(private val userPath: String) {
+class GeneratorAnnotationScanner {
     companion object {
         private const val LIBRARY_PATH = "ru.kontur.spring.test.generator"
     }
 
     fun getValidatorsMap(): Map<KClass<out Annotation>, ValidationParamResolver> {
-        val libraryMap = getValidatorsMap(LIBRARY_PATH).toMutableMap()
-        val usersMap = getValidatorsMap(userPath)
-        libraryMap.putAll(usersMap)
-        return libraryMap
+        return internalValidatorsMap(LIBRARY_PATH)
     }
 
-    private fun getValidatorsMap(path: String): Map<KClass<out Annotation>, ValidationParamResolver> {
+    fun getValidatorsMap(userPath: String): Map<KClass<out Annotation>, ValidationParamResolver> {
+        return internalValidatorsMap(userPath)
+    }
+
+    private fun internalValidatorsMap(path: String): Map<KClass<out Annotation>, ValidationParamResolver> {
         val reflections = Reflections(path)
 
         val validators = reflections.getTypesAnnotatedWith(ValidateAnnotation::class.java)

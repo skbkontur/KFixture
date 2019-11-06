@@ -5,10 +5,12 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import ru.kontur.spring.test.generator.annotations.Generate
+import ru.kontur.spring.test.generator.api.SpringTestDataGenerator
 import ru.kontur.spring.test.generator.resolver.GenerateParameterResolver
 import javax.validation.constraints.NotEmpty
 
 @ExtendWith(GenerateParameterResolver::class)
+@SpringTestDataGenerator(value = "ru.kontur.spring.test.generator")
 class NotEmptyGenerator {
 
     data class SimpleClassWithAnnotation(
