@@ -1,13 +1,16 @@
 package ru.kontur.spring.test.generator.generators
 
 import ru.kontur.spring.test.generator.api.ValidationParamResolver
+import ru.kontur.spring.test.generator.api.ValidatorFor
 import ru.kontur.spring.test.generator.utils.generateString
+import javax.validation.constraints.NotBlank
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
 /**
  * @author Konstantin Volivach
  */
+@ValidatorFor(value = NotBlank::class)
 class NotBlankGenerator : ValidationParamResolver {
     private companion object {
         const val DEFAULT_SIZE = 10

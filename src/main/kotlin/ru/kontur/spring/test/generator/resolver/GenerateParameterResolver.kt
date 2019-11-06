@@ -5,15 +5,11 @@ import org.junit.jupiter.api.extension.ParameterContext
 import org.junit.jupiter.api.extension.ParameterResolver
 import ru.kontur.spring.test.generator.annotations.Generate
 import ru.kontur.spring.test.generator.api.SpringTestDataGenerator
-import ru.kontur.spring.test.generator.api.ValidationConstructor
 import ru.kontur.spring.test.generator.api.ValidationParamResolver
-import ru.kontur.spring.test.generator.constructors.UUIDConstructor
 import ru.kontur.spring.test.generator.processor.ClassProcessor
 import ru.kontur.spring.test.generator.processor.GeneratorAnnotationScanner
 import ru.kontur.spring.test.generator.utils.toKType
 import java.lang.RuntimeException
-import java.util.*
-import javax.validation.constraints.*
 import kotlin.reflect.KClass
 
 class GenerateParameterResolver : ParameterResolver {
@@ -21,7 +17,7 @@ class GenerateParameterResolver : ParameterResolver {
     private val generatorAnnotationScanner = GeneratorAnnotationScanner()
 
     init {
-        val validatorsMap = generatorAnnotationScanner.getValidatorsMap()
+        val validatorsMap = generatorAnnotationScanner.getDefaultValidatorsMap()
         defaultGenerators = validatorsMap
     }
 

@@ -1,12 +1,12 @@
 package ru.kontur.spring.test.generator.processor
 
 import org.reflections.Reflections
-import ru.kontur.spring.test.generator.api.ValidateAnnotation
 import ru.kontur.spring.test.generator.api.ValidationParamResolver
 import ru.kontur.spring.test.generator.api.ValidatorFor
 import ru.kontur.spring.test.generator.exceptions.NotResolverException
 import ru.kontur.spring.test.generator.exceptions.NotValidateAnnotationException
 import ru.kontur.spring.test.generator.exceptions.ResolverNotFoundException
+import javax.validation.Constraint
 import kotlin.reflect.KClass
 
 /**
@@ -16,32 +16,44 @@ import kotlin.reflect.KClass
 class GeneratorAnnotationScanner {
     companion object {
         private const val LIBRARY_PATH = "ru.kontur.spring.test.generator"
+        private const val JAVAX_PATH = "javax.validation.constraints"
     }
 
-    fun getValidatorsMap(): Map<KClass<out Annotation>, ValidationParamResolver> {
-        return internalValidatorsMap(LIBRARY_PATH)
+    fun getDefaultValidatorsMap(): Map<KClass<out Annotation>, ValidationParamResolver> {
+        return internalValidatorsMap(JAVAX_PATH, LIBRARY_PATH)
     }
 
     fun getValidatorsMap(userPath: String): Map<KClass<out Annotation>, ValidationParamResolver> {
-        return internalValidatorsMap(userPath)
+        return internalValidatorsMap(userPath, userPath)
     }
 
-    private fun internalValidatorsMap(path: String): Map<KClass<out Annotation>, ValidationParamResolver> {
-        val reflections = Reflections(path)
+    private fun internalValidatorsMap(
+        annotationPath: String,
+        resolverPath: String
+    ): Map<KClass<out Annotation>, ValidationParamResolver> {
+        val annotationResolver = Reflections(annotationPath)
+        val validationResolver = Reflections(resolverPath)
 
-        val validators = reflections.getTypesAnnotatedWith(ValidateAnnotation::class.java)
-        val resolvers = reflections.getTypesAnnotatedWith(ValidatorFor::class.java)
+        val annotationValidators = annotationResolver.getTypesAnnotatedWith(Constraint::class.java).map { it.kotlin }
+        val resolvers = validationResolver.getTypesAnnotatedWith(ValidatorFor::class.java).map { it.kotlin }
 
         val map = mutableMapOf<KClass<out Annotation>, ValidationParamResolver>()
-        for (validator in validators) {
-            val annotation = validator as? Annotation ?: throw NotValidateAnnotationException(validator.kotlin)
+        for (annotationClass in annotationValidators) {
+            annotationClass as? KClass<out Annotation> ?: throw NotValidateAnnotationException(
+                annotationClass
+            )
 
-            val paramResolver = resolvers.firstOrNull { it.getAnnotation(ValidatorFor::class.java).value == validator }
-                ?: throw ResolverNotFoundException(validator.kotlin)
-            if (paramResolver is ValidationParamResolver) {
-                map[annotation.annotationClass] = paramResolver
+            val paramResolver =
+                resolvers.firstOrNull { it.java.getAnnotation(ValidatorFor::class.java).value == annotationClass }
+                    ?: throw ResolverNotFoundException(annotationClass)
+
+            val constructor = paramResolver.constructors.toMutableList()[0]
+            val resolver = constructor.call()
+
+            if (resolver is ValidationParamResolver) {
+                map[annotationClass] = resolver
             } else {
-                throw NotResolverException(paramResolver.kotlin)
+                throw NotResolverException(paramResolver)
             }
         }
         return map

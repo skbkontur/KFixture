@@ -1,12 +1,10 @@
 package ru.kontur.spring.test.generator.utils
 
-import ru.kontur.spring.test.generator.exceptions.NoPrimitiveTypeException
 import java.lang.RuntimeException
 import kotlin.random.Random
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeParameter
-import kotlin.reflect.full.starProjectedType
 
 /**
  * @author Konstantin Volivach
@@ -87,7 +85,6 @@ fun makeRandomInstance(classRef: KClass<*>, type: KType): Any? {
 
     throw IllegalArgumentException("No useable constructor")
 }
-
 
 fun generatePrimitiveValue(kclass: KClass<*>, type: KType?): Any? {
     return when (kclass) {

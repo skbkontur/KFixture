@@ -1,6 +1,7 @@
 package ru.kontur.spring.test.generator.generators
 
 import ru.kontur.spring.test.generator.api.ValidationParamResolver
+import ru.kontur.spring.test.generator.api.ValidatorFor
 import java.math.BigDecimal
 import java.math.BigInteger
 import javax.validation.constraints.Min
@@ -10,6 +11,7 @@ import kotlin.reflect.KType
 /**
  * @author Konstantin Volivach
  */
+@ValidatorFor(value = Min::class)
 class MinGenerator : ValidationParamResolver {
     override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any? {
         val min = (annotation as Min).value

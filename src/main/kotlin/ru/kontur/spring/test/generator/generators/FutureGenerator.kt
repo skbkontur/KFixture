@@ -1,6 +1,7 @@
 package ru.kontur.spring.test.generator.generators
 
 import ru.kontur.spring.test.generator.api.ValidationParamResolver
+import ru.kontur.spring.test.generator.api.ValidatorFor
 import java.time.*
 import java.time.chrono.HijrahDate
 import java.time.chrono.JapaneseDate
@@ -12,6 +13,7 @@ import javax.validation.constraints.Future
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
+@ValidatorFor(value = Future::class)
 class FutureGenerator : ValidationParamResolver {
 
     override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any? {
@@ -20,51 +22,37 @@ class FutureGenerator : ValidationParamResolver {
                 return Date.from(Instant.now().plus(1000, ChronoUnit.HOURS))
             }
             Calendar::class -> {
-                return Calendar.getInstance() //TODO
+                return Calendar.getInstance() // TODO
             }
             Instant::class -> {
-
             }
             LocalDate::class -> {
-
             }
             LocalDateTime::class -> {
-
             }
             LocalTime::class -> {
-
             }
             MonthDay::class -> {
-
             }
             OffsetDateTime::class -> {
-
             }
             OffsetTime::class -> {
-
             }
             Year::class -> {
-
             }
             YearMonth::class -> {
-
             }
             ZonedDateTime::class -> {
-
             }
             HijrahDate::class -> {
-
             }
             JapaneseDate::class -> {
-
             }
             MinguoDate::class -> {
-
             }
             ThaiBuddhistDate::class -> {
-
             }
         }
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 }

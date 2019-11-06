@@ -1,14 +1,17 @@
 package ru.kontur.spring.test.generator.generators
 
 import ru.kontur.spring.test.generator.api.ValidationParamResolver
+import ru.kontur.spring.test.generator.api.ValidatorFor
 import ru.kontur.spring.test.generator.exceptions.NoSuchCaseException
 import ru.kontur.spring.test.generator.utils.generateString
+import javax.validation.constraints.Email
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
 /**
  * @author Konstantin Volivach
  */
+@ValidatorFor(value = Email::class)
 class EmailGenerator : ValidationParamResolver {
     private companion object {
         const val DEFAULT_NUMBER = 10
