@@ -109,6 +109,9 @@ fun generatePrimitiveValue(kclass: KClass<*>, type: KType?): Any? {
         List::class -> {
             generateCollection(10, kclass, type!!)
         }
+        Map::class -> {
+            generateMap(10, kclass, type!!)
+        }
         else -> null
     }
 }

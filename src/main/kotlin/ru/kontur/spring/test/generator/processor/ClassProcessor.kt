@@ -1,13 +1,10 @@
 package ru.kontur.spring.test.generator.processor
 
-import org.junit.jupiter.api.extension.ExtensionContext
-import org.junit.jupiter.api.extension.ParameterContext
 import ru.kontur.spring.test.generator.api.ValidationConstructor
 import ru.kontur.spring.test.generator.api.ValidationParamResolver
 import ru.kontur.spring.test.generator.constructors.UUIDConstructor
 import ru.kontur.spring.test.generator.exceptions.NoSuchValidAnnotationException
 import ru.kontur.spring.test.generator.utils.*
-import java.lang.RuntimeException
 import java.util.*
 import javax.validation.constraints.*
 import kotlin.random.Random
@@ -17,18 +14,12 @@ import kotlin.reflect.KType
 /**
  * @author Konstantin Volivach
  */
-class ClassProcessor(private val userPath: String) {
-    // TODO scan and this generators
+class ClassProcessor(
     private val generators: Map<KClass<out Annotation>, ValidationParamResolver>
+) {
     private val constructors: Map<KClass<*>, ValidationConstructor<*>> = mapOf(
         UUID::class to UUIDConstructor()
     )
-
-    init {
-        val customAnnotationProcessor = GeneratorAnnotationScanner(userPath)
-        val validatorsMap = customAnnotationProcessor.getValidatorsMap()
-        generators = validatorsMap
-    }
 
     private val defaultPriority: Map<KClass<out Annotation>, Long> = mapOf(
         AssertFalse::class to 0L,
@@ -55,13 +46,7 @@ class ClassProcessor(private val userPath: String) {
         Size::class to 0L
     )
 
-    fun generate(parameterContext: ParameterContext, extensionContext: ExtensionContext): Any {
-        val type = parameterContext.parameter.type
-        return generateParam(type.kotlin, type.toKType(), null)
-            ?: throw RuntimeException("Something went wrong")
-    }
-
-    private fun generateParam(clazz: KClass<*>, type: KType, annotation: List<Annotation>?): Any? {
+    fun generateParam(clazz: KClass<*>, type: KType, annotation: List<Annotation>?): Any? {
         return when {
             clazz.isSimple() -> processSimpleType(clazz, type, annotation)
             clazz.java.isEnum -> {
@@ -86,11 +71,7 @@ class ClassProcessor(private val userPath: String) {
 
     private fun processSimpleType(clazz: KClass<*>, type: KType, annotationList: List<Annotation>?): Any? {
         return when {
-            annotationList == null || annotationList.isEmpty() -> generatePrimitiveValue(
-                clazz,
-                type
-            )
-            annotationList.any {
+            annotationList != null && annotationList.any {
                 generators.keys.contains(it::class)
             } -> {
                 val sorted = annotationList.sortedBy {
@@ -104,7 +85,7 @@ class ClassProcessor(private val userPath: String) {
                 }
             }
             else -> {
-                generateParam(clazz, type, annotationList)
+                generatePrimitiveValue(clazz, type)
             }
         }
     }

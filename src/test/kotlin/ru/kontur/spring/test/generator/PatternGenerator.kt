@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import ru.kontur.spring.test.generator.annotations.Generate
 import ru.kontur.spring.test.generator.resolver.GenerateParameterResolver
-import javax.annotation.Generated
 import javax.validation.Validation
 import javax.validation.Validator
 import javax.validation.constraints.Pattern
