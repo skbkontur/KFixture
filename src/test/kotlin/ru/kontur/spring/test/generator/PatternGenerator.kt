@@ -24,7 +24,7 @@ class PatternGenerator {
     private val regex = "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*\$"
 
     data class TestData(
-        @field:Pattern(regexp = "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*\$")
+        @field:Pattern(regexp = "^[+]*[(]{0,1}[0-9]{1,4}[)]?[-\\s\\./0-9]*\$")
         val phoneNumber: String
     )
 
