@@ -5,7 +5,6 @@ import ru.kontur.spring.test.generator.api.ValidationParamResolver
 import ru.kontur.spring.test.generator.constructors.UUIDConstructor
 import ru.kontur.spring.test.generator.exceptions.NoSuchValidAnnotationException
 import ru.kontur.spring.test.generator.utils.*
-import java.util.*
 import javax.validation.constraints.*
 import kotlin.random.Random
 import kotlin.reflect.KClass
@@ -15,11 +14,9 @@ import kotlin.reflect.KType
  * @author Konstantin Volivach
  */
 class ClassProcessor(
-    private val generators: Map<KClass<out Annotation>, ValidationParamResolver>
+    private val generators: Map<KClass<out Annotation>, ValidationParamResolver>,
+    private val constructors: Map<KClass<*>, ValidationConstructor<*>>
 ) {
-    private val constructors: Map<KClass<*>, ValidationConstructor<*>> = mapOf(
-        UUID::class to UUIDConstructor()
-    )
 
     private val defaultPriority: Map<KClass<out Annotation>, Long> = mapOf(
         AssertFalse::class to 0L,
