@@ -1,6 +1,7 @@
 package ru.kontur.spring.test.generator.processor
 
 import org.reflections.Reflections
+import ru.kontur.spring.test.generator.api.ValidationConstructor
 import ru.kontur.spring.test.generator.api.ValidationParamResolver
 import ru.kontur.spring.test.generator.api.ValidatorFor
 import ru.kontur.spring.test.generator.exceptions.NotResolverException
@@ -25,6 +26,17 @@ class GeneratorAnnotationScanner {
 
     fun getValidatorsMap(userPath: String): Map<KClass<out Annotation>, ValidationParamResolver> {
         return internalValidatorsMap(userPath, userPath)
+    }
+
+    fun getConstructors(userPath: String): Map<KClass<*>, ValidationConstructor<*>> {
+        val constructorResolver = Reflections(userPath)
+        val constructors = constructorResolver.getSubTypesOf(ValidationConstructor::class.java).map { it.kotlin }
+
+        return constructors.associate<KClass<out ValidationConstructor<*>>, KClass<out Any>, ValidationConstructor<*>> {
+            val constructor = it.constructors.toMutableList()[0]
+            val validationConstructor = constructor.call()
+            it.java.getDeclaredMethod("call").returnType.kotlin to validationConstructor
+        }
     }
 
     private fun internalValidatorsMap(
@@ -58,4 +70,6 @@ class GeneratorAnnotationScanner {
         }
         return map
     }
+
+
 }
