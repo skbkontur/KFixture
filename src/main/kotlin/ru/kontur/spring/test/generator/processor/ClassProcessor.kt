@@ -2,9 +2,10 @@ package ru.kontur.spring.test.generator.processor
 
 import ru.kontur.spring.test.generator.api.ValidationConstructor
 import ru.kontur.spring.test.generator.api.ValidationParamResolver
-import ru.kontur.spring.test.generator.constructors.UUIDConstructor
 import ru.kontur.spring.test.generator.exceptions.NoSuchValidAnnotationException
+import ru.kontur.spring.test.generator.exceptions.ResolverNotFoundException
 import ru.kontur.spring.test.generator.utils.*
+import javax.validation.Constraint
 import javax.validation.constraints.*
 import kotlin.random.Random
 import kotlin.reflect.KClass
@@ -44,23 +45,35 @@ class ClassProcessor(
     )
 
     fun generateParam(clazz: KClass<*>, type: KType, annotation: List<Annotation>?): Any? {
+        val annotationSum = (annotation?.let { it + clazz.annotations }
+            ?: clazz.annotations).filter { it.annotationClass.annotations.any { annotation -> annotation is Constraint } }
         return when {
-            clazz.isSimple() -> processSimpleType(clazz, type, annotation)
+            clazz.isSimple() -> processSimpleType(clazz, type, annotationSum)
             clazz.java.isEnum -> {
                 val x = Random.nextInt(clazz.java.enumConstants.size)
                 clazz.java.enumConstants[x]
             }
             else -> {
-                if (constructors.containsKey(clazz)) {
-                    constructors[clazz]?.call()
-                } else {
-                    val constructor = clazz.constructors.toMutableList()[0]
-                    val arguments = constructor.parameters.map { param ->
-                        val newAnnotation =
-                            clazz.java.declaredFields.firstOrNull { it.name == param.name }?.annotations?.toList()
-                        generateParam(param.type.classifier as KClass<*>, param.type, newAnnotation)
-                    }.toTypedArray()
-                    constructor.call(*arguments)
+                when {
+                    constructors.containsKey(clazz) -> constructors[clazz]?.call()
+                    !annotationSum.isNullOrEmpty() -> {
+                        var result: Any? = null
+                        for (it in annotationSum) {
+                            val generator = generators[it.annotationClass]
+                                ?: throw ResolverNotFoundException(it.annotationClass)
+                            result = generator.process(result, clazz, type, it)
+                        }
+                        return result
+                    }
+                    else -> {
+                        val constructor = clazz.constructors.toMutableList()[0]
+                        val arguments = constructor.parameters.map { param ->
+                            val newAnnotation =
+                                clazz.java.declaredFields.firstOrNull { it.name == param.name }?.annotations?.toList()
+                            generateParam(param.type.classifier as KClass<*>, param.type, newAnnotation)
+                        }.toTypedArray()
+                        constructor.call(*arguments)
+                    }
                 }
             }
         }
