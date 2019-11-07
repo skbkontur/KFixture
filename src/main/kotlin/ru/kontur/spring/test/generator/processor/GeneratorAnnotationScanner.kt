@@ -57,15 +57,15 @@ class GeneratorAnnotationScanner {
 
             val paramResolver =
                 resolvers.firstOrNull { it.java.getAnnotation(ValidatorFor::class.java).value == annotationClass }
-                    ?: throw ResolverNotFoundException(annotationClass)
+//                    ?: throw ResolverNotFoundException(annotationClass)
 
-            val constructor = paramResolver.constructors.toMutableList()[0]
-            val resolver = constructor.call()
+            val constructor = paramResolver?.constructors?.toMutableList()?.get(0)
+            val resolver = constructor?.call()
 
             if (resolver is ValidationParamResolver) {
                 map[annotationClass] = resolver
             } else {
-                throw NotResolverException(paramResolver)
+//                throw NotResolverException(paramResolver)
             }
         }
         return map
