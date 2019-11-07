@@ -15,7 +15,7 @@ fun generateString(numOfElements: Int): String {
 }
 
 fun generateRandomChar(): Char {
-    return Random.nextInt().toChar()
+    return (Random.nextInt(26) + 'a'.toInt()).toChar()
 }
 
 fun generateDouble(): Double {
