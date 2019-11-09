@@ -131,6 +131,12 @@ class ClassProcessor(
             Float::class -> {
                 Random.nextFloat()
             }
+            Short::class -> {
+                Random.nextInt().toShort()
+            }
+            Byte::class -> {
+                Random.nextInt(256).toByte()
+            }
             Char::class -> {
                 generateRandomChar()
             }
