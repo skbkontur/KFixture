@@ -98,7 +98,7 @@ class ClassProcessor(
     private fun processSimpleType(clazz: KClass<*>, type: KType, annotationList: List<Annotation>?): Any? {
         return when {
             annotationList != null && annotationList.any {
-                generators.keys.contains(it::class)
+                generators.keys.contains(it.annotationClass)
             } -> {
                 val sorted = annotationList.sortedBy {
                     return@sortedBy defaultPriority[it.annotationClass]
@@ -109,6 +109,7 @@ class ClassProcessor(
                         ?: throw NoSuchValidAnnotationException("Please annotate your validate annotation with ValidateAnnotation class")
                     generatedParam = generator.process(generatedParam, clazz, type, annotation)
                 }
+                generatedParam
             }
             else -> {
                 generatePrimitiveValue(clazz, type)
