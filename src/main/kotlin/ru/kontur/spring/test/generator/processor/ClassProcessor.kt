@@ -4,7 +4,6 @@ import ru.kontur.spring.test.generator.api.ValidationConstructor
 import ru.kontur.spring.test.generator.api.ValidationParamResolver
 import ru.kontur.spring.test.generator.exceptions.NoOptionalRecursiveException
 import ru.kontur.spring.test.generator.exceptions.NoSuchValidAnnotationException
-import ru.kontur.spring.test.generator.exceptions.ResolverNotFoundException
 import ru.kontur.spring.test.generator.utils.*
 import javax.validation.Constraint
 import javax.validation.constraints.*
@@ -112,12 +111,70 @@ class ClassProcessor(
                 generatedParam
             }
             else -> {
-                generatePrimitiveValue(clazz, type)
+                this.generatePrimitiveValue(clazz, type, annotationList)
             }
         }
     }
 
     private fun KClass<*>.isSimple(): Boolean {
         return this == Int::class || this == Long::class || this == String::class || this == Boolean::class || this == List::class || this == Map::class
+    }
+
+    private fun generatePrimitiveValue(kclass: KClass<*>, type: KType?, annotationList: List<Annotation>?): Any? {
+        return when (kclass) {
+            Double::class -> {
+                Random.nextDouble()
+            }
+            Int::class -> {
+                Random.nextInt()
+            }
+            Float::class -> {
+                Random.nextFloat()
+            }
+            Char::class -> {
+                generateRandomChar()
+            }
+            String::class -> {
+                generateString(Random.nextInt(100))
+            }
+            List::class -> {
+                generateCollection(10, kclass, type!!, annotationList)
+            }
+            Map::class -> {
+                generateMap(10, kclass, type!!, annotationList)
+            }
+            else -> null
+        }
+    }
+
+    private fun generateMap(
+        numOfElements: Int,
+        classRef: KClass<*>,
+        type: KType,
+        annotationList: List<Annotation>?
+    ): Map<Any, Any> {
+        val keyType = type.arguments[0].type!!
+        val valueType = type.arguments[1].type!!
+        val keys =
+            (1..numOfElements).mapNotNull { generateParam(keyType.classifier as KClass<*>, keyType, annotationList) }
+        val values =
+            (1..numOfElements).mapNotNull {
+                generateParam(
+                    valueType.classifier as KClass<*>,
+                    valueType,
+                    annotationList
+                )
+            }
+        return keys.zip(values).toMap()
+    }
+
+    private fun generateCollection(
+        numOfElements: Int,
+        classRef: KClass<*>,
+        type: KType,
+        annotationList: List<Annotation>?
+    ): Any {
+        val elemType = type.arguments[0].type!!
+        return (1..numOfElements).map { generateParam(elemType.classifier as KClass<*>, elemType, annotationList) }
     }
 }
