@@ -2,6 +2,7 @@ package ru.kontur.spring.test.generator.processor
 
 import ru.kontur.spring.test.generator.api.ValidationConstructor
 import ru.kontur.spring.test.generator.api.ValidationParamResolver
+import ru.kontur.spring.test.generator.exceptions.NoOptionalRecursiveException
 import ru.kontur.spring.test.generator.exceptions.NoSuchValidAnnotationException
 import ru.kontur.spring.test.generator.exceptions.ResolverNotFoundException
 import ru.kontur.spring.test.generator.utils.*
@@ -70,6 +71,14 @@ class ClassProcessor(
                         val arguments = constructor.parameters.map { param ->
                             val newAnnotation =
                                 clazz.java.declaredFields.firstOrNull { it.name == param.name }?.annotations?.toList()
+                            val paramClazz = param.type.classifier as KClass<*>
+                            if (paramClazz == clazz) {
+                                if (param.isOptional) {
+                                    return@map null
+                                } else {
+                                    throw NoOptionalRecursiveException("Recursive field can't be required field.name=${param.name} clazz=${paramClazz}")
+                                }
+                            }
                             generateParam(param.type.classifier as KClass<*>, param.type, newAnnotation)
                         }.toTypedArray()
                         constructor.call(*arguments)
