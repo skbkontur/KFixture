@@ -1,14 +1,14 @@
 package ru.kontur.spring.test.generator.generators
 
 import ru.kontur.spring.test.generator.api.ValidationParamResolver
-import ru.kontur.spring.test.generator.api.ValidatorFor
+import ru.kontur.spring.test.generator.api.ResolverFor
 import java.math.BigDecimal
 import java.math.BigInteger
 import javax.validation.constraints.NegativeOrZero
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
-@ValidatorFor(value = NegativeOrZero::class)
+@ResolverFor(value = NegativeOrZero::class)
 class NegativeOrZeroGenerator : ValidationParamResolver {
     companion object {
         const val DEFAULT_VALUE = 0L

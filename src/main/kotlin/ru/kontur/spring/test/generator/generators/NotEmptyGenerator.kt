@@ -1,7 +1,7 @@
 package ru.kontur.spring.test.generator.generators
 
 import ru.kontur.spring.test.generator.api.ValidationParamResolver
-import ru.kontur.spring.test.generator.api.ValidatorFor
+import ru.kontur.spring.test.generator.api.ResolverFor
 import ru.kontur.spring.test.generator.exceptions.NoSuchCaseException
 import ru.kontur.spring.test.generator.utils.generateCollection
 import ru.kontur.spring.test.generator.utils.generateMap
@@ -13,7 +13,7 @@ import kotlin.reflect.KType
 /**
  * @author Konstantin Volivach
  */
-@ValidatorFor(value = NotEmpty::class)
+@ResolverFor(value = NotEmpty::class)
 class NotEmptyGenerator : ValidationParamResolver {
     override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any? {
         when (clazz) {

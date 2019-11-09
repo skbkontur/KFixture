@@ -1,7 +1,7 @@
 package ru.kontur.spring.test.generator.generators
 
 import ru.kontur.spring.test.generator.api.ValidationParamResolver
-import ru.kontur.spring.test.generator.api.ValidatorFor
+import ru.kontur.spring.test.generator.api.ResolverFor
 import java.math.BigDecimal
 import java.math.BigInteger
 import javax.validation.constraints.Negative
@@ -11,7 +11,7 @@ import kotlin.reflect.KType
 /**
  * @author Konstantin Volivach
  */
-@ValidatorFor(value = Negative::class)
+@ResolverFor(value = Negative::class)
 class NegativeGenerator : ValidationParamResolver {
     private companion object {
         const val DEFAULT_MINUS = -1L
