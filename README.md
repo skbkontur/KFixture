@@ -15,7 +15,7 @@ Version 1.0
 You just inheritance from annotation and define your own behavior
 ```kotlin
 class NotEmptyGenerator : ValidationParamResolver {
-    override fun <T> process(param: T, clazz: KClass<*>, type: KType): T {
+    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any? {
         TODO("your implementation")
     }
 }
@@ -29,11 +29,11 @@ data class TestClass (
     val param1:String
 )
 
-@ExtendWith(SpringTestDataFrameworkParameterResolver::class)
+@ExtendWith(GenerateParameterResolver::class)
 class YourTest {
 
     @Test
-    fun test(@TestData param: TestClass) {
+    fun test(@Generate param: TestClass) {
     
     }
 }
