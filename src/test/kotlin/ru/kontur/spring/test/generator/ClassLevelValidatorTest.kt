@@ -6,7 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import ru.kontur.spring.test.generator.annotations.Generate
 import ru.kontur.spring.test.generator.api.SpringTestDataGenerator
 import ru.kontur.spring.test.generator.api.ValidationParamResolver
-import ru.kontur.spring.test.generator.api.ValidatorFor
+import ru.kontur.spring.test.generator.api.ResolverFor
 import ru.kontur.spring.test.generator.resolver.GenerateParameterResolver
 import ru.kontur.spring.test.generator.utils.generateString
 import javax.validation.Constraint
@@ -16,7 +16,7 @@ import javax.validation.Payload
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
-@ValidatorFor(value = ClassLevelValidatorTest.SomeValidation::class)
+@ResolverFor(value = ClassLevelValidatorTest.SomeValidation::class)
 class CustomResolver : ValidationParamResolver {
     override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any? {
         return ClassLevelValidatorTest.Data(

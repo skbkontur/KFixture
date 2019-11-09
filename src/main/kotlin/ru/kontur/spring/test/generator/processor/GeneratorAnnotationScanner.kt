@@ -3,10 +3,8 @@ package ru.kontur.spring.test.generator.processor
 import org.reflections.Reflections
 import ru.kontur.spring.test.generator.api.ValidationConstructor
 import ru.kontur.spring.test.generator.api.ValidationParamResolver
-import ru.kontur.spring.test.generator.api.ValidatorFor
-import ru.kontur.spring.test.generator.exceptions.NotResolverException
+import ru.kontur.spring.test.generator.api.ResolverFor
 import ru.kontur.spring.test.generator.exceptions.NotValidateAnnotationException
-import ru.kontur.spring.test.generator.exceptions.ResolverNotFoundException
 import javax.validation.Constraint
 import kotlin.reflect.KClass
 
@@ -47,7 +45,7 @@ class GeneratorAnnotationScanner {
         val validationResolver = Reflections(resolverPath)
 
         val annotationValidators = annotationResolver.getTypesAnnotatedWith(Constraint::class.java).map { it.kotlin }
-        val resolvers = validationResolver.getTypesAnnotatedWith(ValidatorFor::class.java).map { it.kotlin }
+        val resolvers = validationResolver.getTypesAnnotatedWith(ResolverFor::class.java).map { it.kotlin }
 
         val map = mutableMapOf<KClass<out Annotation>, ValidationParamResolver>()
         for (annotationClass in annotationValidators) {
@@ -56,7 +54,7 @@ class GeneratorAnnotationScanner {
             )
 
             val paramResolver =
-                resolvers.firstOrNull { it.java.getAnnotation(ValidatorFor::class.java).value == annotationClass }
+                resolvers.firstOrNull { it.java.getAnnotation(ResolverFor::class.java).value == annotationClass }
 //                    ?: throw ResolverNotFoundException(annotationClass)
 
             val constructor = paramResolver?.constructors?.toMutableList()?.get(0)

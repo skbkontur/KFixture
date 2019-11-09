@@ -1,7 +1,7 @@
 package ru.kontur.spring.test.generator.generators
 
 import ru.kontur.spring.test.generator.api.ValidationParamResolver
-import ru.kontur.spring.test.generator.api.ValidatorFor
+import ru.kontur.spring.test.generator.api.ResolverFor
 import java.time.*
 import java.time.chrono.HijrahDate
 import java.time.chrono.JapaneseDate
@@ -13,7 +13,7 @@ import javax.validation.constraints.Future
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
-@ValidatorFor(value = Future::class)
+@ResolverFor(value = Future::class)
 class FutureGenerator : ValidationParamResolver {
 
     override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any? {

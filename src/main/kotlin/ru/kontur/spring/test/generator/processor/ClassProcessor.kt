@@ -61,31 +61,38 @@ class ClassProcessor(
                         var result: Any? = null
                         for (it in annotationSum) {
                             val generator = generators[it.annotationClass]
-                                ?: throw ResolverNotFoundException(it.annotationClass)
-                            result = generator.process(result, clazz, type, it)
+                            result = if (generator != null) {
+                                generator.process(result, clazz, type, it)
+                            } else {
+                                createClazz(clazz) //Else create by default generators
+                            }
                         }
                         return result
                     }
                     else -> {
-                        val constructor = clazz.constructors.toMutableList()[0]
-                        val arguments = constructor.parameters.map { param ->
-                            val newAnnotation =
-                                clazz.java.declaredFields.firstOrNull { it.name == param.name }?.annotations?.toList()
-                            val paramClazz = param.type.classifier as KClass<*>
-                            if (paramClazz == clazz) {
-                                if (param.isOptional) {
-                                    return@map null
-                                } else {
-                                    throw NoOptionalRecursiveException("Recursive field can't be required field.name=${param.name} clazz=${paramClazz}")
-                                }
-                            }
-                            generateParam(param.type.classifier as KClass<*>, param.type, newAnnotation)
-                        }.toTypedArray()
-                        constructor.call(*arguments)
+                        createClazz(clazz)
                     }
                 }
             }
         }
+    }
+
+    private fun createClazz(clazz: KClass<*>): Any {
+        val constructor = clazz.constructors.toMutableList()[0]
+        val arguments = constructor.parameters.map { param ->
+            val newAnnotation =
+                clazz.java.declaredFields.firstOrNull { it.name == param.name }?.annotations?.toList()
+            val paramClazz = param.type.classifier as KClass<*>
+            if (paramClazz == clazz) {
+                if (param.isOptional) {
+                    return@map null
+                } else {
+                    throw NoOptionalRecursiveException("Recursive field can't be required field.name=${param.name} clazz=${paramClazz}")
+                }
+            }
+            generateParam(param.type.classifier as KClass<*>, param.type, newAnnotation)
+        }.toTypedArray()
+        return constructor.call(*arguments)
     }
 
     private fun processSimpleType(clazz: KClass<*>, type: KType, annotationList: List<Annotation>?): Any? {
