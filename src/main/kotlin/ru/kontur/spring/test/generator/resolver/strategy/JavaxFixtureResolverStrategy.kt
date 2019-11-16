@@ -5,7 +5,7 @@ import org.junit.jupiter.api.extension.ParameterContext
 import ru.kontur.spring.test.generator.api.SpringTestDataGenerator
 import ru.kontur.spring.test.generator.api.ValidationConstructor
 import ru.kontur.spring.test.generator.api.ValidationParamResolver
-import ru.kontur.spring.test.generator.processor.ClassProcessor
+import ru.kontur.spring.test.generator.processor.processors.JavaxFixtureProcessor
 import ru.kontur.spring.test.generator.processor.GeneratorAnnotationScanner
 import ru.kontur.spring.test.generator.resolver.ResolverStrategy
 import ru.kontur.spring.test.generator.utils.toKType
@@ -40,7 +40,8 @@ class JavaxFixtureResolverStrategy(
             constructors.putAll(usersConstructors)
         }
 
-        val classProcessor = ClassProcessor(generators, constructors)
+        val classProcessor =
+            JavaxFixtureProcessor(generators, constructors)
 
         val type = parameterContext.parameter.type
         return classProcessor.generateParam(type.kotlin, type.toKType(), null)

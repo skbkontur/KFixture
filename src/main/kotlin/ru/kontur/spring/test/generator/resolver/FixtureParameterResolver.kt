@@ -7,31 +7,22 @@ import ru.kontur.spring.test.generator.annotations.Fixture
 import ru.kontur.spring.test.generator.annotations.Generate
 import ru.kontur.spring.test.generator.annotations.JavaxFixture
 import ru.kontur.spring.test.generator.api.ValidationConstructor
-import ru.kontur.spring.test.generator.api.ValidationParamResolver
 import ru.kontur.spring.test.generator.constructors.UUIDConstructor
-import ru.kontur.spring.test.generator.processor.GeneratorAnnotationScanner
 import ru.kontur.spring.test.generator.resolver.strategy.FixtureResolverStrategy
 import ru.kontur.spring.test.generator.resolver.strategy.JavaxFixtureResolverStrategy
 import java.util.*
 import kotlin.reflect.KClass
 
 class FixtureParameterResolver : ParameterResolver {
-    private val defaultGenerators: Map<KClass<out Annotation>, ValidationParamResolver>
     private val defaultConstructors: Map<KClass<*>, ValidationConstructor<*>> = mapOf(
         UUID::class to UUIDConstructor()
     )
-    private val generatorAnnotationScanner = GeneratorAnnotationScanner()
 
     private val resolveStrategies = mapOf(
         Generate::class to JavaxFixtureResolverStrategy(defaultConstructors),
-        Fixture::class to FixtureResolverStrategy(),
+        Fixture::class to FixtureResolverStrategy(defaultConstructors),
         JavaxFixture::class to JavaxFixtureResolverStrategy(defaultConstructors)
     )
-
-    init {
-        val validatorsMap = generatorAnnotationScanner.getDefaultValidatorsMap()
-        defaultGenerators = validatorsMap
-    }
 
     override fun supportsParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Boolean {
         return parameterContext.parameter.annotations.filterIsInstance<Generate>().isNotEmpty() ||
