@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ParameterResolver
 import ru.kontur.spring.test.generator.annotations.Fixture
 import ru.kontur.spring.test.generator.annotations.Generate
 import ru.kontur.spring.test.generator.annotations.JavaxFixture
+import ru.kontur.spring.test.generator.api.SpringTestDataGenerator
 import ru.kontur.spring.test.generator.api.ValidationConstructor
 import ru.kontur.spring.test.generator.constructors.UUIDConstructor
 import ru.kontur.spring.test.generator.resolver.strategy.FixtureResolverStrategy
@@ -20,7 +21,6 @@ class FixtureParameterResolver : ParameterResolver {
 
     private val resolveStrategies = mapOf(
         Generate::class to JavaxFixtureResolverStrategy(defaultConstructors),
-        Fixture::class to FixtureResolverStrategy(defaultConstructors),
         JavaxFixture::class to JavaxFixtureResolverStrategy(defaultConstructors)
     )
 
@@ -41,8 +41,12 @@ class FixtureParameterResolver : ParameterResolver {
                     ?: throw IllegalArgumentException("Can't find strategy for such annotation")
             }
             fixture.isNotEmpty() -> {
-                resolveStrategies[fixture.first().annotationClass]?.resolve(parameterContext, extensionContext)
-                    ?: throw IllegalArgumentException("Can't find strategy for such annotation")
+                val annotation =
+                    extensionContext.testInstance.get()::class.annotations.firstOrNull { it is SpringTestDataGenerator } as? SpringTestDataGenerator
+                val fixtureStrategy = FixtureResolverStrategy(
+                    defaultConstructors,
+                    requireNotNull(annotation?.value) { "Please annotate your class with path" })
+                fixtureStrategy.resolve(parameterContext, extensionContext)
             }
             javaxFixture.isNotEmpty() -> {
                 resolveStrategies[javaxFixture.first().annotationClass]?.resolve(parameterContext, extensionContext)

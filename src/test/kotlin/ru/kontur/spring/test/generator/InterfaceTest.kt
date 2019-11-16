@@ -1,31 +1,26 @@
 package ru.kontur.spring.test.generator
 
-import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import ru.kontur.spring.test.generator.annotations.Fixture
 import ru.kontur.spring.test.generator.api.SpringTestDataGenerator
 import ru.kontur.spring.test.generator.resolver.FixtureParameterResolver
-import java.time.LocalDate
-import javax.validation.constraints.Past
 
 @ExtendWith(FixtureParameterResolver::class)
 @SpringTestDataGenerator(value = "ru.kontur.spring.test.generator")
-class FixtureTest {
+class InterfaceTest {
 
-    annotation class Custom
+    interface TestInterface {
+        val param: String
+    }
+
+    class SimpleTestInstance(override val param: String) : TestInterface
 
     data class TestData(
-        @field:Custom
-        val param: String,
-        @field:Past
-        val secondParam: LocalDate
+        val field: TestInterface
     )
 
     @Test
-    fun test(
-        @Fixture clazz: TestData
-    ) {
-        assertNotNull(clazz)
+    fun test(@Fixture data: TestData) {
     }
 }

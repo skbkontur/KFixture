@@ -12,7 +12,8 @@ import java.lang.RuntimeException
 import kotlin.reflect.KClass
 
 class FixtureResolverStrategy(
-    private val defaultConstructors: Map<KClass<*>, ValidationConstructor<*>>
+    private val defaultConstructors: Map<KClass<*>, ValidationConstructor<*>>,
+    private val userPath: String
 ) : ResolverStrategy {
     private val generatorAnnotationScanner = GeneratorAnnotationScanner()
 
@@ -29,7 +30,7 @@ class FixtureResolverStrategy(
             constructors.putAll(usersConstructors)
         }
 
-        val clazzProcessor = FixtureProcessor(constructors)
+        val clazzProcessor = FixtureProcessor(constructors, userPath)
 
         val type = parameterContext.parameter.type
         return clazzProcessor.generateParam(type.kotlin, type.toKType(), null)

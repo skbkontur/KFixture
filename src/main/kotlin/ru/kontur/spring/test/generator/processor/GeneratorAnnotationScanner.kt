@@ -37,6 +37,11 @@ class GeneratorAnnotationScanner {
         }
     }
 
+    fun getSubTypeOf(clazz: KClass<*>, userPath: String): Class<*> {
+        val resolver = Reflections(userPath)
+        return resolver.getSubTypesOf(clazz.java).first()
+    }
+
     private fun internalValidatorsMap(
         annotationPath: String,
         resolverPath: String
