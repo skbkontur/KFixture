@@ -39,7 +39,8 @@ class GeneratorAnnotationScanner {
 
     fun getSubTypeOf(clazz: KClass<*>, userPath: String): Class<*> {
         val resolver = Reflections(userPath)
-        return resolver.getSubTypesOf(clazz.java).first()
+        return resolver.getSubTypesOf(clazz.java).firstOrNull()
+            ?: throw IllegalArgumentException("Collection of subType is empty, clazz=${clazz.qualifiedName}")
     }
 
     private fun internalValidatorsMap(
