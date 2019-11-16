@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/skbkontur/spring-test-data-generator.svg?branch=master)](https://travis-ci.org/skbkontur/spring-test-data-generator)
+
 ### What is about?
 
 Library give a parameter resolver,
@@ -6,6 +8,7 @@ which can be used to generate valid data for your class to pass validation of yo
 Version 1.0
 
 * Generate data for all javax validation annotations.
+* Also generate data ignore javax annotations
 * Provide an interface to define custom rules for validation.
 * Valid param go through chain of validation.
 * Suite of test utils for generation parameters and so on.
@@ -21,6 +24,11 @@ class NotEmptyGenerator : ValidationParamResolver {
 }
 ```
 
+#### Fixture annotations
+
+* Fixture - generate random instance of your class, ignore all javax annotations
+* JavaxFixture - generate valid random instance of your class, use all annotations
+
 ### Use in your test
 
 ```kotlin
@@ -33,7 +41,7 @@ data class TestClass (
 class YourTest {
 
     @Test
-    fun test(@Generate param: TestClass) {
+    fun test(@JavaxFixture param: TestClass) {
     
     }
 }
