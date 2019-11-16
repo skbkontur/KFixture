@@ -7,6 +7,7 @@ import ru.kontur.spring.test.generator.processor.AbstractGenerateProcessor
 import kotlin.random.Random
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
+import kotlin.reflect.jvm.isAccessible
 
 /**
  * @author Konstantin Volivach
@@ -35,6 +36,7 @@ class FixtureProcessor(
 
     private fun createClazz(clazz: KClass<*>): Any {
         val constructor = clazz.constructors.toMutableList()[0]
+        constructor.isAccessible = true
         val arguments = constructor.parameters.map { param ->
             val paramClazz = param.type.classifier as KClass<*>
             if (paramClazz == clazz) {
