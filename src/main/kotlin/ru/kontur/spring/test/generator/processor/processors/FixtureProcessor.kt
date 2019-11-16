@@ -4,6 +4,7 @@ import ru.kontur.spring.test.generator.api.ValidationConstructor
 import ru.kontur.spring.test.generator.exceptions.NoOptionalRecursiveException
 import ru.kontur.spring.test.generator.extensions.isSimple
 import ru.kontur.spring.test.generator.processor.AbstractGenerateProcessor
+import ru.kontur.spring.test.generator.processor.GeneratorAnnotationScanner
 import kotlin.random.Random
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -13,8 +14,10 @@ import kotlin.reflect.jvm.isAccessible
  * @author Konstantin Volivach
  */
 class FixtureProcessor(
-    private val constructors: Map<KClass<*>, ValidationConstructor<*>>
+    private val constructors: Map<KClass<*>, ValidationConstructor<*>>,
+    private val userPath: String
 ) : AbstractGenerateProcessor() {
+    private val generatorAnnotationScanner = GeneratorAnnotationScanner()
 
     override fun generateParam(clazz: KClass<*>, type: KType, annotation: List<Annotation>?): Any? {
         return when {
@@ -35,7 +38,11 @@ class FixtureProcessor(
     }
 
     private fun createClazz(clazz: KClass<*>): Any {
-        val constructor = clazz.constructors.toMutableList()[0]
+        val constructor = if (clazz.isAbstract) {
+            generatorAnnotationScanner.getSubTypeOf(clazz, userPath).kotlin.constructors.toMutableList()[0]
+        } else {
+            clazz.constructors.toMutableList()[0]
+        }
         constructor.isAccessible = true
         val arguments = constructor.parameters.map { param ->
             val paramClazz = param.type.classifier as KClass<*>
