@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import ru.kontur.spring.test.generator.annotations.Generate
-import ru.kontur.spring.test.generator.resolver.GenerateParameterResolver
+import ru.kontur.spring.test.generator.resolver.FixtureParameterResolver
 import javax.validation.Validation
 import javax.validation.Validator
 import javax.validation.constraints.Pattern
 
-@ExtendWith(GenerateParameterResolver::class)
+@ExtendWith(FixtureParameterResolver::class)
 @Disabled
 class PatternGenerator {
 

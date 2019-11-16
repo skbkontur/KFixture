@@ -7,7 +7,7 @@ import ru.kontur.spring.test.generator.annotations.Generate
 import ru.kontur.spring.test.generator.api.SpringTestDataGenerator
 import ru.kontur.spring.test.generator.api.ValidationParamResolver
 import ru.kontur.spring.test.generator.api.ResolverFor
-import ru.kontur.spring.test.generator.resolver.GenerateParameterResolver
+import ru.kontur.spring.test.generator.resolver.FixtureParameterResolver
 import ru.kontur.spring.test.generator.utils.generateString
 import javax.validation.Constraint
 import javax.validation.ConstraintValidator
@@ -26,7 +26,7 @@ class CustomResolver : ValidationParamResolver {
     }
 }
 
-@ExtendWith(GenerateParameterResolver::class)
+@ExtendWith(FixtureParameterResolver::class)
 @SpringTestDataGenerator(value = "ru.kontur.spring.test.generator")
 class ClassLevelValidatorTest {
     @SomeValidation
@@ -51,7 +51,6 @@ class ClassLevelValidatorTest {
                 }
                 return true
             }
-
         }
     }
 

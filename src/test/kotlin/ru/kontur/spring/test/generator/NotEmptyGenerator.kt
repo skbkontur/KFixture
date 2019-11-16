@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import ru.kontur.spring.test.generator.annotations.Generate
 import ru.kontur.spring.test.generator.api.SpringTestDataGenerator
-import ru.kontur.spring.test.generator.resolver.GenerateParameterResolver
+import ru.kontur.spring.test.generator.resolver.FixtureParameterResolver
 import javax.validation.constraints.NotEmpty
 
-@ExtendWith(GenerateParameterResolver::class)
+@ExtendWith(FixtureParameterResolver::class)
 @SpringTestDataGenerator(value = "ru.kontur.spring.test.generator")
 class NotEmptyGenerator {
 

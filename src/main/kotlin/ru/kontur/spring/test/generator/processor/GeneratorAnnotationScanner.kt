@@ -68,6 +68,4 @@ class GeneratorAnnotationScanner {
         }
         return map
     }
-
-
 }

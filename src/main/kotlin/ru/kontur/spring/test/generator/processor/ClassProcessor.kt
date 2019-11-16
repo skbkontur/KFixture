@@ -63,7 +63,7 @@ class ClassProcessor(
                             result = if (generator != null) {
                                 generator.process(result, clazz, type, it)
                             } else {
-                                createClazz(clazz) //Else create by default generators
+                                createClazz(clazz) // Else create by default generators
                             }
                         }
                         return result
@@ -86,7 +86,7 @@ class ClassProcessor(
                 if (param.isOptional) {
                     return@map null
                 } else {
-                    throw NoOptionalRecursiveException("Recursive field can't be required field.name=${param.name} clazz=${paramClazz}")
+                    throw NoOptionalRecursiveException("Recursive field can't be required field.name=${param.name} clazz=$paramClazz")
                 }
             }
             generateParam(param.type.classifier as KClass<*>, param.type, newAnnotation)
