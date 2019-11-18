@@ -6,6 +6,7 @@ import ru.kontur.spring.test.generator.exceptions.NoOptionalRecursiveException
 import ru.kontur.spring.test.generator.exceptions.NoSuchValidAnnotationException
 import ru.kontur.spring.test.generator.extensions.isSimple
 import ru.kontur.spring.test.generator.processor.AbstractGenerateProcessor
+import ru.kontur.spring.test.generator.processor.GeneratorAnnotationScanner
 import javax.validation.Constraint
 import javax.validation.constraints.*
 import kotlin.random.Random
@@ -17,8 +18,10 @@ import kotlin.reflect.KType
  */
 class JavaxFixtureProcessor(
     private val generators: Map<KClass<out Annotation>, ValidationParamResolver>,
-    private val constructors: Map<KClass<*>, ValidationConstructor<*>>
+    private val constructors: Map<KClass<*>, ValidationConstructor<*>>,
+    private val userPath: String?
 ) : AbstractGenerateProcessor() {
+    private val generatorAnnotationScanner = GeneratorAnnotationScanner()
 
     private val defaultPriority: Map<KClass<out Annotation>, Long> = mapOf(
         AssertFalse::class to 0L,
@@ -78,7 +81,12 @@ class JavaxFixtureProcessor(
     }
 
     private fun createClazz(clazz: KClass<*>): Any {
-        val constructor = clazz.constructors.toMutableList()[0]
+        val constructor = if (clazz.isAbstract) {
+            requireNotNull(userPath) { "Please add path if you want to use abstractions" }
+            generatorAnnotationScanner.getSubTypeOf(clazz, userPath).kotlin.constructors.toMutableList()[0]
+        } else {
+            clazz.constructors.toMutableList()[0]
+        }
         val arguments = constructor.parameters.map { param ->
             val newAnnotation =
                 clazz.java.declaredFields.firstOrNull { it.name == param.name }?.annotations?.toList()
