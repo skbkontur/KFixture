@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import ru.kontur.spring.test.generator.annotations.Generate
+import ru.kontur.spring.test.generator.annotations.JavaxFixture
 import ru.kontur.spring.test.generator.resolver.FixtureParameterResolver
 import javax.validation.Validation
 import javax.validation.Validator
@@ -31,7 +31,7 @@ class PatternGenerator {
     )
 
     @Test
-    fun generateValidData(@Generate data: TestData) {
+    fun generateValidData(@JavaxFixture data: TestData) {
         val results = validator.validate(data)
         assertEquals(0, results.size)
     }

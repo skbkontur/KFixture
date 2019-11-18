@@ -4,7 +4,6 @@ import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterContext
 import org.junit.jupiter.api.extension.ParameterResolver
 import ru.kontur.spring.test.generator.annotations.Fixture
-import ru.kontur.spring.test.generator.annotations.Generate
 import ru.kontur.spring.test.generator.annotations.JavaxFixture
 import ru.kontur.spring.test.generator.api.FixtureGenerator
 import ru.kontur.spring.test.generator.processor.GeneratorAnnotationScanner
@@ -16,8 +15,7 @@ import ru.kontur.spring.test.generator.resolver.strategy.JavaxFixtureResolverStr
  */
 class FixtureParameterResolver : ParameterResolver {
     override fun supportsParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Boolean {
-        return parameterContext.parameter.annotations.filterIsInstance<Generate>().isNotEmpty() ||
-            parameterContext.parameter.annotations.filterIsInstance<Fixture>().isNotEmpty() ||
+        return parameterContext.parameter.annotations.filterIsInstance<Fixture>().isNotEmpty() ||
             parameterContext.parameter.annotations.filterIsInstance<JavaxFixture>().isNotEmpty()
     }
 
@@ -30,14 +28,9 @@ class FixtureParameterResolver : ParameterResolver {
         )
 
         val fixture = parameterContext.parameter.annotations.filterIsInstance<Fixture>()
-        val legacyFixture = parameterContext.parameter.annotations.filterIsInstance<Generate>()
         val javaxFixture = parameterContext.parameter.annotations.filterIsInstance<JavaxFixture>()
 
         return when {
-            legacyFixture.isNotEmpty() -> {
-                val javaxFixtureStrategy = JavaxFixtureResolverStrategy(annotationScanner)
-                javaxFixtureStrategy.resolve(parameterContext, extensionContext)
-            }
             fixture.isNotEmpty() -> {
                 val fixtureStrategy = FixtureResolverStrategy(
                     annotationScanner
