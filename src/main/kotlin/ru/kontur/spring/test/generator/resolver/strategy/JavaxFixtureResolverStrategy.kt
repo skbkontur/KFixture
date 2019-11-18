@@ -41,7 +41,7 @@ class JavaxFixtureResolverStrategy(
         }
 
         val classProcessor =
-            JavaxFixtureProcessor(generators, constructors)
+            JavaxFixtureProcessor(generators, constructors, annotation?.value)
 
         val type = parameterContext.parameter.type
         return classProcessor.generateParam(type.kotlin, type.toKType(), null)

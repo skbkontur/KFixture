@@ -45,7 +45,7 @@ class FixtureParameterResolver : ParameterResolver {
                     extensionContext.testInstance.get()::class.annotations.firstOrNull { it is SpringTestDataGenerator } as? SpringTestDataGenerator
                 val fixtureStrategy = FixtureResolverStrategy(
                     defaultConstructors,
-                    requireNotNull(annotation?.value) { "Please annotate your class with path" })
+                    annotation?.value)
                 fixtureStrategy.resolve(parameterContext, extensionContext)
             }
             javaxFixture.isNotEmpty() -> {

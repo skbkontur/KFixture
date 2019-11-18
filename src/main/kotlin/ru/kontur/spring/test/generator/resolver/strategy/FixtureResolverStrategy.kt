@@ -13,7 +13,7 @@ import kotlin.reflect.KClass
 
 class FixtureResolverStrategy(
     private val defaultConstructors: Map<KClass<*>, ValidationConstructor<*>>,
-    private val userPath: String
+    private val userPath: String?
 ) : ResolverStrategy {
     private val generatorAnnotationScanner = GeneratorAnnotationScanner()
 

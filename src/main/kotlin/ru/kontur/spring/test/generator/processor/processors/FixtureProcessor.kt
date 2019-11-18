@@ -15,7 +15,7 @@ import kotlin.reflect.jvm.isAccessible
  */
 class FixtureProcessor(
     private val constructors: Map<KClass<*>, ValidationConstructor<*>>,
-    private val userPath: String
+    private val userPath: String?
 ) : AbstractGenerateProcessor() {
     private val generatorAnnotationScanner = GeneratorAnnotationScanner()
 
@@ -39,9 +39,14 @@ class FixtureProcessor(
 
     private fun createClazz(clazz: KClass<*>): Any {
         val constructor = if (clazz.isAbstract) {
-            generatorAnnotationScanner.getSubTypeOf(clazz, userPath).kotlin.constructors.toMutableList()[0]
+            requireNotNull(userPath) { "Please annotate your class and add userPath if you want to use an abstractions" }
+            val constructors = generatorAnnotationScanner.getSubTypeOf(clazz, userPath).kotlin.constructors.toMutableList()
+            constructors.sortBy { it.parameters.size }
+            constructors[0]
         } else {
-            clazz.constructors.toMutableList()[0]
+            val constructors = clazz.constructors.toMutableList()
+            constructors.sortBy { it.parameters.size }
+            constructors[0]
         }
         constructor.isAccessible = true
         val arguments = constructor.parameters.map { param ->
