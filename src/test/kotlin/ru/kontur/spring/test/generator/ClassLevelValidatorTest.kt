@@ -3,8 +3,8 @@ package ru.kontur.spring.test.generator
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import ru.kontur.spring.test.generator.annotations.Generate
-import ru.kontur.spring.test.generator.api.SpringTestDataGenerator
+import ru.kontur.spring.test.generator.annotations.JavaxFixture
+import ru.kontur.spring.test.generator.api.FixtureGenerator
 import ru.kontur.spring.test.generator.api.ValidationParamResolver
 import ru.kontur.spring.test.generator.api.ResolverFor
 import ru.kontur.spring.test.generator.resolver.FixtureParameterResolver
@@ -27,7 +27,7 @@ class CustomResolver : ValidationParamResolver {
 }
 
 @ExtendWith(FixtureParameterResolver::class)
-@SpringTestDataGenerator(value = "ru.kontur.spring.test.generator")
+@FixtureGenerator(value = ["ru.kontur.spring.test.generator"])
 class ClassLevelValidatorTest {
     @SomeValidation
     data class Data(
@@ -55,7 +55,7 @@ class ClassLevelValidatorTest {
     }
 
     @Test
-    fun test(@Generate data: Data) {
+    fun test(@JavaxFixture data: Data) {
         val result = data.param1 == null && data.param2 != null || data.param1 != null && data.param2 == null
         assertTrue(result)
     }
