@@ -3,7 +3,7 @@ package ru.kontur.spring.test.generator
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import ru.kontur.spring.test.generator.annotations.Generate
+import ru.kontur.spring.test.generator.annotations.JavaxFixture
 import ru.kontur.spring.test.generator.data.TestModel
 import ru.kontur.spring.test.generator.resolver.FixtureParameterResolver
 
@@ -23,17 +23,17 @@ class TestGenerator {
     )
 
     @Test
-    fun test(@Generate test: SimpleClass) {
+    fun test(@JavaxFixture test: SimpleClass) {
         assertNotNull(test.param)
     }
 
     @Test
-    fun testWithEnum(@Generate data: ClassWithEmum) {
+    fun testWithEnum(@JavaxFixture data: ClassWithEmum) {
         assertNotNull(data)
     }
 
     @Test
-    fun testWithTestData1(@Generate data: TestModel) {
+    fun testWithTestData1(@JavaxFixture data: TestModel) {
         assertNotNull(data)
     }
 }

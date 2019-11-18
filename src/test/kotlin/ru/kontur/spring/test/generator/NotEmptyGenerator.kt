@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import ru.kontur.spring.test.generator.annotations.Generate
+import ru.kontur.spring.test.generator.annotations.JavaxFixture
 import ru.kontur.spring.test.generator.api.FixtureGenerator
 import ru.kontur.spring.test.generator.resolver.FixtureParameterResolver
 import javax.validation.constraints.NotEmpty
@@ -36,23 +36,23 @@ class NotEmptyGenerator {
     )
 
     @Test
-    fun test2(@Generate test: SimpleClassWithAnnotation) {
+    fun test2(@JavaxFixture test: SimpleClassWithAnnotation) {
         Assertions.assertNotNull(test.param)
         assertTrue(test.param.isNotEmpty())
     }
 
     @Test
-    fun generateList(@Generate test: SimpleClassWithCollection) {
+    fun generateList(@JavaxFixture test: SimpleClassWithCollection) {
         assertTrue(test.param.isNotEmpty())
     }
 
     @Test
-    fun generateMap(@Generate test: SimpleClassWithMap) {
+    fun generateMap(@JavaxFixture test: SimpleClassWithMap) {
         assertTrue(test.param.isNotEmpty())
     }
 
     @Test
-    fun generateDifficultClass(@Generate test: DifficultClass) {
+    fun generateDifficultClass(@JavaxFixture test: DifficultClass) {
         assertTrue(test.param.isNotEmpty())
         assertTrue(test.param1.param.isNotEmpty())
         assertTrue(test.param2.param.isNotEmpty())

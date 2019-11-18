@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import ru.kontur.spring.test.generator.annotations.Generate
+import ru.kontur.spring.test.generator.annotations.JavaxFixture
 import ru.kontur.spring.test.generator.api.FixtureGenerator
 import ru.kontur.spring.test.generator.resolver.FixtureParameterResolver
 
@@ -19,7 +19,7 @@ class RecursionTest {
 
     @Test
     fun testGenerate(
-        @Generate data: RecursionData
+        @JavaxFixture data: RecursionData
     ) {
         assertNotNull(data)
         assertNotNull(data.someParam)
