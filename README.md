@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/skbkontur/spring-test-data-generator.svg?branch=master)](https://travis-ci.org/skbkontur/spring-test-data-generator)
+[![Build Status](https://travis-ci.org/skbkontur/KFixture.svg?branch=master)](https://travis-ci.org/skbkontur/KFixture)
 
 ### What is about?
 
