@@ -4,6 +4,7 @@ import ru.kontur.spring.test.generator.api.ValidationConstructor
 import ru.kontur.spring.test.generator.exceptions.NoOptionalRecursiveException
 import ru.kontur.spring.test.generator.extensions.isSimple
 import ru.kontur.spring.test.generator.processor.AbstractGenerateProcessor
+import ru.kontur.spring.test.generator.processor.FixtureUtils
 import ru.kontur.spring.test.generator.processor.GeneratorAnnotationScanner
 import kotlin.random.Random
 import kotlin.reflect.KClass
@@ -37,15 +38,7 @@ class FixtureProcessor(
     }
 
     private fun createClazz(clazz: KClass<*>): Any {
-        val constructor = if (clazz.isAbstract) {
-            val constructors = generatorAnnotationScanner.getSubTypeOf(clazz).kotlin.constructors.toMutableList()
-            constructors.sortBy { it.parameters.size }
-            constructors[0]
-        } else {
-            val constructors = clazz.constructors.toMutableList()
-            constructors.sortBy { it.parameters.size }
-            constructors[0]
-        }
+        val constructor = FixtureUtils.getCreatorFunction(clazz, generatorAnnotationScanner)
         constructor.isAccessible = true
         val arguments = constructor.parameters.map { param ->
             val paramClazz = param.type.classifier as KClass<*>
@@ -58,6 +51,8 @@ class FixtureProcessor(
             }
             generateParam(param.type.classifier as KClass<*>, param.type, null)
         }.toTypedArray()
-        return constructor.call(*arguments)
+        return requireNotNull(constructor.call(*arguments)) {
+            "Constructor of your clazz is null, clazz=${clazz.simpleName}, it can happens if one of your static function return null"
+        }
     }
 }

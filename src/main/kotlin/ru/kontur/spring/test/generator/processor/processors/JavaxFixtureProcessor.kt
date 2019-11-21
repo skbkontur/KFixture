@@ -6,6 +6,7 @@ import ru.kontur.spring.test.generator.exceptions.NoOptionalRecursiveException
 import ru.kontur.spring.test.generator.exceptions.NoSuchValidAnnotationException
 import ru.kontur.spring.test.generator.extensions.isSimple
 import ru.kontur.spring.test.generator.processor.AbstractGenerateProcessor
+import ru.kontur.spring.test.generator.processor.FixtureUtils
 import ru.kontur.spring.test.generator.processor.GeneratorAnnotationScanner
 import javax.validation.Constraint
 import javax.validation.constraints.*
@@ -80,11 +81,7 @@ class JavaxFixtureProcessor(
     }
 
     private fun createClazz(clazz: KClass<*>): Any {
-        val constructor = if (clazz.isAbstract) {
-            generatorAnnotationScanner.getSubTypeOf(clazz).kotlin.constructors.toMutableList()[0]
-        } else {
-            clazz.constructors.toMutableList()[0]
-        }
+        val constructor = FixtureUtils.getCreatorFunction(clazz, generatorAnnotationScanner)
         val arguments = constructor.parameters.map { param ->
             val newAnnotation =
                 clazz.java.declaredFields.firstOrNull { it.name == param.name }?.annotations?.toList()
@@ -98,7 +95,9 @@ class JavaxFixtureProcessor(
             }
             generateParam(param.type.classifier as KClass<*>, param.type, newAnnotation)
         }.toTypedArray()
-        return constructor.call(*arguments)
+        return requireNotNull(constructor.call(*arguments)) {
+            "Constructor of your clazz is null, clazz=${clazz.simpleName}, it can happens if one of your static function return null"
+        }
     }
 
     private fun processSimpleType(clazz: KClass<*>, type: KType, annotationList: List<Annotation>?): Any? {
