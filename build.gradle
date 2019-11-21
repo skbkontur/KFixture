@@ -5,7 +5,7 @@ plugins {
     id "maven-publish"
 }
 
-version '0.3'
+version '0.3.2'
 
 repositories {
     mavenCentral()
@@ -35,7 +35,7 @@ publishing {
                 classifier "javadoc"
             }
             groupId 'ru.kontur'
-            artifactId 'spring-test-data-generator'
+            artifactId 'KFixture'
             version project.version
         }
     }
@@ -48,10 +48,10 @@ bintray {
 
     pkg {
         repo = 'kontur'
-        name = 'spring-test-data-generator'
+        name = 'KFixture'
         userOrg = 'kostya05983'
         licenses = ['MIT']
-        vcsUrl = 'https://github.com/skbkontur/spring-test-data-generator'
+        vcsUrl = 'https://github.com/skbkontur/KFixture'
         version {
             name = project.version
             desc = project.version
