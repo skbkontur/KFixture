@@ -4,7 +4,7 @@ import ru.kontur.spring.test.generator.api.ValidationConstructor
 import ru.kontur.spring.test.generator.exceptions.NoOptionalRecursiveException
 import ru.kontur.spring.test.generator.extensions.isSimple
 import ru.kontur.spring.test.generator.processor.AbstractGenerateProcessor
-import ru.kontur.spring.test.generator.processor.FixtureUtils
+import ru.kontur.spring.test.generator.utils.FixtureUtils
 import ru.kontur.spring.test.generator.processor.GeneratorAnnotationScanner
 import kotlin.random.Random
 import kotlin.reflect.KClass
