@@ -1,0 +1,58 @@
+package ru.kontur.test.kfixture.generators
+
+import ru.kontur.test.kfixture.api.ValidationParamResolver
+import ru.kontur.test.kfixture.api.ResolverFor
+import java.time.*
+import java.time.chrono.HijrahDate
+import java.time.chrono.JapaneseDate
+import java.time.chrono.MinguoDate
+import java.time.chrono.ThaiBuddhistDate
+import java.time.temporal.ChronoUnit
+import java.util.*
+import javax.validation.constraints.Future
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
+
+@ResolverFor(value = Future::class)
+class FutureGenerator : ValidationParamResolver {
+
+    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any? {
+        when (clazz) {
+            Date::class -> {
+                return Date.from(Instant.now().plus(1000, ChronoUnit.HOURS))
+            }
+            Calendar::class -> {
+                return Calendar.getInstance() // TODO
+            }
+            Instant::class -> {
+            }
+            LocalDate::class -> {
+            }
+            LocalDateTime::class -> {
+            }
+            LocalTime::class -> {
+            }
+            MonthDay::class -> {
+            }
+            OffsetDateTime::class -> {
+            }
+            OffsetTime::class -> {
+            }
+            Year::class -> {
+            }
+            YearMonth::class -> {
+            }
+            ZonedDateTime::class -> {
+            }
+            HijrahDate::class -> {
+            }
+            JapaneseDate::class -> {
+            }
+            MinguoDate::class -> {
+            }
+            ThaiBuddhistDate::class -> {
+            }
+        }
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+    }
+}
