@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import ru.kontur.test.kfixture.annotations.JavaxFixture
-import ru.kontur.test.kfixture.api.FixtureGenerator
+import ru.kontur.test.kfixture.api.FixtureMetaGenerator
 import ru.kontur.test.kfixture.api.ValidationParamResolver
 import ru.kontur.test.kfixture.api.ResolverFor
 import ru.kontur.test.kfixture.resolver.FixtureParameterResolver
@@ -27,7 +27,7 @@ class CustomResolver : ValidationParamResolver {
 }
 
 @ExtendWith(FixtureParameterResolver::class)
-@FixtureGenerator(value = ["ru.kontur.spring.test.generator"])
+@FixtureMetaGenerator(pathes = ["ru.kontur.spring.test.generator"])
 class ClassLevelValidatorTest {
     @SomeValidation
     data class Data(

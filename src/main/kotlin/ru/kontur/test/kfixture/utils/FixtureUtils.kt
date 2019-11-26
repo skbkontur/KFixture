@@ -34,7 +34,7 @@ object FixtureUtils {
     }
 
     fun getCreatorFunction(clazz: KClass<*>, annotationScanner: GeneratorAnnotationScanner): KFunction<*> {
-        val searchClazz = if (clazz.isAbstract) {
+        val searchClazz = if (clazz.isAbstract || clazz.isSealed) {
             annotationScanner.getSubTypeOf(clazz).kotlin
         } else {
             clazz
