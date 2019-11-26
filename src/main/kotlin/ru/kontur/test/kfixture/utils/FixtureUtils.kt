@@ -6,6 +6,7 @@ import java.lang.RuntimeException
 import java.lang.reflect.Modifier
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
+import kotlin.reflect.KVisibility
 import kotlin.reflect.full.functions
 import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.jvm.javaMethod
@@ -53,6 +54,7 @@ object FixtureUtils {
 
         val result = (functions + constructors).toMutableList()
         result.sortBy { it.parameters.size }
+        result.sortBy { it.visibility ?: KVisibility.PUBLIC }
         return result[0]
     }
 }
