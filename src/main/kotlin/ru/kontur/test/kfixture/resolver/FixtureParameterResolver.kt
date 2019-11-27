@@ -5,7 +5,7 @@ import org.junit.jupiter.api.extension.ParameterContext
 import org.junit.jupiter.api.extension.ParameterResolver
 import ru.kontur.test.kfixture.annotations.Fixture
 import ru.kontur.test.kfixture.annotations.JavaxFixture
-import ru.kontur.test.kfixture.api.FixtureMetaGenerator
+import ru.kontur.test.kfixture.api.FixtureGeneratorMeta
 import ru.kontur.test.kfixture.processor.GeneratorAnnotationScanner
 import ru.kontur.test.kfixture.resolver.strategy.FixtureResolverStrategy
 import ru.kontur.test.kfixture.resolver.strategy.JavaxFixtureResolverStrategy
@@ -21,8 +21,8 @@ class FixtureParameterResolver : ParameterResolver {
 
     override fun resolveParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Any {
         val meta = extensionContext.testInstance.get()::class.annotations.firstOrNull {
-            it is FixtureMetaGenerator
-        } as? FixtureMetaGenerator
+            it is FixtureGeneratorMeta
+        } as? FixtureGeneratorMeta
         val annotationScanner = GeneratorAnnotationScanner(
             meta?.pathes?.toList() ?: listOf()
         )
