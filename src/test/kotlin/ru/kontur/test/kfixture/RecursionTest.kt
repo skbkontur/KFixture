@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import ru.kontur.test.kfixture.annotations.JavaxFixture
-import ru.kontur.test.kfixture.api.FixtureMetaGenerator
+import ru.kontur.test.kfixture.api.FixtureGeneratorMeta
 import ru.kontur.test.kfixture.resolver.FixtureParameterResolver
 
 @ExtendWith(FixtureParameterResolver::class)
-@FixtureMetaGenerator(pathes = ["ru.kontur.spring.test.generator"])
+@FixtureGeneratorMeta(pathes = ["ru.kontur.spring.test.generator"])
 class RecursionTest {
 
     data class RecursionData(
