@@ -37,6 +37,9 @@ abstract class AbstractGenerateProcessor : GenerateProcessor {
             Map::class -> {
                 generateMap(10, kclass, type!!, annotationList)
             }
+            Boolean::class -> {
+                Random.nextBoolean()
+            }
             else -> null
         }
     }
