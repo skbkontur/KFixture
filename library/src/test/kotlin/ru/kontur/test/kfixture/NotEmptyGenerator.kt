@@ -36,7 +36,7 @@ class NotEmptyGenerator {
     )
 
     @Test
-    fun test2(@JavaxFixture test: SimpleClassWithAnnotation) {
+    fun test2(@JavaxFixture test: SimpleClassWithAnnotation, @JavaxFixture test2: SimpleClassWithAnnotation) {
         Assertions.assertNotNull(test.param)
         assertTrue(test.param.isNotEmpty())
     }

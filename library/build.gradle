@@ -21,6 +21,9 @@ dependencies {
 }
 compileJava.dependsOn(processResources)
 
+test.testLogging {
+    showStandardStreams = true
+}
 
 publishing {
     publications {
