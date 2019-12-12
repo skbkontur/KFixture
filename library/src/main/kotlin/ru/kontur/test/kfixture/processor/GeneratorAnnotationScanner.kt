@@ -13,9 +13,9 @@ import kotlin.reflect.KClass
  * Scan users code and get validations and resolvers for them
  */
 class GeneratorAnnotationScanner(
-    pathes: List<String>
+    private val reflections: Reflections
 ) {
-    private val reflections: Reflections = Reflections(pathes + listOf(LIBRARY_PATH, JAVAX_PATH))
+    constructor(paths: List<String>) : this(Reflections(paths + listOf(LIBRARY_PATH, JAVAX_PATH)))
 
     fun getValidatorsMap(): Map<KClass<out Annotation>, ValidationParamResolver> {
         return internalValidatorsMap()

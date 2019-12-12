@@ -3,6 +3,7 @@ package ru.kontur.test.kfixture.resolver
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterContext
 import org.junit.jupiter.api.extension.ParameterResolver
+import org.reflections.Reflections
 import ru.kontur.test.kfixture.annotations.Fixture
 import ru.kontur.test.kfixture.annotations.JavaxFixture
 import ru.kontur.test.kfixture.api.FixtureGeneratorMeta
@@ -23,8 +24,9 @@ class FixtureParameterResolver : ParameterResolver {
         val meta = extensionContext.testInstance.get()::class.annotations.firstOrNull {
             it is FixtureGeneratorMeta
         } as? FixtureGeneratorMeta
+
         val annotationScanner = GeneratorAnnotationScanner(
-            meta?.pathes?.toList() ?: listOf()
+            getReflections(paths = meta?.pathes?.toList() ?: listOf(), extensionContext = extensionContext)
         )
 
         val fixture = parameterContext.parameter.annotations.filterIsInstance<Fixture>()
@@ -47,5 +49,23 @@ class FixtureParameterResolver : ParameterResolver {
                 throw IllegalArgumentException("Class was not annotated, something went wrong")
             }
         }
+    }
+
+    private fun getReflections(paths: List<String>, extensionContext: ExtensionContext): Reflections {
+        return extensionContext.getStore(ExtensionContext.Namespace.GLOBAL)
+            .get(DEFAULT_REFLECTION_KEY, Reflections::class.java)
+            ?: if (extensionContext.parent.isPresent) {
+                getReflections(paths, extensionContext.parent.get())
+            } else {
+                val reflections = Reflections(paths + listOf(LIBRARY_PATH, JAVAX_PATH))
+                extensionContext.getStore(ExtensionContext.Namespace.GLOBAL).put(DEFAULT_REFLECTION_KEY, reflections)
+                reflections
+            }
+    }
+
+    private companion object {
+        const val DEFAULT_REFLECTION_KEY = "REFLECTIONS_REFERENCES"
+        const val LIBRARY_PATH = "ru.kontur.test.kfixture"
+        const val JAVAX_PATH = "javax.validation.constraints"
     }
 }
