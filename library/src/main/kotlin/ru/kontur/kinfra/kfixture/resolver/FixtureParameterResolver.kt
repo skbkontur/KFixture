@@ -17,7 +17,7 @@ import ru.kontur.kinfra.kfixture.resolver.strategy.JavaxFixtureResolverStrategy
 class FixtureParameterResolver : ParameterResolver {
     override fun supportsParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Boolean {
         return parameterContext.parameter.annotations.filterIsInstance<Fixture>().isNotEmpty() ||
-            parameterContext.parameter.annotations.filterIsInstance<JavaxFixture>().isNotEmpty()
+                parameterContext.parameter.annotations.filterIsInstance<JavaxFixture>().isNotEmpty()
     }
 
     override fun resolveParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Any {
@@ -52,15 +52,17 @@ class FixtureParameterResolver : ParameterResolver {
     }
 
     private fun getReflections(paths: List<String>, extensionContext: ExtensionContext): Reflections {
-        return extensionContext.getStore(ExtensionContext.Namespace.GLOBAL)
-            .get(DEFAULT_REFLECTION_KEY, Reflections::class.java)
-            ?: if (extensionContext.parent.isPresent) {
-                getReflections(paths, extensionContext.parent.get())
-            } else {
-                val reflections = Reflections(paths + listOf(LIBRARY_PATH, JAVAX_PATH))
-                extensionContext.getStore(ExtensionContext.Namespace.GLOBAL).put(DEFAULT_REFLECTION_KEY, reflections)
-                reflections
-            }
+        return Reflections(paths + listOf(LIBRARY_PATH, JAVAX_PATH))
+////        return
+//        extensionContext.getStore(ExtensionContext.Namespace.GLOBAL)
+//            .get(DEFAULT_REFLECTION_KEY, Reflections::class.java)
+//            ?: if (extensionContext.parent.isPresent) {
+//                getReflections(paths, extensionContext.parent.get())
+//            } else {
+//                val reflections = Reflections(paths + listOf(LIBRARY_PATH, JAVAX_PATH))
+//                extensionContext.getStore(ExtensionContext.Namespace.GLOBAL).put(DEFAULT_REFLECTION_KEY, reflections)
+//                reflections
+//            }
     }
 
     private companion object {
