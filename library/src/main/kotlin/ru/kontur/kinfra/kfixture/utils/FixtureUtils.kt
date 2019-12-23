@@ -41,7 +41,7 @@ object FixtureUtils {
             clazz
         }
 
-        val functions =
+        val functions = if (!searchClazz.java.isKotlinClass()) {
             searchClazz.functions.filter {
                 val method = it.javaMethod
                 if (method == null) {
@@ -50,6 +50,10 @@ object FixtureUtils {
                     it.returnType::classifier.get() == clazz && Modifier.isStatic(method.modifiers)
                 }
             }
+        } else {
+            listOf()
+        }
+
         val constructors = searchClazz.constructors
 
         val result = (functions + constructors).toMutableList()
@@ -57,4 +61,10 @@ object FixtureUtils {
         result.sortBy { it.visibility ?: KVisibility.PUBLIC }
         return result[0]
     }
+
+    private fun Class<*>.isKotlinClass(): Boolean {
+        return declaredAnnotations.any { it.annotationClass.java.name == METADATA_NAME }
+    }
+
+    private const val METADATA_NAME = "kotlin.Metadata"
 }

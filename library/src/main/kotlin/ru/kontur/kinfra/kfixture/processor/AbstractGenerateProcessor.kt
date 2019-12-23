@@ -9,36 +9,40 @@ import kotlin.reflect.KType
 abstract class AbstractGenerateProcessor : GenerateProcessor {
 
     protected fun generatePrimitiveValue(kclass: KClass<*>, type: KType?, annotationList: List<Annotation>?): Any? {
-        return when (kclass) {
-            Double::class -> {
+        return when {
+            kclass == Double::class -> {
                 Random.nextDouble()
             }
-            Int::class -> {
+            kclass == Int::class -> {
                 Random.nextInt()
             }
-            Float::class -> {
+            kclass == Float::class -> {
                 Random.nextFloat()
             }
-            Short::class -> {
+            kclass == Short::class -> {
                 Random.nextInt().toShort()
             }
-            Byte::class -> {
+            kclass == Byte::class -> {
                 Random.nextInt(256).toByte()
             }
-            Char::class -> {
+            kclass == Char::class -> {
                 generateRandomChar()
             }
-            String::class -> {
+            kclass == String::class -> {
                 generateString(Random.nextInt(100))
             }
-            List::class -> {
+            kclass == List::class -> {
                 generateCollection(10, kclass, type!!, annotationList)
             }
-            Map::class -> {
+            kclass == Map::class -> {
                 generateMap(10, kclass, type!!, annotationList)
             }
-            Boolean::class -> {
+            kclass == Boolean::class -> {
                 Random.nextBoolean()
+            }
+            kclass.simpleName == "Array" -> {
+                val array = generateArray(10, kclass, type!!, annotationList)
+                array
             }
             else -> null
         }
@@ -73,5 +77,16 @@ abstract class AbstractGenerateProcessor : GenerateProcessor {
     ): Any {
         val elemType = type.arguments[0].type!!
         return (1..numOfElements).map { generateParam(elemType.classifier as KClass<*>, elemType, annotationList) }
+    }
+
+    private fun generateArray(
+        numOfElements: Int,
+        classRef: KClass<*>,
+        type: KType,
+        annotationList: List<Annotation>?
+    ): Any {
+        val elemType = type.arguments[0].type!!
+        return (1..numOfElements).map { generateParam(elemType.classifier as KClass<*>, elemType, annotationList) }
+            .toTypedArray()
     }
 }
