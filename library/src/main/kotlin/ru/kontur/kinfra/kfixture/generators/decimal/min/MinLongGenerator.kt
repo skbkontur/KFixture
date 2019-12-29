@@ -1,4 +1,4 @@
-package ru.kontur.kinfra.kfixture.generators.decimal
+package ru.kontur.kinfra.kfixture.generators.decimal.min
 
 import javax.validation.constraints.DecimalMin
 
