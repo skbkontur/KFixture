@@ -1,6 +1,6 @@
 package ru.kontur.kinfra.kfixture.routers
 
-import ru.kontur.kinfra.kfixture.generators.decimal.*
+import ru.kontur.kinfra.kfixture.generators.decimal.min.*
 import java.math.BigDecimal
 import java.math.BigInteger
 import javax.validation.constraints.DecimalMin

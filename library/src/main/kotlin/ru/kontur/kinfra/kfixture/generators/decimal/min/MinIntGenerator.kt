@@ -1,15 +1,15 @@
-package ru.kontur.kinfra.kfixture.generators.decimal
+package ru.kontur.kinfra.kfixture.generators.decimal.min
 
 import javax.validation.constraints.DecimalMin
 
 /**
  * @author Konstantin Volivach
  */
-class MinShortGenerator {
-    fun process(param: Short?, decimalMin: DecimalMin): Short {
+class MinIntGenerator {
+    fun process(param: Int?, decimalMin: DecimalMin): Int {
         val min = decimalMin.value.toInt()
         return if (param == null || param < min) {
-            (min + 1).toShort()
+            min + 1
         } else {
             param
         }
