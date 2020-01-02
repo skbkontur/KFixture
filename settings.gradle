@@ -1,2 +1,4 @@
+rootProject.name = "kfixture"
+
 include 'library'
 include 'examples'
