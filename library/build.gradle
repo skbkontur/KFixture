@@ -1,10 +1,10 @@
 plugins {
-    id "com.jfrog.bintray" version "1.8.4"
     id "maven-publish"
     id 'org.jetbrains.kotlin.jvm'
+    id 'signing'
 }
 
-version '0.4.4'
+version '0.4.5'
 
 repositories {
     mavenCentral()
@@ -25,61 +25,132 @@ test.testLogging {
     showStandardStreams = true
 }
 
-publishing {
-    publications {
-        mavenPublication(MavenPublication) {
-            from components.java
-            artifact sourcesJar {
-                classifier "sources"
-            }
-            artifact javadocJar {
-                classifier "javadoc"
-            }
-            groupId 'ru.kontur.kinfra.kfixture'
-            artifactId 'kfixture'
-            version project.version
-        }
-    }
+group "ru.kontur.kinfra.kfixture"
+
+task sourceJar(type: Jar) {
+    classifier "sources"
+    from sourceSets.main.allJava
 }
 
-bintray {
-    user = System.getProperty('bintray.user')
-    key = System.getProperty('bintray.key')
-    publications = ['mavenPublication']
-
-    pkg {
-        repo = 'kontur'
-        name = 'KFixture'
-        userOrg = 'kostya05983'
-        licenses = ['MIT']
-        vcsUrl = 'https://github.com/skbkontur/KFixture'
-        version {
-            name = project.version
-            desc = project.version
-            released = new Date()
-        }
-    }
-}
-
-compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-}
-compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-javadoc.failOnError = false
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
+    classifier "javadoc"
     from javadoc.destinationDir
 }
 
 artifacts {
-    archives sourcesJar
+    archives jar
+    archives sourceJar
     archives javadocJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            customizePom(pom)
+            groupId 'ru.kontur.kinfra.kfixture'
+            artifactId 'kfixture'
+
+            from components.java
+
+            // create the sign pom artifact
+            pom.withXml {
+                def pomFile = file("${project.buildDir}/generated-pom.xml")
+                writeTo(pomFile)
+                def pomAscFile = signing.sign(pomFile).signatureFiles[0]
+                artifact(pomAscFile) {
+                    classifier = null
+                    extension = 'pom.asc'
+                }
+            }
+
+            artifact(sourceJar) {
+                classifier = 'sources'
+            }
+            artifact(javadocJar) {
+                classifier = 'javadoc'
+            }
+
+            // create the signed artifacts
+            project.tasks.signArchives.signatureFiles.each {
+                artifact(it) {
+                    def matcher = it.file =~ /-(sources|javadoc)\.jar\.asc$/
+                    if (matcher.find()) {
+                        classifier = matcher.group(1)
+                    } else {
+                        classifier = null
+                    }
+                    extension = 'jar.asc'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            credentials {
+                username sonatypeUsername
+                password sonatypePassword
+            }
+        }
+    }
+}
+
+def customizePom(pom) {
+    pom.withXml {
+        def root = asNode()
+
+        // eliminate test-scoped dependencies (no need in maven central POMs)
+        root.dependencies.removeAll { dep ->
+            dep.scope == "test"
+        }
+
+        // add all items necessary for maven central publication
+        root.children().last() + {
+            resolveStrategy = Closure.DELEGATE_FIRST
+
+            description 'Generate test data'
+            name 'KFixture'
+
+            url 'https://github.com/skbkontur/KFixture'
+            organization {
+                name 'skbkontur'
+                url 'https://github.com/skbkontur'
+            }
+            issueManagement {
+                system 'GitHub'
+                url 'https://github.com/skbkontur/KFixture/issues'
+            }
+            licenses {
+                license {
+                    name 'MIT'
+                    url 'https://github.com/skbkontur/KFixture/blob/master/LICENSE'
+                    distribution 'repo'
+                }
+            }
+            scm {
+                url 'https://github.com/skbkontur/KFixture'
+            }
+            developers {
+                developer {
+                    name 'Konstantin Volivach'
+                }
+            }
+        }
+    }
+}
+
+model {
+    tasks.generatePomFileForMavenJavaPublication {
+        destination = file("$buildDir/generated-pom.xml")
+    }
+    tasks.publishMavenJavaPublicationToMavenLocal {
+        dependsOn project.tasks.signArchives
+    }
+    tasks.publishMavenJavaPublicationToMavenRepository {
+        dependsOn project.tasks.signArchives
+    }
 }
