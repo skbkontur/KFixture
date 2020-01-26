@@ -16,6 +16,9 @@ abstract class AbstractGenerateProcessor : GenerateProcessor {
             kclass == Int::class -> {
                 Random.nextInt()
             }
+            kclass == Long::class -> {
+                Random.nextLong()
+            }
             kclass == Float::class -> {
                 Random.nextFloat()
             }
