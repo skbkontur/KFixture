@@ -1,9 +1,10 @@
 plugins {
-    id "java-library"
-    id "maven-publish"
+    id "maven"
     id 'org.jetbrains.kotlin.jvm'
     id "signing"
 }
+group = "ru.kontur.kinfra.kfixture"
+
 
 version '0.4.5'
 
@@ -26,50 +27,61 @@ test.testLogging {
     showStandardStreams = true
 }
 
-group "ru.kontur.kinfra.kfixture"
+archivesBaseName = "kfixture"
 
-task sourceJar(type: Jar) {
-    classifier "sources"
-    from sourceSets.main.allJava
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier "javadoc"
-    from javadoc.destinationDir
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
 }
 
 artifacts {
-    archives jar
-    archives sourceJar
-    archives javadocJar
+    archives javadocJar, sourcesJar
 }
+
 
 signing {
     useGpgCmd()
     sign configurations.archives
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifactId 'kfixture'
-
-            from components.java
-
-//            artifact(sourceJar) {
-//                classifier = 'sources'
-//            }
-//            artifact(javadocJar) {
-//                classifier = 'javadoc'
-//            }
-        }
-    }
+uploadArchives {
     repositories {
-        maven {
-            url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
-            credentials {
-                username sonatypeUsername
-                password sonatypePassword
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+            pom.project {
+                name = 'kfixture'
+                groupId = "ru.kontur.kinfra.kfixture"
+                artifactId="kfixture"
+                packaging 'jar'
+                description = 'Junit5 Extension for data generation'
+                url = 'https://github.com/skbkontur/KFixture'
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'http://www.opensource.org/licenses/mit-license.php'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'kostya05983'
+                        name = 'Konstantin Volivach'
+                        email = 'kostya05983@mail.ru'
+                    }
+                }
+                scm {
+                    connection = "scm:git:git://github.com:skbkontur/KFixture.git"
+                    developerConnection = 'scm:git:ssh://github.com:skbkontur/KFixture.git'
+                    url = 'https://github.com/skbkontur/KFixture'
+                }
             }
         }
     }
