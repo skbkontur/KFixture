@@ -2,6 +2,7 @@ package ru.kontur.kinfra.kfixture.generators
 
 import ru.kontur.kinfra.kfixture.api.ValidationParamResolver
 import ru.kontur.kinfra.kfixture.api.ResolverFor
+import ru.kontur.kinfra.kfixture.api.ValidParamGenerator
 import ru.kontur.kinfra.kfixture.exceptions.NoSuchCaseException
 import ru.kontur.kinfra.kfixture.utils.generateString
 import javax.validation.constraints.Email
@@ -30,5 +31,19 @@ class EmailGenerator : ValidationParamResolver {
 
     private fun generateEmail(): String {
         return generateString(DEFAULT_NUMBER) + "@gmail.com"
+    }
+}
+
+class EmailGenerator2 : ValidParamGenerator<String, Email> {
+    override fun process(param: String?, annotation: Email): String {
+        return generateEmail()
+    }
+
+    private fun generateEmail(): String {
+        return generateString(DEFAULT_NUMBER) + "@gmail.com"
+    }
+
+    private companion object {
+        const val DEFAULT_NUMBER = 10
     }
 }
