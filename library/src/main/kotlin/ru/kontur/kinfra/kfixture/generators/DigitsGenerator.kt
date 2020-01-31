@@ -1,15 +1,13 @@
 package ru.kontur.kinfra.kfixture.generators
 
-import ru.kontur.kinfra.kfixture.api.ValidationParamResolver
-import ru.kontur.kinfra.kfixture.api.ResolverFor
+import ru.kontur.kinfra.kfixture.api.ValidParamGenerator
 import javax.validation.constraints.Digits
-import kotlin.reflect.KClass
-import kotlin.reflect.KType
 
-@ResolverFor(value = Digits::class)
-class DigitsGenerator : ValidationParamResolver {
+class DigitsGenerator<T>(
+    private val creator: VariableCreator<T>
+) : ValidParamGenerator<T, Digits> {
 
-    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any? {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+    override fun process(param: T?, annotation: Digits): T {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
