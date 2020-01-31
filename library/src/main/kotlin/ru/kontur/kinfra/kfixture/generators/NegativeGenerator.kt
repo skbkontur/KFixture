@@ -9,8 +9,8 @@ import javax.validation.constraints.Negative
 class NegativeGenerator<T : Comparable<T>>(
     private val creator: VariableCreator<T>
 ) : ValidParamGenerator<T, Negative> {
-    override fun process(param: T?, annotation: Negative): T {
-        return if (param == null || param < creator.create(0)) {
+    override fun process(param: T, annotation: Negative): T {
+        return if (param < creator.create(0)) {
             creator.create(DEFAULT_MINUS)
         } else {
             param

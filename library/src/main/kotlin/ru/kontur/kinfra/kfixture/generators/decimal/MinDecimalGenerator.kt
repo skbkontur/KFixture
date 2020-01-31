@@ -9,10 +9,11 @@ class MinDecimalGenerator<T : Comparable<T>>(
     private val creator: VariableCreator<T>,
     private val plusSupplyer: PlusSupplyer<T>
 ) : ValidParamGenerator<T, DecimalMin> {
-    override fun process(param: T?, annotation: DecimalMin): T {
+
+    override fun process(param: T, annotation: DecimalMin): T {
         val min = creator.create(annotation.value.toLong())
 
-        return if (param == null || param < min) {
+        return if (param < min) {
             plusSupplyer.plus(min, creator.create(1))
         } else {
             param

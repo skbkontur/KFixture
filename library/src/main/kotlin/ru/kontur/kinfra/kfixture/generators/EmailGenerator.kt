@@ -8,7 +8,7 @@ import javax.validation.constraints.Email
  * @author Konstantin Volivach
  */
 class EmailGenerator : ValidParamGenerator<String, Email> {
-    override fun process(param: String?, annotation: Email): String {
+    override fun process(param: String, annotation: Email): String {
         return generateEmail()
     }
 
