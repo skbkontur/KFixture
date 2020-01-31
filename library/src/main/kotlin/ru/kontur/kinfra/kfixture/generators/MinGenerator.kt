@@ -11,7 +11,7 @@ class MinGenerator<T : Comparable<T>>(
     private val creator: VariableCreator<T>,
     private val plusSupplyer: PlusSupplyer<T>
 ) : ValidParamGenerator<T, Min> {
-    override fun process(param: T?, annotation: Min): T {
+    override fun process(param: T, annotation: Min): T {
         val min = creator.create(annotation.value)
 
         return if (param == null || param < min) {

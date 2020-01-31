@@ -7,7 +7,7 @@ class DigitsGenerator<T>(
     private val creator: VariableCreator<T>
 ) : ValidParamGenerator<T, Digits> {
 
-    override fun process(param: T?, annotation: Digits): T {
+    override fun process(param: T, annotation: Digits): T {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

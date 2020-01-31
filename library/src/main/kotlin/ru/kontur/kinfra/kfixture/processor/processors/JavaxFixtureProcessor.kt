@@ -1,12 +1,12 @@
 package ru.kontur.kinfra.kfixture.processor.processors
 
 import ru.kontur.kinfra.kfixture.api.ValidationConstructor
-import ru.kontur.kinfra.kfixture.api.ValidationParamResolver
 import ru.kontur.kinfra.kfixture.exceptions.NoOptionalRecursiveException
 import ru.kontur.kinfra.kfixture.exceptions.NoSuchValidAnnotationException
 import ru.kontur.kinfra.kfixture.extensions.isSimple
 import ru.kontur.kinfra.kfixture.processor.AbstractGenerateProcessor
 import ru.kontur.kinfra.kfixture.processor.GeneratorAnnotationScanner
+import ru.kontur.kinfra.kfixture.routers.ValidRouter
 import ru.kontur.kinfra.kfixture.utils.FixtureUtils
 import javax.validation.Constraint
 import javax.validation.constraints.*
@@ -18,9 +18,10 @@ import kotlin.reflect.KType
  * @author Konstantin Volivach
  */
 class JavaxFixtureProcessor(
-    private val generators: Map<KClass<out Annotation>, ValidationParamResolver>,
+    private val generators: Map<KClass<out Annotation>, ValidRouter<Any, Any>>,
     private val constructors: Map<KClass<*>, ValidationConstructor<*>>,
-    private val generatorAnnotationScanner: GeneratorAnnotationScanner
+    private val generatorAnnotationScanner: GeneratorAnnotationScanner,
+    private val fixtureProcessor: FixtureProcessor
 ) : AbstractGenerateProcessor() {
 
     private val defaultPriority: Map<KClass<out Annotation>, Long> = mapOf(
@@ -51,6 +52,7 @@ class JavaxFixtureProcessor(
     override fun generateParam(clazz: KClass<*>, type: KType, annotation: List<Annotation>?): Any? {
         val annotationSum = (annotation?.let { it + clazz.annotations }
             ?: clazz.annotations).filter { it.annotationClass.annotations.any { annotation -> annotation is Constraint } }
+
         return when {
             clazz.isSimple() -> processSimpleType(clazz, type, annotationSum)
             clazz.java.isEnum -> {
@@ -61,11 +63,11 @@ class JavaxFixtureProcessor(
                 when {
                     constructors.containsKey(clazz) -> constructors[clazz]?.call()
                     !annotationSum.isNullOrEmpty() -> {
-                        var result: Any? = null
+                        var result = fixtureProcessor.generateParam(clazz, type, annotation)!!
                         for (it in annotationSum) {
                             val generator = generators[it.annotationClass]
                             result = if (generator != null) {
-                                generator.process(result, clazz, type, it)
+                                generator.process(result, it)
                             } else {
                                 createClazz(clazz) // Else create by default generators
                             }
@@ -108,11 +110,11 @@ class JavaxFixtureProcessor(
                 val sorted = annotationList.sortedBy {
                     return@sortedBy defaultPriority[it.annotationClass]
                 }
-                var generatedParam: Any? = null
+                var generatedParam = fixtureProcessor.generateParam(clazz, type, listOf())!!
                 for (annotation in sorted) {
                     val generator = generators[annotation.annotationClass]
                         ?: throw NoSuchValidAnnotationException("Please annotate your validate annotation with ValidateAnnotation class")
-                    generatedParam = generator.process(generatedParam, clazz, type, annotation)
+                    generatedParam = generator.process(generatedParam, annotation)
                 }
                 generatedParam
             }
