@@ -6,8 +6,8 @@ import javax.validation.constraints.NegativeOrZero
 class NegativeOrZeroGenerator<T : Comparable<T>>(
     private val creator: VariableCreator<T>
 ) : ValidParamGenerator<T, NegativeOrZero> {
-    override fun process(param: T?, annotation: NegativeOrZero): T {
-        return if (param == null || param > creator.create(0)) {
+    override fun process(param: T, annotation: NegativeOrZero): T {
+        return if (param > creator.create(0)) {
             return creator.create(DEFAULT_VALUE)
         } else {
             param
