@@ -1,7 +1,7 @@
 package ru.kontur.kinfra.kfixture.generators
 
 import ru.kontur.kinfra.kfixture.api.ValidParamGenerator
-import ru.kontur.kinfra.kfixture.generators.operators.MinusSupplyer
+import ru.kontur.kinfra.kfixture.generators.operators.MinusSupplier
 import javax.validation.constraints.Max
 
 /**
@@ -9,7 +9,7 @@ import javax.validation.constraints.Max
  */
 class MaxGenerator<T : Comparable<T>>(
     private val creator: VariableCreator<T>,
-    private val minusOperation: MinusSupplyer<T>
+    private val minusOperation: MinusSupplier<T>
 ) : ValidParamGenerator<T, Max> {
     override fun process(param: T, annotation: Max): T {
         val max = creator.create(annotation.value)
