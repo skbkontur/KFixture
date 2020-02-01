@@ -9,13 +9,13 @@ import javax.validation.constraints.Min
  */
 class MinGenerator<T : Comparable<T>>(
     private val creator: VariableCreator<T>,
-    private val plusSupplyer: PlusSupplier<T>
+    private val plusSupplier: PlusSupplier<T>
 ) : ValidParamGenerator<T, Min> {
     override fun process(param: T, annotation: Min): T {
         val min = creator.create(annotation.value)
 
         return if (param == null || param < min) {
-            plusSupplyer.plus(min, creator.create(1))
+            plusSupplier.plus(min, creator.create(1))
         } else {
             param
         }

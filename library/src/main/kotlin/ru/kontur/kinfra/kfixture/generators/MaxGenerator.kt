@@ -9,13 +9,13 @@ import javax.validation.constraints.Max
  */
 class MaxGenerator<T : Comparable<T>>(
     private val creator: VariableCreator<T>,
-    private val minusOperation: MinusSupplier<T>
+    private val minusSupplier: MinusSupplier<T>
 ) : ValidParamGenerator<T, Max> {
     override fun process(param: T, annotation: Max): T {
         val max = creator.create(annotation.value)
 
         return if (param > max) {
-            minusOperation.minus(max, creator.create(1))
+            minusSupplier.minus(max, creator.create(1))
         } else {
             param
         }
