@@ -1,14 +1,10 @@
 package ru.kontur.kinfra.kfixture.generators
 
-import ru.kontur.kinfra.kfixture.api.ValidationParamResolver
-import ru.kontur.kinfra.kfixture.api.ResolverFor
+import ru.kontur.kinfra.kfixture.api.ValidParamGenerator
 import javax.validation.constraints.Past
-import kotlin.reflect.KClass
-import kotlin.reflect.KType
 
-@ResolverFor(value = Past::class)
-class PastGenerator : ValidationParamResolver {
-    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any? {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+class PastGenerator<T> : ValidParamGenerator<T, Past> {
+    override fun process(param: T, annotation: Past): T {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
