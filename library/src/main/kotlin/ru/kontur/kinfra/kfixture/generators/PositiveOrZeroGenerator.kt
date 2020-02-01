@@ -1,51 +1,19 @@
 package ru.kontur.kinfra.kfixture.generators
 
-import ru.kontur.kinfra.kfixture.api.ValidationParamResolver
-import ru.kontur.kinfra.kfixture.api.ResolverFor
-import java.math.BigDecimal
-import java.math.BigInteger
+import ru.kontur.kinfra.kfixture.api.ValidParamGenerator
 import javax.validation.constraints.PositiveOrZero
-import kotlin.reflect.KClass
-import kotlin.reflect.KType
 
-@ResolverFor(value = PositiveOrZero::class)
-class PositiveOrZeroGenerator : ValidationParamResolver {
-    companion object {
-        private const val DEFAULT_VALUE = 10
+class PositiveOrZeroGenerator<T : Comparable<T>>(
+    private val creator: VariableCreator<T>
+) : ValidParamGenerator<T, PositiveOrZero> {
+    override fun process(param: T, annotation: PositiveOrZero): T {
+        if (param < creator.create(0)) {
+            return creator.create(DEFAULT_VALUE)
+        }
+        return param
     }
 
-    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any? {
-        val value = if (generatedParam != null && generatedParam is Number && generatedParam.toDouble() > 0) {
-            generatedParam
-        } else {
-            BigDecimal(DEFAULT_VALUE)
-        }
-        when (clazz) {
-            BigDecimal::class -> {
-                return value
-            }
-            BigInteger::class -> {
-                return BigInteger.valueOf(value.toLong())
-            }
-            Byte::class -> {
-                return value.toByte()
-            }
-            Short::class -> {
-                return value.toShort()
-            }
-            Int::class -> {
-                return value.toInt()
-            }
-            Long::class -> {
-                return value.toLong()
-            }
-            Float::class -> {
-                return value.toFloat()
-            }
-            Double::class -> {
-                return value.toDouble()
-            }
-        }
-        return generatedParam
+    companion object {
+        private const val DEFAULT_VALUE = 10L
     }
 }
