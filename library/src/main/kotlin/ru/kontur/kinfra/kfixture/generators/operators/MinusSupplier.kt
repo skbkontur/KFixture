@@ -1,5 +1,5 @@
 package ru.kontur.kinfra.kfixture.generators.operators
 
-interface MinusSupplyer<T> {
+interface MinusSupplier<T> {
     fun minus(first: T, other: T): T
 }

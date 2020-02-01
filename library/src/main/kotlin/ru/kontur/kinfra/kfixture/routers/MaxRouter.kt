@@ -17,7 +17,6 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import javax.validation.constraints.Max
 
-
 class MaxRouter<T> : ValidRouter<T, Max> where T : Any, T : Comparable<T> {
     private val bigDecimalMaxGenerator = MaxGenerator(
         BigDecimalCreator(),
