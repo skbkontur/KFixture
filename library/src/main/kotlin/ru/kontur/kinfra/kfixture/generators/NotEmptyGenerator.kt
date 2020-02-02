@@ -1,7 +1,11 @@
 package ru.kontur.kinfra.kfixture.generators
 
 import ru.kontur.kinfra.kfixture.api.ValidParamGenerator
+import ru.kontur.kinfra.kfixture.utils.generateCollection
+import ru.kontur.kinfra.kfixture.utils.toInvariantFlexibleProjection
+import java.lang.IllegalArgumentException
 import javax.validation.constraints.NotEmpty
+import kotlin.reflect.full.starProjectedType
 
 /**
  * @author Konstantin Volivach
@@ -42,7 +46,25 @@ class NotEmptyGenerator<T> : ValidParamGenerator<T, NotEmpty> {
     }
 
     override fun process(param: T, annotation: NotEmpty): T? {
+        when (param) {
+            is Collection<*> -> {
+                return generateCollection()
+//                return generateCollection(10, T, T::class.starProjectedType) as T
+            }
+            is List<*> -> {
 
-        TODO("Generate not empty structures is not implemented")
+            }
+            is Map<*, *> -> {
+            }
+            is String -> {
+
+            }
+            is Array<*> -> {
+
+            }
+            else -> {
+                throw IllegalArgumentException("Such annotation can't be applied to ${param::class.simpleName}")
+            }
+        }
     }
 }
