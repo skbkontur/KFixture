@@ -30,7 +30,7 @@ class MaxRouter<T> : ValidRouter<T, Max> where T : Any, T : Comparable<T> {
     private val intMaxGenerator = MaxGenerator(IntCreator(), IntMinusSupplier())
     private val longMaxGenerator = MaxGenerator(LongCreator(), LongMinusSupplier())
 
-    override fun process(param: T, annotation: Max): T {
+    override fun process(param: T, annotation: Max): Any? {
         return when (param) {
             is BigDecimal -> bigDecimalMaxGenerator.process(param, annotation)
             is BigInteger -> bigIntegerMaxGenerator.process(param, annotation)
@@ -41,6 +41,6 @@ class MaxRouter<T> : ValidRouter<T, Max> where T : Any, T : Comparable<T> {
             else -> {
                 throw IllegalArgumentException("Max validation can't be applyed to type ${param::class.simpleName}")
             }
-        } as T
+        }
     }
 }
