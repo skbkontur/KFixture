@@ -1,8 +1,9 @@
 plugins {
-    id "com.jfrog.bintray" version "1.8.4"
-    id "maven-publish"
+    id "maven"
     id 'org.jetbrains.kotlin.jvm'
+    id "signing"
 }
+group = "ru.kontur.kinfra.kfixture"
 
 version '0.4.7'
 
@@ -25,61 +26,61 @@ test.testLogging {
     showStandardStreams = true
 }
 
-publishing {
-    publications {
-        mavenPublication(MavenPublication) {
-            from components.java
-            artifact sourcesJar {
-                classifier "sources"
-            }
-            artifact javadocJar {
-                classifier "javadoc"
-            }
-            groupId 'ru.kontur.kinfra.kfixture'
-            artifactId 'kfixture'
-            version project.version
-        }
-    }
+archivesBaseName = "kfixture"
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
 }
 
-bintray {
-    user = System.getProperty('bintray.user')
-    key = System.getProperty('bintray.key')
-    publications = ['mavenPublication']
-
-    pkg {
-        repo = 'kontur'
-        name = 'KFixture'
-        userOrg = 'kostya05983'
-        licenses = ['MIT']
-        vcsUrl = 'https://github.com/skbkontur/KFixture'
-        version {
-            name = project.version
-            desc = project.version
-            released = new Date()
-        }
-    }
-}
-
-compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-}
-compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
+task sourcesJar(type: Jar) {
     classifier = 'sources'
     from sourceSets.main.allSource
 }
 
-javadoc.failOnError = false
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
+artifacts {
+    archives javadocJar, sourcesJar
 }
 
-artifacts {
-    archives sourcesJar
-    archives javadocJar
+signing {
+    useGpgCmd()
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: System.getProperty("publish.username"), password: System.getProperty("publish.password"))
+            }
+            pom.project {
+                name = 'kfixture'
+                groupId = "ru.kontur.kinfra.kfixture"
+                artifactId = "kfixture"
+                packaging 'jar'
+                description = 'Junit5 Extension for data generation'
+                url = 'https://github.com/skbkontur/KFixture'
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'http://www.opensource.org/licenses/mit-license.php'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'kostya05983'
+                        name = 'Konstantin Volivach'
+                        email = 'kostya05983@mail.ru'
+                    }
+                }
+                scm {
+                    connection = "scm:git:git://github.com:skbkontur/KFixture.git"
+                    developerConnection = 'scm:git:ssh://github.com:skbkontur/KFixture.git'
+                    url = 'https://github.com/skbkontur/KFixture'
+                }
+            }
+        }
+    }
 }
