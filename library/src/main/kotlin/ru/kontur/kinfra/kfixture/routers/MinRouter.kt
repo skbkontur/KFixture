@@ -21,7 +21,7 @@ class MinRouter<T> : ValidRouter<T, Min> where T : Any, T : Comparable<T> {
     private val shortMinGenerator = MinGenerator(ShortCreator(), ShortPlusSupplier())
     private val byteMinGenerator = MinGenerator(ByteCreator(), BytePlusSupplier())
 
-    override fun process(param: T, annotation: Min): T {
+    override fun process(param: T, annotation: Min): Any? {
         return when (param) {
             is BigDecimal -> bigDecimalMinGenerator.process(param, annotation)
             is BigInteger -> bigIntegerMinGenerator.process(param, annotation)
@@ -32,6 +32,6 @@ class MinRouter<T> : ValidRouter<T, Min> where T : Any, T : Comparable<T> {
             else -> {
                 throw IllegalArgumentException("Max validation can't be applyed to type ${param::class.simpleName}")
             }
-        } as T
+        }
     }
 }

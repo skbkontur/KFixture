@@ -18,10 +18,6 @@ fun generateRandomChar(): Char {
     return (Random.nextInt(26) + 'a'.toInt()).toChar()
 }
 
-fun generateDouble(): Double {
-    return Random.nextDouble()
-}
-
 fun generateMap(numOfElements: Int, classRef: KClass<*>, type: KType): Map<Any, Any> {
     val keyType = type.arguments[0].type!!
     val valueType = type.arguments[1].type!!
