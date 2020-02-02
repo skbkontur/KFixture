@@ -3,7 +3,7 @@ install: true
 
 jdk:
   - openjdk11
-script: ./gradlew build
+script: ./gradlew build -Psigning.gnupg.keyName=04C29067
 
 services:
   - docker
