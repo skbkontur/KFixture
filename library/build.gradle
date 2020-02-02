@@ -5,7 +5,6 @@ plugins {
 }
 group = "ru.kontur.kinfra.kfixture"
 
-
 version '0.4.5'
 
 repositories {
@@ -43,7 +42,6 @@ artifacts {
     archives javadocJar, sourcesJar
 }
 
-
 signing {
     useGpgCmd()
     sign configurations.archives
@@ -55,12 +53,12 @@ uploadArchives {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
             repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: sonatypeUsername, password: sonatypePassword)
+                authentication(userName: System.getProperty("publish.username"), password: System.getProperty("publish.password"))
             }
             pom.project {
                 name = 'kfixture'
                 groupId = "ru.kontur.kinfra.kfixture"
-                artifactId="kfixture"
+                artifactId = "kfixture"
                 packaging 'jar'
                 description = 'Junit5 Extension for data generation'
                 url = 'https://github.com/skbkontur/KFixture'
