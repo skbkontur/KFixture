@@ -32,12 +32,12 @@ class MaxRouter<T> : ValidRouter<T, Max> where T : Any, T : Comparable<T> {
 
     override fun process(param: T, annotation: Max): Any? {
         return when (param) {
-            is BigDecimal -> bigDecimalMaxGenerator.process(param, annotation)
-            is BigInteger -> bigIntegerMaxGenerator.process(param, annotation)
-            is Byte -> byteMaxGenerator.process(param, annotation)
-            is Short -> shortMaxGenerator.process(param, annotation)
-            is Int -> intMaxGenerator.process(param, annotation)
-            is Long -> longMaxGenerator.process(param, annotation)
+            is BigDecimal -> bigDecimalMaxGenerator.process(param, annotation,,)
+            is BigInteger -> bigIntegerMaxGenerator.process(param, annotation,,)
+            is Byte -> byteMaxGenerator.process(param, annotation,,)
+            is Short -> shortMaxGenerator.process(param, annotation,,)
+            is Int -> intMaxGenerator.process(param, annotation,,)
+            is Long -> longMaxGenerator.process(param, annotation,,)
             else -> {
                 throw IllegalArgumentException("Max validation can't be applyed to type ${param::class.simpleName}")
             }
