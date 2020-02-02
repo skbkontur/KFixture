@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank
  * @author Konstantin Volivach
  */
 class NotBlankGenerator : ValidParamGenerator<String, NotBlank> {
-    override fun process(param: String, annotation: NotBlank): String {
+    override fun process(param: String, annotation: NotBlank): String? {
         if (param.isBlank()) {
             return generateString(DEFAULT_SIZE)
         }

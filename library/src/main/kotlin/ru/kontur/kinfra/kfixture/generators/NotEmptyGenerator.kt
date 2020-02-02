@@ -41,7 +41,8 @@ class NotEmptyGenerator<T> : ValidParamGenerator<T, NotEmpty> {
         const val DEFAULT_SIZE = 10
     }
 
-    override fun process(param: T, annotation: NotEmpty): T {
+    override fun process(param: T, annotation: NotEmpty): T? {
+
         TODO("Generate not empty structures is not implemented")
     }
 }

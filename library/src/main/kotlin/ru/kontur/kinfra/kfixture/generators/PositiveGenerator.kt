@@ -1,18 +1,16 @@
 package ru.kontur.kinfra.kfixture.generators
 
-import ru.kontur.kinfra.kfixture.api.ResolverFor
 import ru.kontur.kinfra.kfixture.api.ValidParamGenerator
 import javax.validation.constraints.Positive
 
 /**
  * @author Konstatntin Volivach
  */
-@ResolverFor(value = Positive::class)
 class PositiveGenerator<T : Comparable<T>>(
     private val creator: VariableCreator<T>
 ) : ValidParamGenerator<T, Positive> {
 
-    override fun process(param: T, annotation: Positive): T {
+    override fun process(param: T, annotation: Positive): T? {
         if (param <= creator.create(0)) {
             return creator.create(DEFAULT_VALUE)
         }
