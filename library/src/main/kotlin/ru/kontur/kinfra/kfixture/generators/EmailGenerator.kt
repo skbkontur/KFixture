@@ -3,12 +3,19 @@ package ru.kontur.kinfra.kfixture.generators
 import ru.kontur.kinfra.kfixture.api.ValidParamGenerator
 import ru.kontur.kinfra.kfixture.utils.generateString
 import javax.validation.constraints.Email
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
 
 /**
  * @author Konstantin Volivach
  */
 class EmailGenerator : ValidParamGenerator<String, Email> {
-    override fun process(param: String, annotation: Email): String? {
+    override fun process(
+        param: String,
+        annotation: Email,
+        clazz: KClass<String>,
+        type: KType
+    ): String? {
         return generateEmail()
     }
 
