@@ -1,5 +1,8 @@
 package ru.kontur.kinfra.kfixture.api
 
-interface ValidParamGenerator<P, in A> {
-    fun process(param: P, annotation: A): P?
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
+
+interface ValidParamGenerator<P : Any, in A> {
+    fun process(param: P, annotation: A, clazz: KClass<P>, type: KType): P?
 }
