@@ -2,6 +2,8 @@ package ru.kontur.kinfra.kfixture.generators
 
 import ru.kontur.kinfra.kfixture.api.ValidParamGenerator
 import javax.validation.constraints.Negative
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
 
 /**
  * @author Konstantin Volivach
@@ -9,7 +11,12 @@ import javax.validation.constraints.Negative
 class NegativeGenerator<T : Comparable<T>>(
     private val creator: VariableCreator<T>
 ) : ValidParamGenerator<T, Negative> {
-    override fun process(param: T, annotation: Negative): T? {
+    override fun process(
+        param: T,
+        annotation: Negative,
+        clazz: KClass<T>,
+        type: KType
+    ): T? {
         return if (param < creator.create(0)) {
             creator.create(DEFAULT_MINUS)
         } else {
