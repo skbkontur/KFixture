@@ -9,7 +9,7 @@ class MaxDecimalGenerator<T : Comparable<T>>(
     private val creator: VariableCreator<T>,
     private val minusOperation: MinusSupplier<T>
 ) : ValidParamGenerator<T, DecimalMax> {
-    override fun process(param: T, annotation: DecimalMax): T {
+    override fun process(param: T, annotation: DecimalMax): T? {
         val max = creator.create(annotation.value.toLong())
 
         return if (param > max) {

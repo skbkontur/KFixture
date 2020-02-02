@@ -11,7 +11,7 @@ class MaxGenerator<T : Comparable<T>>(
     private val creator: VariableCreator<T>,
     private val minusSupplier: MinusSupplier<T>
 ) : ValidParamGenerator<T, Max> {
-    override fun process(param: T, annotation: Max): T {
+    override fun process(param: T, annotation: Max): T? {
         val max = creator.create(annotation.value)
 
         return if (param > max) {
