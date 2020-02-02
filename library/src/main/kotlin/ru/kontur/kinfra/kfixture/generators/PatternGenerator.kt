@@ -8,7 +8,7 @@ import javax.validation.constraints.Pattern
  * @author Konstantin Volivach
  */
 class PatternGenerator : ValidParamGenerator<String, Pattern> {
-    override fun process(param: String, annotation: Pattern): String {
+    override fun process(param: String, annotation: Pattern): String? {
         val pattern = annotation.regexp
         val generex = Generex(pattern)
         return generex.getMatchedString(0)
