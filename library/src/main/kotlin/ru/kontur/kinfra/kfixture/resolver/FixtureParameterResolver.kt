@@ -28,7 +28,10 @@ class FixtureParameterResolver : ParameterResolver {
         } as? FixtureGeneratorMeta
 
         val annotationScanner = GeneratorAnnotationScanner(
-            cachedReflections.getReflections(paths = meta?.pathes?.toList() ?: listOf(), extensionContext = extensionContext)
+            cachedReflections.getReflections(
+                paths = meta?.pathes?.toList() ?: listOf(),
+                extensionContext = extensionContext
+            )
         )
 
         val fixture = parameterContext.parameter.annotations.filterIsInstance<Fixture>()
@@ -48,7 +51,7 @@ class FixtureParameterResolver : ParameterResolver {
                 javaxStrategy.resolve(parameterContext, extensionContext)
             }
             else -> {
-                throw IllegalArgumentException("Class was not annotated, something went wrong")
+                throw IllegalArgumentException("Class wasn't annotated, name=${parameterContext.parameter.name}")
             }
         }
     }

@@ -2,12 +2,12 @@ package ru.kontur.kinfra.kfixture.resolver.strategy
 
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterContext
+import ru.kontur.kinfra.kfixture.exceptions.FixtureGenerationException
 import ru.kontur.kinfra.kfixture.processor.GeneratorAnnotationScanner
 import ru.kontur.kinfra.kfixture.processor.processors.FixtureProcessor
 import ru.kontur.kinfra.kfixture.resolver.ResolverStrategy
 import ru.kontur.kinfra.kfixture.utils.toKType
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl
-import java.lang.RuntimeException
 
 class FixtureResolverStrategy(
     private val generatorAnnotationScanner: GeneratorAnnotationScanner
@@ -19,13 +19,17 @@ class FixtureResolverStrategy(
         val clazzProcessor = FixtureProcessor(constructors, generatorAnnotationScanner)
 
         val type = parameterContext.parameter.type
-        return if (type.simpleName == "List") {
+        return if (type.simpleName == LIST_SIMPLE_NAME) {
             val kType = (parameterContext.parameter.parameterizedType as ParameterizedTypeImpl)
             clazzProcessor.generateParam(type.kotlin, kType.toKType(), null)
-                ?: throw RuntimeException("Something went wrong")
+                ?: throw FixtureGenerationException(kType.typeName, parameterContext.parameter.name)
         } else {
             clazzProcessor.generateParam(type.kotlin, type.toKType(), null)
-                ?: throw RuntimeException("Something went wrong")
+                ?: throw FixtureGenerationException(type.typeName, parameterContext.parameter.name)
         }
+    }
+
+    private companion object {
+        const val LIST_SIMPLE_NAME = "List"
     }
 }
