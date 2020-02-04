@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ParameterResolver
 import ru.kontur.kinfra.kfixture.annotations.Fixture
 import ru.kontur.kinfra.kfixture.annotations.JavaxFixture
 import ru.kontur.kinfra.kfixture.api.FixtureGeneratorMeta
+import ru.kontur.kinfra.kfixture.exceptions.NotAnnotatedException
 import ru.kontur.kinfra.kfixture.processor.GeneratorAnnotationScanner
 import ru.kontur.kinfra.kfixture.resolver.strategy.FixtureResolverStrategy
 import ru.kontur.kinfra.kfixture.resolver.strategy.JavaxFixtureResolverStrategy
@@ -51,7 +52,7 @@ class FixtureParameterResolver : ParameterResolver {
                 javaxStrategy.resolve(parameterContext, extensionContext)
             }
             else -> {
-                throw IllegalArgumentException("Class wasn't annotated, name=${parameterContext.parameter.name}")
+                throw NotAnnotatedException(parameterContext.parameter.name)
             }
         }
     }
