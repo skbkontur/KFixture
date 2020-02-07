@@ -2,7 +2,6 @@ package ru.kontur.kinfra.kfixture.processor
 
 import org.reflections.Reflections
 import ru.kontur.kinfra.kfixture.api.ValidationConstructor
-import ru.kontur.kinfra.kfixture.api.ValidationParamResolver
 import ru.kontur.kinfra.kfixture.routers.ValidRouter
 import kotlin.reflect.KClass
 

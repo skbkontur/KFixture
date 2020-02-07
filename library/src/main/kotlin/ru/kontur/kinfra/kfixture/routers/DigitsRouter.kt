@@ -1,6 +1,5 @@
 package ru.kontur.kinfra.kfixture.routers
 
-import ru.kontur.kinfra.kfixture.generators.DigitsCreator
 import ru.kontur.kinfra.kfixture.generators.DigitsGenerator
 import ru.kontur.kinfra.kfixture.generators.digits.BigDecimalDigitsCreator
 import ru.kontur.kinfra.kfixture.generators.digits.BigIntegerDigitsCreator
@@ -34,6 +33,5 @@ class DigitsRouter<T> : ValidRouter<T, Digits> where T : Comparable<T>, T : Any 
                 throw IllegalArgumentException("Max validation can't be applyed to type ${param::class.simpleName}")
             }
         }
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
