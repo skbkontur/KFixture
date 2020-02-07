@@ -1,4 +1,4 @@
-package ru.kontur.kinfra.kfixture.processor.processors
+package ru.kontur.kinfra.kfixture.processor.impl
 
 import ru.kontur.kinfra.kfixture.api.ValidationConstructor
 import ru.kontur.kinfra.kfixture.exceptions.NoOptionalRecursiveException

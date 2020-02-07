@@ -16,6 +16,8 @@ import ru.kontur.kinfra.kfixture.generators.operators.ShortMinusSupplier
 import java.math.BigDecimal
 import java.math.BigInteger
 import javax.validation.constraints.Max
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
 
 class MaxRouter<T> : ValidRouter<T, Max> where T : Any, T : Comparable<T> {
     private val bigDecimalMaxGenerator = MaxGenerator(
@@ -30,7 +32,12 @@ class MaxRouter<T> : ValidRouter<T, Max> where T : Any, T : Comparable<T> {
     private val intMaxGenerator = MaxGenerator(IntCreator(), IntMinusSupplier())
     private val longMaxGenerator = MaxGenerator(LongCreator(), LongMinusSupplier())
 
-    override fun process(param: T, annotation: Max): Any? {
+    override fun process(
+        param: T,
+        annotation: Max,
+        clazz: KClass<T>,
+        type: KType
+    ): Any? {
         return when (param) {
             is BigDecimal -> bigDecimalMaxGenerator.process(param, annotation,,)
             is BigInteger -> bigIntegerMaxGenerator.process(param, annotation,,)

@@ -6,7 +6,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
 class DigitsGenerator<T : Any>(
-    private val creator: VariableCreator<T>
+    private val creator: DigitsCreator<T>
 ) : ValidParamGenerator<T, Digits> {
 
     override fun process(
@@ -15,6 +15,6 @@ class DigitsGenerator<T : Any>(
         clazz: KClass<T>,
         type: KType
     ): T? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return creator.create(annotation.integer-1, annotation.fraction-1)
     }
 }

@@ -1,7 +1,7 @@
 package ru.kontur.kinfra.kfixture.utils
 
 import ru.kontur.kinfra.kfixture.processor.GeneratorAnnotationScanner
-import ru.kontur.kinfra.kfixture.processor.processors.FixtureProcessor
+import ru.kontur.kinfra.kfixture.processor.impl.FixtureProcessor
 import java.lang.RuntimeException
 import java.lang.reflect.Modifier
 import kotlin.reflect.KClass
