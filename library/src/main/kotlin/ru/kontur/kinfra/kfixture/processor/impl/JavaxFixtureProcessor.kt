@@ -1,4 +1,4 @@
-package ru.kontur.kinfra.kfixture.processor.processors
+package ru.kontur.kinfra.kfixture.processor.impl
 
 import ru.kontur.kinfra.kfixture.api.ValidationConstructor
 import ru.kontur.kinfra.kfixture.exceptions.NoOptionalRecursiveException
@@ -63,11 +63,11 @@ class JavaxFixtureProcessor(
                 when {
                     constructors.containsKey(clazz) -> constructors[clazz]?.call()
                     !annotationSum.isNullOrEmpty() -> {
-                        var result = fixtureProcessor.generateParam(clazz, type, annotation)!!
+                        var result = fixtureProcessor.generateParam(clazz, type, annotation)
                         for (it in annotationSum) {
                             val generator = generators[it.annotationClass]
                             result = if (generator != null) {
-                                generator.process(result, it)
+                                generator.process(result!!, it,,)
                             } else {
                                 createClazz(clazz) // Else create by default generators
                             }
@@ -114,7 +114,7 @@ class JavaxFixtureProcessor(
                 for (annotation in sorted) {
                     val generator = generators[annotation.annotationClass]
                         ?: throw NoSuchValidAnnotationException("Please annotate your validate annotation with ValidateAnnotation class")
-                    generatedParam = generator.process(generatedParam, annotation)
+                    generatedParam = generator.process(generatedParam, annotation, clazz, type)
                 }
                 generatedParam
             }

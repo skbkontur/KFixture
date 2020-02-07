@@ -4,8 +4,8 @@ import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterContext
 import ru.kontur.kinfra.kfixture.exceptions.FixtureGenerationException
 import ru.kontur.kinfra.kfixture.processor.GeneratorAnnotationScanner
-import ru.kontur.kinfra.kfixture.processor.processors.FixtureProcessor
-import ru.kontur.kinfra.kfixture.processor.processors.JavaxFixtureProcessor
+import ru.kontur.kinfra.kfixture.processor.impl.FixtureProcessor
+import ru.kontur.kinfra.kfixture.processor.impl.JavaxFixtureProcessor
 import ru.kontur.kinfra.kfixture.resolver.ResolverStrategy
 import ru.kontur.kinfra.kfixture.utils.toKType
 
