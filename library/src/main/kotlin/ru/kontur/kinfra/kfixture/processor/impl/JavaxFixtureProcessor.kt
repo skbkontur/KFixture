@@ -67,7 +67,7 @@ class JavaxFixtureProcessor(
                         for (it in annotationSum) {
                             val generator = generators[it.annotationClass]
                             result = if (generator != null) {
-                                generator.process(result!!, it,,)
+                                generator.process(result!!, it, clazz, type)
                             } else {
                                 createClazz(clazz) // Else create by default generators
                             }

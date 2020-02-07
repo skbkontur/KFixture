@@ -39,12 +39,12 @@ class MaxRouter<T> : ValidRouter<T, Max> where T : Any, T : Comparable<T> {
         type: KType
     ): Any? {
         return when (param) {
-            is BigDecimal -> bigDecimalMaxGenerator.process(param, annotation,,)
-            is BigInteger -> bigIntegerMaxGenerator.process(param, annotation,,)
-            is Byte -> byteMaxGenerator.process(param, annotation,,)
-            is Short -> shortMaxGenerator.process(param, annotation,,)
-            is Int -> intMaxGenerator.process(param, annotation,,)
-            is Long -> longMaxGenerator.process(param, annotation,,)
+            is BigDecimal -> bigDecimalMaxGenerator.process(param, annotation, clazz, type)
+            is BigInteger -> bigIntegerMaxGenerator.process(param, annotation, clazz, type)
+            is Byte -> byteMaxGenerator.process(param, annotation, clazz, type)
+            is Short -> shortMaxGenerator.process(param, annotation, clazz, type)
+            is Int -> intMaxGenerator.process(param, annotation, clazz, type)
+            is Long -> longMaxGenerator.process(param, annotation, clazz, type)
             else -> {
                 throw IllegalArgumentException("Max validation can't be applyed to type ${param::class.simpleName}")
             }
