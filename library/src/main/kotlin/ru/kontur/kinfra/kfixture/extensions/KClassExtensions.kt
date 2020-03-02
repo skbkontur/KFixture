@@ -4,7 +4,11 @@ import kotlin.reflect.KClass
 
 internal fun KClass<*>.isSimple(): Boolean {
     return this == Int::class || this == Long::class || this == String::class ||
-        this == Boolean::class || this == List::class || this == Map::class ||
-        this.simpleName == "Array" || this == Double::class || this == Short::class ||
-        this == Float::class
+            this == Boolean::class || this == List::class || this == Map::class ||
+            this == Double::class || this == Short::class ||
+            this == Float::class || this.simpleName in ARRAYS_NAMES
 }
+
+internal val ARRAYS_NAMES = listOf<String>(
+    "Array", "ByteArray", "LongArray", "IntArray", "ShortArray", "DoubleArray", "FloatArray"
+)
