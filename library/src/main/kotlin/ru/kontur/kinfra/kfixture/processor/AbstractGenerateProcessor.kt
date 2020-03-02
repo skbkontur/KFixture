@@ -43,6 +43,27 @@ abstract class AbstractGenerateProcessor : GenerateProcessor {
             kclass == Boolean::class -> {
                 Random.nextBoolean()
             }
+            kclass == ByteArray::class -> {
+                ByteArray(10)
+            }
+            kclass == CharArray::class -> {
+                CharArray(10)
+            }
+            kclass == IntArray::class -> {
+                IntArray(10)
+            }
+            kclass == DoubleArray::class -> {
+                DoubleArray(10)
+            }
+            kclass == LongArray::class -> {
+                LongArray(10)
+            }
+            kclass == FloatArray::class -> {
+                FloatArray(10)
+            }
+            kclass == ShortArray::class -> {
+                ShortArray(10)
+            }
             kclass.simpleName == "Array" -> {
                 val array = generateArray(10, kclass, type!!, annotationList)
                 array
