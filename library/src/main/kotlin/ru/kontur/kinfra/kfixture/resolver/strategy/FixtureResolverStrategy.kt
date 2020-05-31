@@ -7,7 +7,6 @@ import ru.kontur.kinfra.kfixture.processor.GeneratorAnnotationScanner
 import ru.kontur.kinfra.kfixture.processor.processors.FixtureProcessor
 import ru.kontur.kinfra.kfixture.resolver.ResolverStrategy
 import ru.kontur.kinfra.kfixture.utils.toKType
-import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl
 
 class FixtureResolverStrategy(
     private val generatorAnnotationScanner: GeneratorAnnotationScanner
@@ -20,7 +19,7 @@ class FixtureResolverStrategy(
 
         val type = parameterContext.parameter.type
         return if (type.simpleName == LIST_SIMPLE_NAME) {
-            val kType = (parameterContext.parameter.parameterizedType as ParameterizedTypeImpl)
+            val kType = parameterContext.parameter.parameterizedType
             clazzProcessor.generateParam(type.kotlin, kType.toKType(), null)
                 ?: throw FixtureGenerationException(kType.typeName, parameterContext.parameter.name)
         } else {
