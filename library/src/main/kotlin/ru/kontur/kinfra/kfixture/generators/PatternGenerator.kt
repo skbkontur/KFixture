@@ -13,7 +13,7 @@ class PatternGenerator : ValidParamGenerator<String, Pattern> {
     override fun process(
         param: String,
         annotation: Pattern,
-        clazz: KClass<String>,
+        clazz: KClass<*>,
         type: KType
     ): String? {
         val pattern = annotation.regexp

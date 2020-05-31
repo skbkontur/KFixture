@@ -1,5 +1,6 @@
 package ru.kontur.kinfra.kfixture.routers
 
+import ru.kontur.kinfra.kfixture.exceptions.AnnotationCantBeAppliedException
 import ru.kontur.kinfra.kfixture.generators.MaxGenerator
 import ru.kontur.kinfra.kfixture.generators.creators.BigDecimalCreator
 import ru.kontur.kinfra.kfixture.generators.creators.BigIntegerCreator
@@ -19,6 +20,7 @@ import javax.validation.constraints.Max
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
+@Suppress("unused")
 class MaxRouter<T> : ValidRouter<T, Max> where T : Any, T : Comparable<T> {
     private val bigDecimalMaxGenerator = MaxGenerator(
         BigDecimalCreator(),
@@ -35,7 +37,7 @@ class MaxRouter<T> : ValidRouter<T, Max> where T : Any, T : Comparable<T> {
     override fun process(
         param: T,
         annotation: Max,
-        clazz: KClass<T>,
+        clazz: KClass<*>,
         type: KType
     ): Any? {
         return when (param) {
@@ -46,7 +48,7 @@ class MaxRouter<T> : ValidRouter<T, Max> where T : Any, T : Comparable<T> {
             is Int -> intMaxGenerator.process(param, annotation, clazz, type)
             is Long -> longMaxGenerator.process(param, annotation, clazz, type)
             else -> {
-                throw IllegalArgumentException("Max validation can't be applyed to type ${param::class.simpleName}")
+                throw AnnotationCantBeAppliedException(annotation, clazz)
             }
         }
     }

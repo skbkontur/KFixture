@@ -13,7 +13,7 @@ class NotBlankGenerator : ValidParamGenerator<String, NotBlank> {
     override fun process(
         param: String,
         annotation: NotBlank,
-        clazz: KClass<String>,
+        clazz: KClass<*>,
         type: KType
     ): String? {
         if (param.isBlank()) {

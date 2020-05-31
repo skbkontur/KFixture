@@ -13,7 +13,7 @@ class EmailGenerator : ValidParamGenerator<String, Email> {
     override fun process(
         param: String,
         annotation: Email,
-        clazz: KClass<String>,
+        clazz: KClass<*>,
         type: KType
     ): String? {
         return generateEmail()

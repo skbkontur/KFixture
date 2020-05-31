@@ -16,7 +16,7 @@ class MinGenerator<T : Comparable<T>>(
     override fun process(
         param: T,
         annotation: Min,
-        clazz: KClass<T>,
+        clazz: KClass<*>,
         type: KType
     ): T? {
         val min = creator.create(annotation.value)

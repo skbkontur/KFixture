@@ -9,7 +9,7 @@ class NotNullGenerator<T : Any> : ValidParamGenerator<T, NotNull> {
     override fun process(
         param: T,
         annotation: NotNull,
-        clazz: KClass<T>,
+        clazz: KClass<*>,
         type: KType
     ): T? {
         return param

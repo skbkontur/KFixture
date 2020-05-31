@@ -16,7 +16,7 @@ class MaxGenerator<T : Comparable<T>>(
     override fun process(
         param: T,
         annotation: Max,
-        clazz: KClass<T>,
+        clazz: KClass<*>,
         type: KType
     ): T? {
         val max = creator.create(annotation.value)

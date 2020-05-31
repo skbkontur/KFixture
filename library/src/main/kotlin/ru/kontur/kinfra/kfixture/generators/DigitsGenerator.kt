@@ -12,7 +12,7 @@ class DigitsGenerator<T : Any>(
     override fun process(
         param: T,
         annotation: Digits,
-        clazz: KClass<T>,
+        clazz: KClass<*>,
         type: KType
     ): T? {
         return creator.create(annotation.integer - 1, annotation.fraction - 1)

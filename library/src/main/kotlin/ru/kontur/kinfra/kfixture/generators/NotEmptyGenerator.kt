@@ -16,7 +16,7 @@ class NotEmptyGenerator<T : Any> : ValidParamGenerator<T, NotEmpty> {
     override fun process(
         param: T,
         annotation: NotEmpty,
-        clazz: KClass<T>,
+        clazz: KClass<*>,
         type: KType
     ): T? {
         return when (param) {

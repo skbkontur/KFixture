@@ -4,5 +4,5 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
 interface ValidRouter<T : Any, A> {
-    fun process(param: T, annotation: A, clazz: KClass<T>, type: KType): Any?
+    fun process(param: T, annotation: A, clazz: KClass<*>, type: KType): Any?
 }

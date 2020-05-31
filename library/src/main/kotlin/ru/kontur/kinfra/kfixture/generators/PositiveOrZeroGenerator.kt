@@ -11,7 +11,7 @@ class PositiveOrZeroGenerator<T : Comparable<T>>(
     override fun process(
         param: T,
         annotation: PositiveOrZero,
-        clazz: KClass<T>,
+        clazz: KClass<*>,
         type: KType
     ): T? {
         if (param < creator.create(0)) {
