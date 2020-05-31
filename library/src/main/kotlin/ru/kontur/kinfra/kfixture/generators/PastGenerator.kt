@@ -13,7 +13,7 @@ class PastGenerator<T : Comparable<T>>(
     override fun process(
         param: T,
         annotation: Past,
-        clazz: KClass<T>,
+        clazz: KClass<*>,
         type: KType
     ): T? {
         if (param >= creator.create(TimeInterval.NOW)) {

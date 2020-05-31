@@ -110,11 +110,11 @@ class JavaxFixtureProcessor(
                 val sorted = annotationList.sortedBy {
                     return@sortedBy defaultPriority[it.annotationClass]
                 }
-                var generatedParam = fixtureProcessor.generateParam(clazz, type, listOf())!!
+                var generatedParam = fixtureProcessor.generateParam(clazz, type, listOf())
                 for (annotation in sorted) {
                     val generator = generators[annotation.annotationClass]
                         ?: throw NoSuchValidAnnotationException("Please annotate your validate annotation with ValidateAnnotation class")
-                    generatedParam = generator.process(generatedParam, annotation, clazz, type)
+                    generatedParam = generator.process(generatedParam!!, annotation, clazz, type)
                 }
                 generatedParam
             }

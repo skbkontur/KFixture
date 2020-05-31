@@ -1,5 +1,6 @@
 package ru.kontur.kinfra.kfixture.routers
 
+import ru.kontur.kinfra.kfixture.exceptions.AnnotationCantBeAppliedException
 import ru.kontur.kinfra.kfixture.generators.MinGenerator
 import ru.kontur.kinfra.kfixture.generators.creators.*
 import ru.kontur.kinfra.kfixture.generators.operators.*
@@ -9,6 +10,7 @@ import javax.validation.constraints.Min
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
+@Suppress("unused")
 class MinRouter<T> : ValidRouter<T, Min> where T : Any, T : Comparable<T> {
     private val bigDecimalMinGenerator = MinGenerator(
         BigDecimalCreator(),
@@ -26,7 +28,7 @@ class MinRouter<T> : ValidRouter<T, Min> where T : Any, T : Comparable<T> {
     override fun process(
         param: T,
         annotation: Min,
-        clazz: KClass<T>,
+        clazz: KClass<*>,
         type: KType
     ): Any? {
         return when (param) {
@@ -37,7 +39,7 @@ class MinRouter<T> : ValidRouter<T, Min> where T : Any, T : Comparable<T> {
             is Int -> intMinGenerator.process(param, annotation, clazz, type)
             is Long -> longMinGenerator.process(param, annotation, clazz, type)
             else -> {
-                throw IllegalArgumentException("Max validation can't be applyed to type ${param::class.simpleName}")
+                throw AnnotationCantBeAppliedException(annotation, clazz)
             }
         }
     }

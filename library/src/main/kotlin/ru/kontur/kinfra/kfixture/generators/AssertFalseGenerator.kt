@@ -9,7 +9,7 @@ class AssertFalseGenerator : ValidParamGenerator<Boolean, AssertFalse> {
     override fun process(
         param: Boolean,
         annotation: AssertFalse,
-        clazz: KClass<Boolean>,
+        clazz: KClass<*>,
         type: KType
     ): Boolean? {
         return false

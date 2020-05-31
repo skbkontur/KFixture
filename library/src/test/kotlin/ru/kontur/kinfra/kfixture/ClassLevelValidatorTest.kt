@@ -8,6 +8,7 @@ import ru.kontur.kinfra.kfixture.api.FixtureGeneratorMeta
 import ru.kontur.kinfra.kfixture.api.ValidationParamResolver
 import ru.kontur.kinfra.kfixture.api.ResolverFor
 import ru.kontur.kinfra.kfixture.resolver.FixtureParameterResolver
+import ru.kontur.kinfra.kfixture.routers.ValidRouter
 import ru.kontur.kinfra.kfixture.utils.generateString
 import javax.validation.Constraint
 import javax.validation.ConstraintValidator
@@ -16,9 +17,13 @@ import javax.validation.Payload
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
-@ResolverFor(value = ClassLevelValidatorTest.SomeValidation::class)
-class CustomResolver : ValidationParamResolver {
-    override fun <T> process(generatedParam: T?, clazz: KClass<*>, type: KType, annotation: Annotation): Any? {
+class CustomResolver : ValidRouter<ClassLevelValidatorTest.Data, ClassLevelValidatorTest.SomeValidation> {
+    override fun process(
+        param: ClassLevelValidatorTest.Data,
+        annotation: ClassLevelValidatorTest.SomeValidation,
+        clazz: KClass<*>,
+        type: KType
+    ): Any? {
         return ClassLevelValidatorTest.Data(
             param1 = generateString(10),
             param2 = null

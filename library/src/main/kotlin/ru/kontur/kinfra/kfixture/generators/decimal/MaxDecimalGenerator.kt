@@ -14,7 +14,7 @@ class MaxDecimalGenerator<T : Comparable<T>>(
     override fun process(
         param: T,
         annotation: DecimalMax,
-        clazz: KClass<T>,
+        clazz: KClass<*>,
         type: KType
     ): T? {
         val max = creator.create(annotation.value.toLong())

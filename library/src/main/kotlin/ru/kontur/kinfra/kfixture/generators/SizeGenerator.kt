@@ -13,7 +13,7 @@ class SizeGenerator<T : Any> : ValidParamGenerator<T, Size> {
     override fun process(
         param: T,
         annotation: Size,
-        clazz: KClass<T>,
+        clazz: KClass<*>,
         type: KType
     ): T? {
         return when (param) {

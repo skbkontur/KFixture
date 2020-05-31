@@ -13,7 +13,7 @@ class FutureOrPresentGenerator<T : Comparable<T>>(
     override fun process(
         param: T,
         annotation: FutureOrPresent,
-        clazz: KClass<T>,
+        clazz: KClass<*>,
         type: KType
     ): T? {
         if (param < creator.create(TimeInterval.NOW)) {

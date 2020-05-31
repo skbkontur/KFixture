@@ -1,5 +1,6 @@
 package ru.kontur.kinfra.kfixture.routers
 
+import ru.kontur.kinfra.kfixture.exceptions.AnnotationCantBeAppliedException
 import ru.kontur.kinfra.kfixture.generators.DigitsGenerator
 import ru.kontur.kinfra.kfixture.generators.digits.BigDecimalDigitsCreator
 import ru.kontur.kinfra.kfixture.generators.digits.BigIntegerDigitsCreator
@@ -13,6 +14,7 @@ import javax.validation.constraints.Digits
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
+@Suppress("unused")
 class DigitsRouter<T> : ValidRouter<T, Digits> where T : Comparable<T>, T : Any {
     private val bigDecimalDigitsGenerator = DigitsGenerator(BigDecimalDigitsCreator())
     private val bigIntegerDigitsCreator = DigitsGenerator(BigIntegerDigitsCreator())
@@ -21,7 +23,7 @@ class DigitsRouter<T> : ValidRouter<T, Digits> where T : Comparable<T>, T : Any 
     private val shortDigitsCreator = DigitsGenerator(ShortDigitsCreator())
     private val byteDigitsCreator = DigitsGenerator(ByteDigitsCreator())
 
-    override fun process(param: T, annotation: Digits, clazz: KClass<T>, type: KType): Any? {
+    override fun process(param: T, annotation: Digits, clazz: KClass<*>, type: KType): Any? {
         return when (param) {
             is BigDecimal -> bigDecimalDigitsGenerator.process(param, annotation, clazz, type)
             is BigInteger -> bigIntegerDigitsCreator.process(param, annotation, clazz, type)
@@ -30,7 +32,7 @@ class DigitsRouter<T> : ValidRouter<T, Digits> where T : Comparable<T>, T : Any 
             is Short -> shortDigitsCreator.process(param, annotation, clazz, type)
             is Byte -> byteDigitsCreator.process(param, annotation, clazz, type)
             else -> {
-                throw IllegalArgumentException("Max validation can't be applyed to type ${param::class.simpleName}")
+                throw AnnotationCantBeAppliedException(annotation, clazz)
             }
         }
     }
