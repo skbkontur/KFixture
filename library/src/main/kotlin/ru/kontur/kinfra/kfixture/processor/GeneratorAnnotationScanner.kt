@@ -51,7 +51,7 @@ class GeneratorAnnotationScanner(
     }
 
     private companion object {
-        const val LIBRARY_PATH = "ru.kontur.test.kfixture"
+        const val LIBRARY_PATH = "ru.kontur.kinfra.kfixture"
         const val JAVAX_PATH = "javax.validation.constraints"
     }
 }
