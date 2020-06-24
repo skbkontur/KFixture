@@ -15,6 +15,6 @@ class DigitsGenerator<T : Any>(
         clazz: KClass<*>,
         type: KType
     ): T? {
-        return creator.create(annotation.integer - 1, annotation.fraction - 1)
+        return creator.create(annotation.integer, annotation.fraction)
     }
 }

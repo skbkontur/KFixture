@@ -17,7 +17,7 @@ class NegativeGenerator<T : Comparable<T>>(
         clazz: KClass<*>,
         type: KType
     ): T? {
-        return if (param < creator.create(0)) {
+        return if (param > creator.create(0)) {
             creator.create(DEFAULT_MINUS)
         } else {
             param
