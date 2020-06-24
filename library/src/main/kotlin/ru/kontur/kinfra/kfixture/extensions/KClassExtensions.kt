@@ -6,5 +6,5 @@ internal fun KClass<*>.isSimple(): Boolean {
     return this == Int::class || this == Long::class || this == String::class ||
         this == Boolean::class || this == List::class || this == Map::class ||
         this.simpleName == "Array" || this == Double::class || this == Short::class ||
-        this == Float::class
+        this == Float::class || this == Byte::class
 }

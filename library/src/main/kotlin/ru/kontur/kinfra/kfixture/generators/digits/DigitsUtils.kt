@@ -9,7 +9,8 @@ internal object DigitsUtils {
             sb.append("1")
         }
 
-        sb.append(".")
+        if (fraction != 0)
+            sb.append(".")
 
         for (i in 0 until fraction) {
             sb.append("1")
