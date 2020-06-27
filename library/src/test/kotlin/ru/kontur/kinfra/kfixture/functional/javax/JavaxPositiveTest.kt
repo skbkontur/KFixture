@@ -1,8 +1,6 @@
 package ru.kontur.kinfra.kfixture.functional.javax
 
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.extension.ExtendWith
 import ru.kontur.kinfra.kfixture.annotations.JavaxFixture
@@ -19,7 +17,6 @@ private class JavaxPositiveTest {
     )
 
     @RepeatedTest(10)
-    @Disabled
     fun `should generate big decimal positive`(@JavaxFixture wrapper: BigDecimalWrapper) {
         assertEquals(wrapper.value > BigDecimal.ZERO, true)
     }
@@ -30,7 +27,6 @@ private class JavaxPositiveTest {
     )
 
     @RepeatedTest(10)
-    @Disabled
     fun `should generate big integer positive`(@JavaxFixture wrapper: BigIntegerWrapper) {
         assertEquals(wrapper.value > BigInteger.ZERO, true)
     }

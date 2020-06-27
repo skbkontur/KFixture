@@ -1,5 +1,6 @@
 package ru.kontur.kinfra.kfixture.processor.impl
 
+import ru.kontur.kinfra.kfixture.api.ParamConstructor
 import ru.kontur.kinfra.kfixture.api.ValidationConstructor
 import ru.kontur.kinfra.kfixture.exceptions.NoOptionalRecursiveException
 import ru.kontur.kinfra.kfixture.exceptions.NoSuchValidAnnotationException
@@ -19,7 +20,8 @@ import kotlin.reflect.KType
  */
 class JavaxFixtureProcessor(
     private val generators: Map<KClass<out Annotation>, ValidRouter<Any, Any>>,
-    private val constructors: Map<KClass<*>, ValidationConstructor<*>>,
+    private val validationConstructors: Map<KClass<*>, ValidationConstructor<*>>,
+    private val constructors: Map<KClass<*>, ParamConstructor<*>>,
     private val generatorAnnotationScanner: GeneratorAnnotationScanner,
     private val fixtureProcessor: FixtureProcessor
 ) : AbstractGenerateProcessor() {
@@ -61,7 +63,7 @@ class JavaxFixtureProcessor(
             }
             else -> {
                 when {
-                    constructors.containsKey(clazz) -> constructors[clazz]?.call()
+                    validationConstructors.containsKey(clazz) -> validationConstructors[clazz]?.call()
                     !annotationSum.isNullOrEmpty() -> {
                         var result = fixtureProcessor.generateParam(clazz, type, annotation)
                         for (it in annotationSum) {
@@ -83,6 +85,11 @@ class JavaxFixtureProcessor(
     }
 
     private fun createClazz(clazz: KClass<*>): Any {
+        val userConstructor = constructors[clazz]
+        if (userConstructor != null) {
+            return userConstructor.call()
+        }
+
         val constructor = FixtureUtils.getCreatorFunction(clazz, generatorAnnotationScanner)
         val arguments = constructor.parameters.map { param ->
             val newAnnotation =

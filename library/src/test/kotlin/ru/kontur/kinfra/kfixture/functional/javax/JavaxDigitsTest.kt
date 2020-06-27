@@ -18,20 +18,18 @@ private class JavaxDigitsTest {
     )
 
     @RepeatedTest(10)
-    @Disabled
     fun `should generate big decimal digits`(@JavaxFixture wrapper: BigDecimalWrapper) {
         assertEquals("1.1", wrapper.value.toString())
     }
 
     data class BigIntegerWrapper(
-        @field:Digits(integer = 1, fraction = 1)
+        @field:Digits(integer = 1, fraction = 0)
         val value: BigInteger
     )
 
     @RepeatedTest(10)
-    @Disabled
     fun `should generate big integer digits`(@JavaxFixture wrapper: BigIntegerWrapper) {
-        assertEquals("1.1", wrapper.value.toString())
+        assertEquals("1", wrapper.value.toString())
     }
 
     data class LongWrapper(
