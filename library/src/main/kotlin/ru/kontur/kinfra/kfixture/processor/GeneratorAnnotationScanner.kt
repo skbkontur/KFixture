@@ -1,6 +1,7 @@
 package ru.kontur.kinfra.kfixture.processor
 
 import org.reflections.Reflections
+import ru.kontur.kinfra.kfixture.api.ParamConstructor
 import ru.kontur.kinfra.kfixture.api.ValidationConstructor
 import ru.kontur.kinfra.kfixture.routers.ValidRouter
 import kotlin.reflect.KClass
@@ -18,13 +19,23 @@ class GeneratorAnnotationScanner(
         return internalValidatorsMap()
     }
 
-    fun getConstructors(): Map<KClass<*>, ValidationConstructor<*>> {
+    fun getValidationConstructors(): Map<KClass<*>, ValidationConstructor<*>> {
         val constructors = reflections.getSubTypesOf(ValidationConstructor::class.java).map { it.kotlin }
 
         return constructors.associate<KClass<out ValidationConstructor<*>>, KClass<out Any>, ValidationConstructor<*>> {
             val constructor = it.constructors.toMutableList()[0]
             val validationConstructor = constructor.call()
             it.java.getDeclaredMethod("call").returnType.kotlin to validationConstructor
+        }
+    }
+
+    fun getConstructors(): Map<KClass<*>, ParamConstructor<*>> {
+        val constructors = reflections.getSubTypesOf(ParamConstructor::class.java).map { it.kotlin }
+
+        return constructors.associate<KClass<out ParamConstructor<*>>, KClass<out Any>, ParamConstructor<*>> {
+            val constructor = it.constructors.toMutableList()[0]
+            val paramConstructor = constructor.call()
+            it.java.getDeclaredMethod("call").returnType.kotlin to paramConstructor
         }
     }
 

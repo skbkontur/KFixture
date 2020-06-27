@@ -16,11 +16,18 @@ class JavaxFixtureResolverStrategy(
         val generators = generatorAnnotationScanner.getValidatorsMap()
 
         val constructors = generatorAnnotationScanner.getConstructors()
+        val validationConstructors = generatorAnnotationScanner.getValidationConstructors()
 
         val fixtureProcessor = FixtureProcessor(constructors, generatorAnnotationScanner)
 
         val classProcessor =
-            JavaxFixtureProcessor(generators, constructors, generatorAnnotationScanner, fixtureProcessor)
+            JavaxFixtureProcessor(
+                generators,
+                validationConstructors,
+                constructors,
+                generatorAnnotationScanner,
+                fixtureProcessor
+            )
 
         val type = parameterContext.parameter.type
         return classProcessor.generateParam(type.kotlin, type.toKType(), null)

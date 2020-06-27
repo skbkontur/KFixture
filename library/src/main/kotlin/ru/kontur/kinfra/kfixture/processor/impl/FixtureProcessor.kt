@@ -1,5 +1,6 @@
 package ru.kontur.kinfra.kfixture.processor.impl
 
+import ru.kontur.kinfra.kfixture.api.ParamConstructor
 import ru.kontur.kinfra.kfixture.api.ValidationConstructor
 import ru.kontur.kinfra.kfixture.exceptions.NoOptionalRecursiveException
 import ru.kontur.kinfra.kfixture.extensions.isSimple
@@ -15,7 +16,7 @@ import kotlin.reflect.jvm.isAccessible
  * @author Konstantin Volivach
  */
 class FixtureProcessor(
-    private val constructors: Map<KClass<*>, ValidationConstructor<*>>,
+    private val constructors: Map<KClass<*>, ParamConstructor<*>>,
     private val generatorAnnotationScanner: GeneratorAnnotationScanner
 ) : AbstractGenerateProcessor() {
 

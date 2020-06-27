@@ -28,7 +28,6 @@ private class JavaxNegativeTest {
     )
 
     @RepeatedTest(10)
-    @Disabled
     fun `should generate big integer negative`(@JavaxFixture wrapper: BigIntegerWrapper) {
         Assertions.assertEquals(wrapper.value < BigInteger.ZERO, true)
     }
