@@ -16,7 +16,7 @@ class FutureOrPresentGenerator<T : Comparable<T>>(
         clazz: KClass<*>,
         type: KType
     ): T? {
-        if (param < creator.create(TimeInterval.NOW)) {
+        if (param <= creator.create(TimeInterval.NOW)) {
             return creator.create(TimeInterval.FUTURE)
         }
         return param
