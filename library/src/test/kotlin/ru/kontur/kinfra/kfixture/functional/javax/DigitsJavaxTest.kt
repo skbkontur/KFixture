@@ -11,7 +11,7 @@ import java.math.BigInteger
 import javax.validation.constraints.Digits
 
 @ExtendWith(FixtureParameterResolver::class)
-private class JavaxDigitsTest {
+private class DigitsJavaxTest {
     data class BigDecimalWrapper(
         @field:Digits(integer = 1, fraction = 1)
         val value: BigDecimal

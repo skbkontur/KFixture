@@ -8,7 +8,7 @@ import ru.kontur.kinfra.kfixture.resolver.FixtureParameterResolver
 import javax.validation.constraints.Max
 
 @ExtendWith(FixtureParameterResolver::class)
-private class JavaxMaxTest {
+private class MaxJavaxTest {
     data class MaxWrapper(
         @field:Max(5000)
         val value: Int

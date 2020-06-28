@@ -10,7 +10,7 @@ import java.math.BigInteger
 import javax.validation.constraints.Positive
 
 @ExtendWith(FixtureParameterResolver::class)
-private class JavaxPositiveTest {
+private class PositiveJavaxTest {
     data class BigDecimalWrapper(
         @field:Positive
         val value: BigDecimal

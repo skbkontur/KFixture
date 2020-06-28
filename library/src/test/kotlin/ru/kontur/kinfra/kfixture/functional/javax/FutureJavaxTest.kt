@@ -15,7 +15,7 @@ import java.util.*
 import javax.validation.constraints.Future
 
 @ExtendWith(FixtureParameterResolver::class)
-private class JavaxFutureTest {
+private class FutureJavaxTest {
 
     data class DateWrapper(
         @field:Future
