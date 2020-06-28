@@ -12,7 +12,7 @@ class LocalTimeDateCreator : DateCreator<LocalTime> {
     }
 
     private companion object {
-        const val HOURS_TO_SUB = 10L
-        const val HOURS_TO_ADD = 10L
+        const val HOURS_TO_SUB = 1L
+        const val HOURS_TO_ADD = 1L
     }
 }
