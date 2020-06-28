@@ -11,7 +11,7 @@ import java.math.BigInteger
 import javax.validation.constraints.Negative
 
 @ExtendWith(FixtureParameterResolver::class)
-private class JavaxNegativeTest {
+private class NegativeJavaxTest {
     data class BigDecimalWrapper(
         @field:Negative
         val value: BigDecimal

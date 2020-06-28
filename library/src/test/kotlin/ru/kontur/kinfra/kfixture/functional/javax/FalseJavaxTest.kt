@@ -5,17 +5,17 @@ import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.extension.ExtendWith
 import ru.kontur.kinfra.kfixture.annotations.JavaxFixture
 import ru.kontur.kinfra.kfixture.resolver.FixtureParameterResolver
-import javax.validation.constraints.Email
+import javax.validation.constraints.AssertFalse
 
 @ExtendWith(FixtureParameterResolver::class)
-private class JavaxEmailTest {
-    data class WrapperEmailValue(
-        @field:Email
-        val value: String
+private class FalseJavaxTest {
+    data class WrapperFalseValue(
+        @field:AssertFalse
+        val value: Boolean
     )
 
     @RepeatedTest(10)
-    fun `should generate email`(@JavaxFixture wrapper: WrapperEmailValue) {
-        assertEquals(wrapper.value.contains("@gmail.com"), true)
+    fun `should generate wrapper with false value`(@JavaxFixture wrapper: WrapperFalseValue) {
+        assertEquals(wrapper.value, false)
     }
 }

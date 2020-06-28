@@ -8,7 +8,7 @@ import ru.kontur.kinfra.kfixture.resolver.FixtureParameterResolver
 import javax.validation.constraints.Min
 
 @ExtendWith(FixtureParameterResolver::class)
-private class JavaxMinTest {
+private class MinJavaxTest {
 
     data class MinWrapper(
         @field:Min(5000)

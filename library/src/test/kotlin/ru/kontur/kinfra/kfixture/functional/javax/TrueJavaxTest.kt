@@ -8,7 +8,7 @@ import ru.kontur.kinfra.kfixture.resolver.FixtureParameterResolver
 import javax.validation.constraints.AssertTrue
 
 @ExtendWith(FixtureParameterResolver::class)
-private class JavaxTrueTest {
+private class TrueJavaxTest {
     data class WrapperTrueValue(
         @field:AssertTrue
         val value: Boolean

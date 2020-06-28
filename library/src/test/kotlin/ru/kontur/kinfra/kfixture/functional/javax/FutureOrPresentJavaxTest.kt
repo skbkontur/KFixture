@@ -14,7 +14,7 @@ import java.util.*
 import javax.validation.constraints.FutureOrPresent
 
 @ExtendWith(FixtureParameterResolver::class)
-private class JavaxFutureOrPresentTest {
+private class FutureOrPresentJavaxTest {
     data class DateWrapper(
         @field:FutureOrPresent
         val param: Date
