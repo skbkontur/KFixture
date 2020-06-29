@@ -49,6 +49,11 @@ class FixtureProcessor(
                     throw NoOptionalRecursiveException("Recursive field can't be required")
                 }
             }
+            if (paramClazz == List::class) {
+                if (param.type.arguments.isNotEmpty() && param.type.arguments[0].type?.classifier == clazz) {
+                    return@map listOf<Nothing>()
+                }
+            }
             generateParam(param.type.classifier as KClass<*>, param.type, null)
         }.toTypedArray()
         return requireNotNull(constructor.call(*arguments)) {
