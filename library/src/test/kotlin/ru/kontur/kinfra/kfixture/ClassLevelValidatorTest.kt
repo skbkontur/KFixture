@@ -5,8 +5,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import ru.kontur.kinfra.kfixture.annotations.JavaxFixture
 import ru.kontur.kinfra.kfixture.api.FixtureGeneratorMeta
-import ru.kontur.kinfra.kfixture.api.ValidationParamResolver
-import ru.kontur.kinfra.kfixture.api.ResolverFor
 import ru.kontur.kinfra.kfixture.resolver.FixtureParameterResolver
 import ru.kontur.kinfra.kfixture.routers.ValidRouter
 import ru.kontur.kinfra.kfixture.utils.generateString

@@ -18,7 +18,7 @@ class NegativeOrZeroRouter<T> : ValidRouter<T, NegativeOrZero> where T : Any {
     private val intNegativeOrZeroGenerator = NegativeOrZeroGenerator(IntCreator())
     private val longNegativeOrZeroGenerator = NegativeOrZeroGenerator(LongCreator())
     private val floatNegativeOrZeroGenerator = NegativeOrZeroGenerator(FloatCreator())
-    
+
     override fun process(param: T, annotation: NegativeOrZero, clazz: KClass<*>, type: KType): Any? {
         return when (param) {
             is BigDecimal -> bigDecimalNegativeOrZeroGenerator.process(param, annotation, clazz, type)

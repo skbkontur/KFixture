@@ -25,7 +25,6 @@ private class PastJavaxTest {
         Assertions.assertEquals(fixture.param < Date.from(Instant.now()), true)
     }
 
-
     data class CalendarWrapper(
         @field:Past
         val param: Calendar
@@ -177,5 +176,4 @@ private class PastJavaxTest {
     fun `should generate thai buddhist date in past`(@JavaxFixture fixture: ThaiBuddhistDateWrapper) {
         Assertions.assertEquals(fixture.param < ThaiBuddhistDate.now(), true)
     }
-    
 }

@@ -25,7 +25,6 @@ class PastOrPresentJavaxTest {
         Assertions.assertEquals(fixture.param <= Date.from(Instant.now()), true)
     }
 
-
     data class CalendarWrapper(
         @field:PastOrPresent
         val param: Calendar
@@ -177,5 +176,4 @@ class PastOrPresentJavaxTest {
     fun `should generate thai buddhist date in past or present`(@JavaxFixture fixture: ThaiBuddhistDateWrapper) {
         Assertions.assertEquals(fixture.param <= ThaiBuddhistDate.now(), true)
     }
-
 }
