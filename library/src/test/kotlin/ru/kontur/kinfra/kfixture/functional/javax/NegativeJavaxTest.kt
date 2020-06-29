@@ -1,7 +1,6 @@
 package ru.kontur.kinfra.kfixture.functional.javax
 
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.extension.ExtendWith
 import ru.kontur.kinfra.kfixture.annotations.JavaxFixture
@@ -71,5 +70,4 @@ private class NegativeJavaxTest {
     fun `should generate byte negative`(@JavaxFixture wrapper: ByteWrapper) {
         Assertions.assertEquals(wrapper.value < 0, true)
     }
-
 }

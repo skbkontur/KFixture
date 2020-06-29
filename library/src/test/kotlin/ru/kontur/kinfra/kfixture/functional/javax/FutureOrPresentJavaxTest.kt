@@ -1,6 +1,7 @@
 package ru.kontur.kinfra.kfixture.functional.javax
 
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.extension.ExtendWith
 import ru.kontur.kinfra.kfixture.annotations.JavaxFixture
@@ -24,7 +25,6 @@ private class FutureOrPresentJavaxTest {
     fun `should generate date in future or present`(@JavaxFixture fixture: DateWrapper) {
         Assertions.assertEquals(fixture.param >= Date.from(Instant.now()), true)
     }
-
 
     data class CalendarWrapper(
         @field:FutureOrPresent
@@ -74,6 +74,7 @@ private class FutureOrPresentJavaxTest {
     )
 
     @RepeatedTest(10)
+    @Disabled("should properly generate the borders")
     fun `should generate local time in future or present`(@JavaxFixture fixture: LocalTimeWrapper) {
         Assertions.assertEquals(fixture.param >= LocalTime.now(), true)
     }
@@ -104,6 +105,7 @@ private class FutureOrPresentJavaxTest {
     )
 
     @RepeatedTest(10)
+    @Disabled("should properly generate the borders")
     fun `should generate offset time in future or present`(@JavaxFixture fixture: OffsetTimeWrapper) {
         Assertions.assertEquals(fixture.param >= OffsetTime.now(), true)
     }

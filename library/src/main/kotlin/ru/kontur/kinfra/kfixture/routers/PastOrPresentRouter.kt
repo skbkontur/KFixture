@@ -31,7 +31,7 @@ class PastOrPresentRouter<T> : ValidRouter<T, PastOrPresent> where T : Any {
     private val japaneseDatePastOrPresentGenerator = PastOrPresentGenerator(JapaneseDateDateCreator())
     private val minguoDatePastOrPresentGenerator = PastOrPresentGenerator(MinguoDateDateCreator())
     private val thaiBuddhistPastOrPresentGenerator = PastOrPresentGenerator(ThaiBuddhistDateDateCreator())
-    
+
     override fun process(param: T, annotation: PastOrPresent, clazz: KClass<*>, type: KType): Any? {
         return when (param) {
             is Date -> datePastOrPresentGenerator.process(param, annotation, clazz, type)

@@ -1,7 +1,6 @@
 package ru.kontur.kinfra.kfixture.processor.impl
 
 import ru.kontur.kinfra.kfixture.api.ParamConstructor
-import ru.kontur.kinfra.kfixture.api.ValidationConstructor
 import ru.kontur.kinfra.kfixture.exceptions.NoOptionalRecursiveException
 import ru.kontur.kinfra.kfixture.extensions.isSimple
 import ru.kontur.kinfra.kfixture.processor.AbstractGenerateProcessor
