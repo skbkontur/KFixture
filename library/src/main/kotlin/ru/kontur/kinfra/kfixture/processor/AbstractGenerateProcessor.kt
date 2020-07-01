@@ -40,6 +40,9 @@ abstract class AbstractGenerateProcessor : GenerateProcessor {
             kclass == Map::class -> {
                 generateMap(10, kclass, type!!, annotationList)
             }
+            kclass == Set::class -> {
+                generateSet(10, kclass, type!!, annotationList)
+            }
             kclass == Boolean::class -> {
                 Random.nextBoolean()
             }
@@ -101,6 +104,17 @@ abstract class AbstractGenerateProcessor : GenerateProcessor {
     ): Any {
         val elemType = type.arguments[0].type!!
         return (1..numOfElements).map { generateParam(elemType.classifier as KClass<*>, elemType, annotationList) }
+    }
+
+    private fun generateSet(
+        numOfElements: Int,
+        classRef: KClass<*>,
+        type: KType,
+        annotationList: List<Annotation>?
+    ): Any {
+        val elemType = type.arguments[0].type!!
+        return (1..numOfElements).map { generateParam(elemType.classifier as KClass<*>, elemType, annotationList) }
+            .toSet()
     }
 
     private fun generateArray(
