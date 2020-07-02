@@ -36,7 +36,11 @@ object FixtureUtils {
 
     fun getCreatorFunction(clazz: KClass<*>, annotationScanner: GeneratorAnnotationScanner): KFunction<*> {
         val searchClazz = if (clazz.isAbstract || clazz.isSealed) {
-            annotationScanner.getSubTypeOf(clazz).kotlin
+            annotationScanner.getSubTypeOf(clazz)?.kotlin
+                ?: annotationScanner.tryToGetSubTypeByAbstractPackage(clazz)?.kotlin
+                ?: throw IllegalArgumentException(
+                    "Please provide the path where to search subTypes of clazz=${clazz.qualifiedName}"
+                )
         } else {
             clazz
         }
