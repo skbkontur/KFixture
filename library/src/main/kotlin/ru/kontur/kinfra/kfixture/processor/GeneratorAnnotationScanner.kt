@@ -39,9 +39,14 @@ class GeneratorAnnotationScanner(
         }
     }
 
-    fun getSubTypeOf(clazz: KClass<*>): Class<*> {
+    fun getSubTypeOf(clazz: KClass<*>): Class<*>? {
         return reflections.getSubTypesOf(clazz.java).firstOrNull()
-            ?: throw IllegalArgumentException("Collection of subType is empty, clazz=${clazz.qualifiedName}")
+    }
+
+    fun tryToGetSubTypeByAbstractPackage(clazz: KClass<*>): Class<*>? {
+        val path = clazz.java.name.substringBeforeLast(".")
+        val reflections = Reflections(path)
+        return reflections.getSubTypesOf(clazz.java).firstOrNull()
     }
 
     private fun internalValidatorsMap(): Map<KClass<out Annotation>, ValidRouter<Any, Any>> {
