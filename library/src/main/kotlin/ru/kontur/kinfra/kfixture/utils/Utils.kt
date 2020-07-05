@@ -11,7 +11,8 @@ import kotlin.reflect.KTypeParameter
  */
 
 fun generateString(numOfElements: Int): String {
-    return (1..numOfElements).map { generateRandomChar() }.joinToString(separator = "") { "$it" }
+    val increased = numOfElements + 1
+    return (1..increased).map { generateRandomChar() }.joinToString(separator = "") { "$it" }
 }
 
 fun generateRandomChar(): Char {
