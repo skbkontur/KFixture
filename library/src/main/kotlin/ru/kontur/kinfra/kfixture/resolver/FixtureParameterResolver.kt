@@ -66,6 +66,18 @@ class FixtureParameterResolver(
 
     private inline fun <reified T : Annotation> KClass<*>.findAnnotationEverywhere(): T? {
         return this.findAnnotationWithInheritance() ?: this.findAnnotationOfAnnotations()
+        ?: findAnnotationOnOuterClasses()
+    }
+
+    private inline fun <reified T : Annotation> KClass<*>.findAnnotationOnOuterClasses(): T? {
+        var annotation: T? = null
+        var outer = this.java.declaringClass
+        while (annotation == null && outer != null) {
+            annotation = outer.kotlin.findAnnotationWithInheritance() ?: outer.kotlin.findAnnotationOfAnnotations()
+            outer = outer.declaringClass
+        }
+
+        return annotation
     }
 
     private inline fun <reified T : Annotation> KClass<*>.findAnnotationWithInheritance(): T? {
