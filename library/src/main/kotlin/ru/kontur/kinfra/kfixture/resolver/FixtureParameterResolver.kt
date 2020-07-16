@@ -8,10 +8,10 @@ import ru.kontur.kinfra.kfixture.annotations.Fixture
 import ru.kontur.kinfra.kfixture.annotations.JavaxFixture
 import ru.kontur.kinfra.kfixture.api.FixtureGeneratorMeta
 import ru.kontur.kinfra.kfixture.exceptions.NotAnnotatedException
-import ru.kontur.kinfra.kfixture.processor.GeneratorAnnotationScanner
+import ru.kontur.kinfra.kfixture.processor.scanner.GeneratorAnnotationScannerImpl
 import ru.kontur.kinfra.kfixture.resolver.strategy.FixtureResolverStrategy
 import ru.kontur.kinfra.kfixture.resolver.strategy.JavaxFixtureResolverStrategy
-import ru.kontur.kinfra.kfixture.scanner.CachedReflections
+import ru.kontur.kinfra.kfixture.scanner.CachedScanner
 import kotlin.reflect.KClass
 import kotlin.reflect.full.allSuperclasses
 import kotlin.reflect.full.findAnnotation
@@ -22,7 +22,7 @@ import kotlin.reflect.full.findAnnotation
 class FixtureParameterResolver(
 ) : ParameterResolver {
     private val logger = LoggerFactory.getLogger(this::class.java)
-    private val cachedReflections: CachedReflections = CachedReflections()
+    private val cachedReflections: CachedScanner = CachedScanner()
 
     override fun supportsParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Boolean {
         return parameterContext.parameter.annotations.filterIsInstance<Fixture>().isNotEmpty() ||
@@ -35,11 +35,9 @@ class FixtureParameterResolver(
                 logger.info("Found fixture meta")
             }
 
-        val annotationScanner = GeneratorAnnotationScanner(
-            cachedReflections.getReflections(
-                paths = meta?.pathes?.toList() ?: listOf(),
-                extensionContext = extensionContext
-            )
+        val annotationScanner = cachedReflections.getScanner(
+            paths = meta?.pathes?.toList() ?: listOf(),
+            extensionContext = extensionContext
         )
 
         val fixture = parameterContext.parameter.annotations.filterIsInstance<Fixture>()
