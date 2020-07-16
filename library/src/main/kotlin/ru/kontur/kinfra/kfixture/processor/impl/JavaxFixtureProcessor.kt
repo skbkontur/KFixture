@@ -6,7 +6,7 @@ import ru.kontur.kinfra.kfixture.exceptions.NoOptionalRecursiveException
 import ru.kontur.kinfra.kfixture.exceptions.NoSuchValidAnnotationException
 import ru.kontur.kinfra.kfixture.extensions.isSimple
 import ru.kontur.kinfra.kfixture.processor.AbstractGenerateProcessor
-import ru.kontur.kinfra.kfixture.processor.GeneratorAnnotationScanner
+import ru.kontur.kinfra.kfixture.processor.scanner.GeneratorAnnotationScanner
 import ru.kontur.kinfra.kfixture.routers.ValidRouter
 import ru.kontur.kinfra.kfixture.utils.FixtureUtils
 import javax.validation.Constraint

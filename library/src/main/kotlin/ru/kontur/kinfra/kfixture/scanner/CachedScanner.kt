@@ -1,17 +1,17 @@
 package ru.kontur.kinfra.kfixture.scanner
 
 import org.junit.jupiter.api.extension.ExtensionContext
-import org.reflections.Reflections
+import ru.kontur.kinfra.kfixture.processor.scanner.GeneratorAnnotationScanner
 
-class CachedReflections {
+class CachedScanner {
 
-    fun getReflections(paths: List<String>, extensionContext: ExtensionContext): Reflections {
+    fun getScanner(paths: List<String>, extensionContext: ExtensionContext): GeneratorAnnotationScanner {
         val stored = extensionContext.getStore(ExtensionContext.Namespace.GLOBAL)
             .get(DEFAULT_REFLECTION_KEY, ReflectionsWrapper::class.java)
 
         if (stored != null) {
             return if (stored.pathes.containsAll(paths)) {
-                stored.reflections
+                stored.cachedScanner
             } else {
                 val wrapper = ReflectionsWrapper(
                     paths + listOf(
@@ -20,11 +20,11 @@ class CachedReflections {
                     )
                 )
                 extensionContext.getStore(ExtensionContext.Namespace.GLOBAL).put(DEFAULT_REFLECTION_KEY, wrapper)
-                wrapper.reflections
+                wrapper.cachedScanner
             }
         } else {
             return if (extensionContext.parent.isPresent) {
-                getReflections(paths, extensionContext.parent.get())
+                getScanner(paths, extensionContext.parent.get())
             } else {
                 val wrapper = ReflectionsWrapper(
                     paths + listOf(
@@ -33,7 +33,7 @@ class CachedReflections {
                     )
                 )
                 extensionContext.getStore(ExtensionContext.Namespace.GLOBAL).put(DEFAULT_REFLECTION_KEY, wrapper)
-                wrapper.reflections
+                wrapper.cachedScanner
             }
         }
     }

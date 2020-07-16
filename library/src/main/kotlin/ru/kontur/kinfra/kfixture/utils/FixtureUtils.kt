@@ -1,7 +1,9 @@
 package ru.kontur.kinfra.kfixture.utils
 
-import ru.kontur.kinfra.kfixture.processor.GeneratorAnnotationScanner
+import ru.kontur.kinfra.kfixture.processor.scanner.GeneratorAnnotationScannerImpl
 import ru.kontur.kinfra.kfixture.processor.impl.FixtureProcessor
+import ru.kontur.kinfra.kfixture.processor.scanner.CachedAnnotationScanner
+import ru.kontur.kinfra.kfixture.processor.scanner.GeneratorAnnotationScanner
 import java.lang.RuntimeException
 import java.lang.reflect.Modifier
 import kotlin.reflect.KClass
@@ -13,7 +15,8 @@ import kotlin.reflect.jvm.javaMethod
 
 object FixtureUtils {
     inline fun <reified T : Any> createClazz(vararg path: String): T {
-        val generatorAnnotationScanner = GeneratorAnnotationScanner(path.toList())
+        val generatorAnnotationScanner =
+            CachedAnnotationScanner(GeneratorAnnotationScannerImpl(path.toList()))
         val constructors = generatorAnnotationScanner.getConstructors()
         val clazzProcessor = FixtureProcessor(constructors, generatorAnnotationScanner)
         val result = clazzProcessor.generateParam(
@@ -22,12 +25,18 @@ object FixtureUtils {
         return result ?: throw RuntimeException("Can't generate such clazz name=${T::class.simpleName}")
     }
 
+    /**
+     * Very slow methods
+     */
     inline fun <reified V : Any> createList(vararg path: String): List<V> {
         return listOf(
             createClazz(*path)
         )
     }
 
+    /**
+     * Very slow methods
+     */
     inline fun <reified K : Any, reified V : Any> createMap(vararg path: String): Map<K, V> {
         return mapOf(
             createClazz<K>(*path) to createClazz(*path)

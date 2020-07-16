@@ -1,4 +1,4 @@
-package ru.kontur.kinfra.kfixture.processor
+package ru.kontur.kinfra.kfixture.processor.scanner
 
 import org.reflections.Reflections
 import ru.kontur.kinfra.kfixture.api.ParamConstructor
@@ -10,16 +10,19 @@ import kotlin.reflect.KClass
  * @author Konstantin Volivach
  * Scan users code and get validations and resolvers for them
  */
-class GeneratorAnnotationScanner(
+class GeneratorAnnotationScannerImpl(
     private val reflections: Reflections
-) {
-    constructor(paths: List<String>) : this(Reflections(paths + listOf(LIBRARY_PATH, JAVAX_PATH)))
+) : GeneratorAnnotationScanner {
+    constructor(paths: List<String>) : this(Reflections(paths + listOf(
+        LIBRARY_PATH,
+        JAVAX_PATH
+    )))
 
-    fun getValidatorsMap(): Map<KClass<out Annotation>, ValidRouter<Any, Any>> {
+    override fun getValidatorsMap(): Map<KClass<out Annotation>, ValidRouter<Any, Any>> {
         return internalValidatorsMap()
     }
 
-    fun getValidationConstructors(): Map<KClass<*>, ValidationConstructor<*>> {
+    override fun getValidationConstructors(): Map<KClass<*>, ValidationConstructor<*>> {
         val constructors = reflections.getSubTypesOf(ValidationConstructor::class.java).map { it.kotlin }
 
         return constructors.associate<KClass<out ValidationConstructor<*>>, KClass<out Any>, ValidationConstructor<*>> {
@@ -29,7 +32,7 @@ class GeneratorAnnotationScanner(
         }
     }
 
-    fun getConstructors(): Map<KClass<*>, ParamConstructor<*>> {
+    override fun getConstructors(): Map<KClass<*>, ParamConstructor<*>> {
         val constructors = reflections.getSubTypesOf(ParamConstructor::class.java).map { it.kotlin }
 
         return constructors.associate<KClass<out ParamConstructor<*>>, KClass<out Any>, ParamConstructor<*>> {
@@ -39,11 +42,11 @@ class GeneratorAnnotationScanner(
         }
     }
 
-    fun getSubTypeOf(clazz: KClass<*>): Class<*>? {
+    override fun getSubTypeOf(clazz: KClass<*>): Class<*>? {
         return reflections.getSubTypesOf(clazz.java).firstOrNull()
     }
 
-    fun tryToGetSubTypeByAbstractPackage(clazz: KClass<*>): Class<*>? {
+    override fun tryToGetSubTypeByAbstractPackage(clazz: KClass<*>): Class<*>? {
         val path = clazz.java.name.substringBeforeLast(".")
         val reflections = Reflections(path)
         return reflections.getSubTypesOf(clazz.java).firstOrNull()
