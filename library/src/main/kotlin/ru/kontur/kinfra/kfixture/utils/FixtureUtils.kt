@@ -1,5 +1,6 @@
 package ru.kontur.kinfra.kfixture.utils
 
+import ru.kontur.kinfra.kfixture.model.CollectionSettings
 import ru.kontur.kinfra.kfixture.processor.impl.FixtureProcessor
 import ru.kontur.kinfra.kfixture.processor.scanner.GeneratorAnnotationScanner
 import ru.kontur.kinfra.kfixture.scanner.StaticCache
@@ -15,8 +16,7 @@ import kotlin.reflect.jvm.javaMethod
 object FixtureUtils {
     inline fun <reified T : Any> createClazz(vararg path: String): T {
         val scanner = StaticCache.getScanner(path.toList())
-        val constructors = scanner.getConstructors()
-        val clazzProcessor = FixtureProcessor(constructors, scanner)
+        val clazzProcessor = FixtureProcessor(CollectionSettings(), scanner)
         val result = clazzProcessor.generateParam(
             T::class, T::class.starProjectedType, null
         ) as? T

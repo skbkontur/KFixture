@@ -1,5 +1,6 @@
 package ru.kontur.kinfra.kfixture.processor
 
+import ru.kontur.kinfra.kfixture.model.CollectionSettings
 import ru.kontur.kinfra.kfixture.utils.generateRandomChar
 import ru.kontur.kinfra.kfixture.utils.generateString
 import kotlin.random.Random
@@ -7,6 +8,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
 abstract class AbstractGenerateProcessor : GenerateProcessor {
+    abstract val collectionSettings: CollectionSettings
 
     protected fun generatePrimitiveValue(kclass: KClass<*>, type: KType?, annotationList: List<Annotation>?): Any? {
         return when {
@@ -35,40 +37,40 @@ abstract class AbstractGenerateProcessor : GenerateProcessor {
                 generateString(Random.nextInt(100))
             }
             kclass == List::class -> {
-                generateCollection(10, type!!, annotationList)
+                generateCollection(collectionSettings.size, type!!, annotationList)
             }
             kclass == Map::class -> {
-                generateMap(10, type!!, annotationList)
+                generateMap(collectionSettings.size, type!!, annotationList)
             }
             kclass == Set::class -> {
-                generateSet(10, type!!, annotationList)
+                generateSet(collectionSettings.size, type!!, annotationList)
             }
             kclass == Boolean::class -> {
                 Random.nextBoolean()
             }
             kclass == ByteArray::class -> {
-                ByteArray(10)
+                ByteArray(collectionSettings.size)
             }
             kclass == CharArray::class -> {
-                CharArray(10)
+                CharArray(collectionSettings.size)
             }
             kclass == IntArray::class -> {
-                IntArray(10)
+                IntArray(collectionSettings.size)
             }
             kclass == DoubleArray::class -> {
-                DoubleArray(10)
+                DoubleArray(collectionSettings.size)
             }
             kclass == LongArray::class -> {
-                LongArray(10)
+                LongArray(collectionSettings.size)
             }
             kclass == FloatArray::class -> {
-                FloatArray(10)
+                FloatArray(collectionSettings.size)
             }
             kclass == ShortArray::class -> {
-                ShortArray(10)
+                ShortArray(collectionSettings.size)
             }
             kclass.simpleName == "Array" -> {
-                val array = generateArray(10, type!!, annotationList)
+                val array = generateArray(collectionSettings.size, type!!, annotationList)
                 array
             }
             else -> null

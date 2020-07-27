@@ -5,6 +5,7 @@ import ru.kontur.kinfra.kfixture.api.ValidationConstructor
 import ru.kontur.kinfra.kfixture.exceptions.NoOptionalRecursiveException
 import ru.kontur.kinfra.kfixture.exceptions.NoSuchValidAnnotationException
 import ru.kontur.kinfra.kfixture.extensions.isSimple
+import ru.kontur.kinfra.kfixture.model.CollectionSettings
 import ru.kontur.kinfra.kfixture.processor.AbstractGenerateProcessor
 import ru.kontur.kinfra.kfixture.processor.scanner.GeneratorAnnotationScanner
 import ru.kontur.kinfra.kfixture.routers.ValidRouter
@@ -19,6 +20,7 @@ import kotlin.reflect.KType
  * @author Konstantin Volivach
  */
 class JavaxFixtureProcessor(
+    override val collectionSettings: CollectionSettings = CollectionSettings(),
     private val generators: Map<KClass<out Annotation>, ValidRouter<Any, Any>>,
     private val validationConstructors: Map<KClass<*>, ValidationConstructor<*>>,
     private val constructors: Map<KClass<*>, ParamConstructor<*>>,

@@ -3,6 +3,8 @@ package ru.kontur.kinfra.kfixture.resolver.strategy
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterContext
 import ru.kontur.kinfra.kfixture.exceptions.FixtureGenerationException
+import ru.kontur.kinfra.kfixture.model.CollectionSettings
+import ru.kontur.kinfra.kfixture.processor.scanner.GeneratorAnnotationScannerImpl
 import ru.kontur.kinfra.kfixture.processor.impl.FixtureProcessor
 import ru.kontur.kinfra.kfixture.processor.impl.JavaxFixtureProcessor
 import ru.kontur.kinfra.kfixture.processor.scanner.GeneratorAnnotationScanner
@@ -18,10 +20,11 @@ class JavaxFixtureResolverStrategy(
         val constructors = generatorAnnotationScanner.getConstructors() // TODO optimize
         val validationConstructors = generatorAnnotationScanner.getValidationConstructors() // TODO optimize
 
-        val fixtureProcessor = FixtureProcessor(constructors, generatorAnnotationScanner)
+        val fixtureProcessor = FixtureProcessor(CollectionSettings(), generatorAnnotationScanner)
 
         val classProcessor =
             JavaxFixtureProcessor(
+                CollectionSettings(),
                 generators,
                 validationConstructors,
                 constructors,
