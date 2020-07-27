@@ -7,7 +7,10 @@ import org.slf4j.LoggerFactory
 import ru.kontur.kinfra.kfixture.annotations.Fixture
 import ru.kontur.kinfra.kfixture.annotations.JavaxFixture
 import ru.kontur.kinfra.kfixture.api.FixtureGeneratorMeta
+import ru.kontur.kinfra.kfixture.converter.CollectionSettingsConverter
 import ru.kontur.kinfra.kfixture.exceptions.NotAnnotatedException
+import ru.kontur.kinfra.kfixture.model.CollectionSettings
+import ru.kontur.kinfra.kfixture.processor.impl.FixtureProcessor
 import ru.kontur.kinfra.kfixture.resolver.strategy.FixtureResolverStrategy
 import ru.kontur.kinfra.kfixture.resolver.strategy.JavaxFixtureResolverStrategy
 import ru.kontur.kinfra.kfixture.scanner.CachedScanner
@@ -43,9 +46,12 @@ class FixtureParameterResolver() : ParameterResolver {
 
         return when {
             fixture.isNotEmpty() -> {
-                val fixtureStrategy = FixtureResolverStrategy(
-                    annotationScanner
+                val fixtureProcessor = FixtureProcessor(
+                    collectionSettings = meta?.collection?.let { CollectionSettingsConverter.convert(it) }
+                        ?: CollectionSettings(),
+                    generatorAnnotationScanner = annotationScanner
                 )
+                val fixtureStrategy = FixtureResolverStrategy(fixtureProcessor)
                 fixtureStrategy.resolve(parameterContext, extensionContext)
             }
             javaxFixture.isNotEmpty() -> {

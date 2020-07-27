@@ -3,6 +3,7 @@ package ru.kontur.kinfra.kfixture.processor.impl
 import ru.kontur.kinfra.kfixture.api.ParamConstructor
 import ru.kontur.kinfra.kfixture.exceptions.NoOptionalRecursiveException
 import ru.kontur.kinfra.kfixture.extensions.isSimple
+import ru.kontur.kinfra.kfixture.model.CollectionSettings
 import ru.kontur.kinfra.kfixture.processor.AbstractGenerateProcessor
 import ru.kontur.kinfra.kfixture.processor.scanner.GeneratorAnnotationScanner
 import ru.kontur.kinfra.kfixture.utils.FixtureUtils
@@ -15,9 +16,10 @@ import kotlin.reflect.jvm.isAccessible
  * @author Konstantin Volivach
  */
 class FixtureProcessor(
-    private val constructors: Map<KClass<*>, ParamConstructor<*>>,
+    override val collectionSettings: CollectionSettings,
     private val generatorAnnotationScanner: GeneratorAnnotationScanner
 ) : AbstractGenerateProcessor() {
+    private val constructors: Map<KClass<*>, ParamConstructor<*>> = generatorAnnotationScanner.getConstructors()
 
     override fun generateParam(clazz: KClass<*>, type: KType, annotation: List<Annotation>?): Any? {
         return when {
