@@ -21,7 +21,7 @@ import kotlin.reflect.full.findAnnotation
 /**
  * @author Konstantin Volivach
  */
-class FixtureParameterResolver() : ParameterResolver {
+class FixtureParameterResolver : ParameterResolver {
     private val logger = LoggerFactory.getLogger(this::class.java)
     private val cachedReflections: CachedScanner = CachedScanner()
 
