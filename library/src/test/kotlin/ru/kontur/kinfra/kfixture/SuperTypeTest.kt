@@ -16,6 +16,5 @@ class SuperTypeTest {
 
     @Test
     fun `should generate`(@Fixture id: UUID) {
-
     }
 }
