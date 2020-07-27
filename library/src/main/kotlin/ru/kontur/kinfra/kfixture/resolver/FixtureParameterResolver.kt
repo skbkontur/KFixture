@@ -8,7 +8,6 @@ import ru.kontur.kinfra.kfixture.annotations.Fixture
 import ru.kontur.kinfra.kfixture.annotations.JavaxFixture
 import ru.kontur.kinfra.kfixture.api.FixtureGeneratorMeta
 import ru.kontur.kinfra.kfixture.exceptions.NotAnnotatedException
-import ru.kontur.kinfra.kfixture.processor.scanner.GeneratorAnnotationScannerImpl
 import ru.kontur.kinfra.kfixture.resolver.strategy.FixtureResolverStrategy
 import ru.kontur.kinfra.kfixture.resolver.strategy.JavaxFixtureResolverStrategy
 import ru.kontur.kinfra.kfixture.scanner.CachedScanner
@@ -19,14 +18,13 @@ import kotlin.reflect.full.findAnnotation
 /**
  * @author Konstantin Volivach
  */
-class FixtureParameterResolver(
-) : ParameterResolver {
+class FixtureParameterResolver() : ParameterResolver {
     private val logger = LoggerFactory.getLogger(this::class.java)
     private val cachedReflections: CachedScanner = CachedScanner()
 
     override fun supportsParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Boolean {
         return parameterContext.parameter.annotations.filterIsInstance<Fixture>().isNotEmpty() ||
-            parameterContext.parameter.annotations.filterIsInstance<JavaxFixture>().isNotEmpty()
+                parameterContext.parameter.annotations.filterIsInstance<JavaxFixture>().isNotEmpty()
     }
 
     override fun resolveParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Any {
