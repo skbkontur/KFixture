@@ -35,13 +35,13 @@ abstract class AbstractGenerateProcessor : GenerateProcessor {
                 generateString(Random.nextInt(100))
             }
             kclass == List::class -> {
-                generateCollection(10, kclass, type!!, annotationList)
+                generateCollection(10, type!!, annotationList)
             }
             kclass == Map::class -> {
-                generateMap(10, kclass, type!!, annotationList)
+                generateMap(10, type!!, annotationList)
             }
             kclass == Set::class -> {
-                generateSet(10, kclass, type!!, annotationList)
+                generateSet(10, type!!, annotationList)
             }
             kclass == Boolean::class -> {
                 Random.nextBoolean()
@@ -68,7 +68,7 @@ abstract class AbstractGenerateProcessor : GenerateProcessor {
                 ShortArray(10)
             }
             kclass.simpleName == "Array" -> {
-                val array = generateArray(10, kclass, type!!, annotationList)
+                val array = generateArray(10, type!!, annotationList)
                 array
             }
             else -> null
@@ -77,7 +77,6 @@ abstract class AbstractGenerateProcessor : GenerateProcessor {
 
     private fun generateMap(
         numOfElements: Int,
-        classRef: KClass<*>,
         type: KType,
         annotationList: List<Annotation>?
     ): Map<Any, Any> {
@@ -98,7 +97,6 @@ abstract class AbstractGenerateProcessor : GenerateProcessor {
 
     private fun generateCollection(
         numOfElements: Int,
-        classRef: KClass<*>,
         type: KType,
         annotationList: List<Annotation>?
     ): Any {
@@ -108,7 +106,6 @@ abstract class AbstractGenerateProcessor : GenerateProcessor {
 
     private fun generateSet(
         numOfElements: Int,
-        classRef: KClass<*>,
         type: KType,
         annotationList: List<Annotation>?
     ): Any {
@@ -119,7 +116,6 @@ abstract class AbstractGenerateProcessor : GenerateProcessor {
 
     private fun generateArray(
         numOfElements: Int,
-        classRef: KClass<*>,
         type: KType,
         annotationList: List<Annotation>?
     ): Any {

@@ -1,9 +1,8 @@
 package ru.kontur.kinfra.kfixture.utils
 
-import ru.kontur.kinfra.kfixture.processor.scanner.GeneratorAnnotationScannerImpl
 import ru.kontur.kinfra.kfixture.processor.impl.FixtureProcessor
-import ru.kontur.kinfra.kfixture.processor.scanner.CachedAnnotationScanner
 import ru.kontur.kinfra.kfixture.processor.scanner.GeneratorAnnotationScanner
+import ru.kontur.kinfra.kfixture.scanner.StaticCache
 import java.lang.RuntimeException
 import java.lang.reflect.Modifier
 import kotlin.reflect.KClass
@@ -15,10 +14,9 @@ import kotlin.reflect.jvm.javaMethod
 
 object FixtureUtils {
     inline fun <reified T : Any> createClazz(vararg path: String): T {
-        val generatorAnnotationScanner =
-            CachedAnnotationScanner(GeneratorAnnotationScannerImpl(path.toList()))
-        val constructors = generatorAnnotationScanner.getConstructors()
-        val clazzProcessor = FixtureProcessor(constructors, generatorAnnotationScanner)
+        val scanner = StaticCache.getScanner(path.toList())
+        val constructors = scanner.getConstructors()
+        val clazzProcessor = FixtureProcessor(constructors, scanner)
         val result = clazzProcessor.generateParam(
             T::class, T::class.starProjectedType, null
         ) as? T

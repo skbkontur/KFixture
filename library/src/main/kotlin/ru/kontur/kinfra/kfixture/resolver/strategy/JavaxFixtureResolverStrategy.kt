@@ -15,8 +15,8 @@ class JavaxFixtureResolverStrategy(
     override fun resolve(parameterContext: ParameterContext, extensionContext: ExtensionContext): Any {
         val generators = generatorAnnotationScanner.getValidatorsMap()
 
-        val constructors = generatorAnnotationScanner.getConstructors()
-        val validationConstructors = generatorAnnotationScanner.getValidationConstructors()
+        val constructors = generatorAnnotationScanner.getConstructors() // TODO optimize
+        val validationConstructors = generatorAnnotationScanner.getValidationConstructors() // TODO optimize
 
         val fixtureProcessor = FixtureProcessor(constructors, generatorAnnotationScanner)
 
