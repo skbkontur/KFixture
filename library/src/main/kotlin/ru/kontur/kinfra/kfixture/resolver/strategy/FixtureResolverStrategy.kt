@@ -15,7 +15,7 @@ class FixtureResolverStrategy(
     override fun resolve(parameterContext: ParameterContext, extensionContext: ExtensionContext): Any {
         val constructors = generatorAnnotationScanner.getConstructors()
 
-        val clazzProcessor = FixtureProcessor(constructors, generatorAnnotationScanner)
+        val clazzProcessor = FixtureProcessor(constructors, generatorAnnotationScanner)//TODo optimize
 
         val type = parameterContext.parameter.type
         return if (type.simpleName == LIST_SIMPLE_NAME) {
