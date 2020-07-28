@@ -46,7 +46,7 @@ class FixtureProcessor(
         val arguments = Array<Any?>(parameters.size) {}
         for (i in arguments.indices) {
             val param = parameters[i]
-            val paramClazz = parameters[i].type.classifier as KClass<*>
+            val paramClazz = param.type.classifier as KClass<*>
             if (paramClazz == clazz) {
                 if (param.isOptional) {
                     arguments[i] = null
@@ -61,7 +61,7 @@ class FixtureProcessor(
                     continue
                 }
             }
-            arguments[i] = generateParam(param.type.classifier as KClass<*>, param.type, null)
+            arguments[i] = generateParam(paramClazz, param.type, null)
         }
         return requireNotNull(constructor.call(*arguments)) {
             "Constructor of your clazz is null, clazz=${clazz.simpleName}, it can happens if one of your static function return null"
