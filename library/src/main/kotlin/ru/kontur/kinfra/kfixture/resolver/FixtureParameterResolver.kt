@@ -10,7 +10,6 @@ import ru.kontur.kinfra.kfixture.api.FixtureGeneratorMeta
 import ru.kontur.kinfra.kfixture.converter.CollectionSettingsConverter
 import ru.kontur.kinfra.kfixture.exceptions.NotAnnotatedException
 import ru.kontur.kinfra.kfixture.model.CollectionSettings
-import ru.kontur.kinfra.kfixture.processor.impl.FixtureProcessor
 import ru.kontur.kinfra.kfixture.resolver.strategy.FixtureResolverStrategy
 import ru.kontur.kinfra.kfixture.resolver.strategy.JavaxFixtureResolverStrategy
 import ru.kontur.kinfra.kfixture.scanner.CachedScanner
@@ -36,8 +35,9 @@ class FixtureParameterResolver : ParameterResolver {
                 logger.info("Found fixture meta")
             }
 
+        val paths = (meta?.pathes?.toList() ?: listOf()) + (meta?.scanner?.paths?.toList() ?: listOf())
         val annotationScanner = cachedReflections.getScanner(
-            paths = meta?.pathes?.toList() ?: listOf(),
+            paths = paths,
             extensionContext = extensionContext
         )
 
@@ -46,11 +46,11 @@ class FixtureParameterResolver : ParameterResolver {
 
         return when {
             fixture.isNotEmpty() -> {
-                val fixtureProcessor = FixtureProcessor(
-                    collectionSettings = meta?.collection?.let { CollectionSettingsConverter.convert(it) }
-                        ?: CollectionSettings(),
-                    generatorAnnotationScanner = annotationScanner
-                )
+                val fixtureProcessor =
+                    cachedReflections.getFixtureProcessor(
+                        paths,
+                        meta?.collection?.let { CollectionSettingsConverter.convert(it) } ?: CollectionSettings(),
+                        extensionContext)
                 val fixtureStrategy = FixtureResolverStrategy(fixtureProcessor)
                 fixtureStrategy.resolve(parameterContext, extensionContext)
             }
