@@ -5,8 +5,8 @@ import ru.kontur.kinfra.kfixture.exceptions.NoOptionalRecursiveException
 import ru.kontur.kinfra.kfixture.extensions.isSimple
 import ru.kontur.kinfra.kfixture.model.CollectionSettings
 import ru.kontur.kinfra.kfixture.processor.AbstractGenerateProcessor
+import ru.kontur.kinfra.kfixture.processor.CachedConstructors
 import ru.kontur.kinfra.kfixture.processor.scanner.GeneratorAnnotationScanner
-import ru.kontur.kinfra.kfixture.utils.FixtureUtils
 import kotlin.random.Random
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -17,8 +17,9 @@ import kotlin.reflect.jvm.isAccessible
  */
 class FixtureProcessor(
     override val collectionSettings: CollectionSettings,
-    private val generatorAnnotationScanner: GeneratorAnnotationScanner
+    generatorAnnotationScanner: GeneratorAnnotationScanner
 ) : AbstractGenerateProcessor() {
+    private val cachedConstructors = CachedConstructors(generatorAnnotationScanner)
     private val constructors: Map<KClass<*>, ParamConstructor<*>> = generatorAnnotationScanner.getConstructors()
 
     override fun generateParam(clazz: KClass<*>, type: KType, annotation: List<Annotation>?): Any? {
@@ -40,7 +41,7 @@ class FixtureProcessor(
     }
 
     private fun createClazz(clazz: KClass<*>): Any {
-        val constructor = FixtureUtils.getCreatorFunction(clazz, generatorAnnotationScanner)
+        val constructor = cachedConstructors.getCreatorFunction(clazz)
         constructor.isAccessible = true
         val parameters = constructor.parameters
         val arguments = Array<Any?>(parameters.size) {}
