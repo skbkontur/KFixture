@@ -42,22 +42,27 @@ class FixtureProcessor(
     private fun createClazz(clazz: KClass<*>): Any {
         val constructor = FixtureUtils.getCreatorFunction(clazz, generatorAnnotationScanner)
         constructor.isAccessible = true
-        val arguments = constructor.parameters.map { param ->
-            val paramClazz = param.type.classifier as KClass<*>
+        val parameters = constructor.parameters
+        val arguments = Array<Any?>(parameters.size) {}
+        for (i in arguments.indices) {
+            val param = parameters[i]
+            val paramClazz = parameters[i].type.classifier as KClass<*>
             if (paramClazz == clazz) {
                 if (param.isOptional) {
-                    return@map null
+                    arguments[i] = null
+                    continue
                 } else {
-                    throw NoOptionalRecursiveException("Recursive field can't be required")
+                    throw NoOptionalRecursiveException("Recursive field can't be required ${param::class.simpleName}")
                 }
             }
             if (paramClazz == List::class) {
                 if (param.type.arguments.isNotEmpty() && param.type.arguments[0].type?.classifier == clazz) {
-                    return@map listOf<Nothing>()
+                    arguments[i] = listOf<Nothing>()
+                    continue
                 }
             }
-            generateParam(param.type.classifier as KClass<*>, param.type, null)
-        }.toTypedArray()
+            arguments[i] = generateParam(param.type.classifier as KClass<*>, param.type, null)
+        }
         return requireNotNull(constructor.call(*arguments)) {
             "Constructor of your clazz is null, clazz=${clazz.simpleName}, it can happens if one of your static function return null"
         }

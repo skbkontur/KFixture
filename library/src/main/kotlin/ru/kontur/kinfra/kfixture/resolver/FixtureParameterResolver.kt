@@ -27,7 +27,7 @@ class FixtureParameterResolver : ParameterResolver {
 
     override fun supportsParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Boolean {
         return parameterContext.parameter.annotations.filterIsInstance<Fixture>().isNotEmpty() ||
-                parameterContext.parameter.annotations.filterIsInstance<JavaxFixture>().isNotEmpty()
+            parameterContext.parameter.annotations.filterIsInstance<JavaxFixture>().isNotEmpty()
     }
 
     override fun resolveParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Any {
