@@ -9,9 +9,9 @@ import ru.kontur.kinfra.kfixture.processor.scanner.CachedAnnotationScanner
 import ru.kontur.kinfra.kfixture.processor.scanner.GeneratorAnnotationScannerImpl
 import ru.kontur.kinfra.kfixture.utils.toKType
 
-@BenchmarkMode(Mode.SampleTime)
-@Warmup(iterations = 1)
-@Measurement(iterations = 2, batchSize = 5)
+@BenchmarkMode(Mode.AverageTime)
+@Warmup(iterations = 0)
+@Measurement(iterations = 5, batchSize = 1)
 @State(value = Scope.Benchmark)
 open class FixtureProcessorBenchmark {
     private lateinit var processor: FixtureProcessor
@@ -29,6 +29,7 @@ open class FixtureProcessorBenchmark {
 
     @Benchmark
     fun sum() {
-        processor.generateParam(clazz.kotlin, clazz.toKType(), null)
+        for (i in 0 until 10)
+            processor.generateParam(clazz.kotlin, clazz.toKType(), null)
     }
 }

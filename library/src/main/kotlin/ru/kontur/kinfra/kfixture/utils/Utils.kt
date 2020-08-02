@@ -10,13 +10,18 @@ import kotlin.reflect.KTypeParameter
  * @author Konstantin Volivach
  */
 
+const val A_LETTER_CODE = 97
+
 fun generateString(numOfElements: Int): String {
-    val increased = numOfElements + 1
-    return (1..increased).map { generateRandomChar() }.joinToString(separator = "") { "$it" }
+    val builder = StringBuilder(numOfElements)
+    for (i in 0 until numOfElements) {
+        builder.appendCodePoint(generateRandomChar())
+    }
+    return builder.toString()
 }
 
-fun generateRandomChar(): Char {
-    return (Random.nextInt(26) + 'a'.toInt()).toChar()
+fun generateRandomChar(): Int {
+    return Random.nextInt(26) + A_LETTER_CODE
 }
 
 fun generateMap(numOfElements: Int, classRef: KClass<*>, type: KType): Map<Any, Any> {
@@ -98,7 +103,7 @@ fun generatePrimitiveValue(kclass: KClass<*>, type: KType?): Any? {
             generateRandomChar()
         }
         String::class -> {
-            generateString(Random.nextInt(100))
+            generateString(10)
         }
         List::class -> {
             generateCollection(10, kclass, type!!)
