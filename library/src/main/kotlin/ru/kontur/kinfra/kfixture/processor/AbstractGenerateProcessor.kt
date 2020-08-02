@@ -34,7 +34,7 @@ abstract class AbstractGenerateProcessor : GenerateProcessor {
                 generateRandomChar()
             }
             kclass == String::class -> {
-                generateString(Random.nextInt(100))
+                generateString(10)
             }
             kclass == List::class -> {
                 generateCollection(collectionSettings.size, type!!, annotationList)
