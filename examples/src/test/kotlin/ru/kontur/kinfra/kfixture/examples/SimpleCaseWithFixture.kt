@@ -3,7 +3,7 @@ package ru.kontur.kinfra.kfixture.examples
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import ru.kontur.kinfra.kfixture.annotations.Fixture
+import ru.kontur.kinfra.kfixture.api.Fixture
 import ru.kontur.kinfra.kfixture.api.FixtureGeneratorMeta
 import ru.kontur.kinfra.kfixture.resolver.FixtureParameterResolver
 

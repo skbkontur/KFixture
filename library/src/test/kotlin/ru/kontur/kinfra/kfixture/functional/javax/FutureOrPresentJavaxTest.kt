@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.extension.ExtendWith
-import ru.kontur.kinfra.kfixture.annotations.JavaxFixture
+import ru.kontur.kinfra.kfixture.api.JavaxFixture
 import ru.kontur.kinfra.kfixture.resolver.FixtureParameterResolver
 import java.time.*
 import java.time.chrono.HijrahDate
