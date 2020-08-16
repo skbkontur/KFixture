@@ -9,6 +9,7 @@ import ru.kontur.kinfra.kfixture.api.JavaxFixture
 import ru.kontur.kinfra.kfixture.annotations.Fixture as OldFixture
 import ru.kontur.kinfra.kfixture.annotations.JavaxFixture as OldJavaxFixture
 import ru.kontur.kinfra.kfixture.api.FixtureGeneratorMeta
+import ru.kontur.kinfra.kfixture.api.GenerationSettings
 import ru.kontur.kinfra.kfixture.converter.CollectionSettingsConverter
 import ru.kontur.kinfra.kfixture.exceptions.NotAnnotatedException
 import ru.kontur.kinfra.kfixture.model.CollectionSettings
