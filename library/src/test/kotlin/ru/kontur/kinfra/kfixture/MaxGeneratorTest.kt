@@ -3,7 +3,7 @@ package ru.kontur.kinfra.kfixture
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import ru.kontur.kinfra.kfixture.annotations.JavaxFixture
+import ru.kontur.kinfra.kfixture.api.JavaxFixture
 import ru.kontur.kinfra.kfixture.api.FixtureGeneratorMeta
 import ru.kontur.kinfra.kfixture.resolver.FixtureParameterResolver
 import javax.validation.constraints.Max

@@ -4,8 +4,10 @@ import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterContext
 import org.junit.jupiter.api.extension.ParameterResolver
 import org.slf4j.LoggerFactory
-import ru.kontur.kinfra.kfixture.annotations.Fixture
-import ru.kontur.kinfra.kfixture.annotations.JavaxFixture
+import ru.kontur.kinfra.kfixture.api.Fixture
+import ru.kontur.kinfra.kfixture.api.JavaxFixture
+import ru.kontur.kinfra.kfixture.annotations.Fixture as OldFixture
+import ru.kontur.kinfra.kfixture.annotations.JavaxFixture as OldJavaxFixture
 import ru.kontur.kinfra.kfixture.api.FixtureGeneratorMeta
 import ru.kontur.kinfra.kfixture.converter.CollectionSettingsConverter
 import ru.kontur.kinfra.kfixture.exceptions.NotAnnotatedException
@@ -25,8 +27,13 @@ class FixtureParameterResolver : ParameterResolver {
     private val cachedReflections: CachedScanner = CachedScanner()
 
     override fun supportsParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Boolean {
-        return parameterContext.parameter.annotations.filterIsInstance<Fixture>().isNotEmpty() ||
-            parameterContext.parameter.annotations.filterIsInstance<JavaxFixture>().isNotEmpty()
+        return parameterContext.isAnnotated(Fixture::class.java) ||
+            parameterContext.isAnnotated(JavaxFixture::class.java) ||
+            parameterContext.isAnnotated(OldFixture::class.java) ||
+            parameterContext.isAnnotated(OldJavaxFixture::class.java) ||
+            extensionContext.requiredTestClass.isAnnotationPresent(Fixture::class.java) ||
+            extensionContext.requiredTestClass.isAnnotationPresent(JavaxFixture::class.java)
+
     }
 
     override fun resolveParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Any {
@@ -41,24 +48,26 @@ class FixtureParameterResolver : ParameterResolver {
             extensionContext = extensionContext
         )
 
-        val fixture = parameterContext.parameter.annotations.filterIsInstance<Fixture>()
-        val javaxFixture = parameterContext.parameter.annotations.filterIsInstance<JavaxFixture>()
+        val fixture = parameterContext.parameter.getAnnotation(Fixture::class.java)
+            ?: parameterContext.parameter.getAnnotation(OldFixture::class.java)
+            ?: extensionContext.requiredTestClass.getAnnotation(Fixture::class.java)
+        val javaxFixture = parameterContext.parameter.getAnnotation(JavaxFixture::class.java)
+            ?: parameterContext.parameter.getAnnotation(OldJavaxFixture::class.java)
+            ?: extensionContext.requiredTestClass.getAnnotation(JavaxFixture::class.java)
 
         return when {
-            fixture.isNotEmpty() -> {
+            fixture != null -> {
                 val fixtureProcessor =
                     cachedReflections.getFixtureProcessor(
                         paths,
                         meta?.collection?.let { CollectionSettingsConverter.convert(it) } ?: CollectionSettings(),
                         extensionContext)
-                val fixtureStrategy = FixtureResolverStrategy(fixtureProcessor)
-                fixtureStrategy.resolve(parameterContext, extensionContext)
+                FixtureResolverStrategy(fixtureProcessor).resolve(parameterContext, extensionContext)
             }
-            javaxFixture.isNotEmpty() -> {
-                val javaxStrategy = JavaxFixtureResolverStrategy(
+            javaxFixture != null -> {
+                JavaxFixtureResolverStrategy(
                     annotationScanner
-                )
-                javaxStrategy.resolve(parameterContext, extensionContext)
+                ).resolve(parameterContext, extensionContext)
             }
             else -> {
                 throw NotAnnotatedException(parameterContext.parameter.name)

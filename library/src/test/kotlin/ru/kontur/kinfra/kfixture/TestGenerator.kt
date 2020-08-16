@@ -1,9 +1,12 @@
 package ru.kontur.kinfra.kfixture
 
+import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import ru.kontur.kinfra.kfixture.annotations.JavaxFixture
+import ru.kontur.kinfra.kfixture.annotations.Fixture
+import ru.kontur.kinfra.kfixture.api.JavaxFixture
+import ru.kontur.kinfra.kfixture.annotations.JavaxFixture as OldJavaxFixture
 import ru.kontur.kinfra.kfixture.data.TestModel
 import ru.kontur.kinfra.kfixture.resolver.FixtureParameterResolver
 
@@ -34,6 +37,16 @@ class TestGenerator {
 
     @Test
     fun testWithTestData1(@JavaxFixture data: TestModel) {
+        assertNotNull(data)
+    }
+
+    @Test
+    fun `should generate with fixture`(@Fixture data: TestModel) {
+        assertNotNull(data)
+    }
+
+    @Test
+    fun `should generate with old javax Fixture`(@OldJavaxFixture data: TestModel) {
         assertNotNull(data)
     }
 }
