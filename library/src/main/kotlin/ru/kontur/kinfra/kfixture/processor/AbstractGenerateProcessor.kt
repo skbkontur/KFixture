@@ -101,7 +101,7 @@ abstract class AbstractGenerateProcessor : GenerateProcessor {
         numOfElements: Int,
         type: KType,
         annotationList: List<Annotation>?
-    ): Any {
+    ): List<Any?> {
         val elemType = type.arguments[0].type!!
         return (1..numOfElements).map { generateParam(elemType.classifier as KClass<*>, elemType, annotationList) }
     }
@@ -110,17 +110,15 @@ abstract class AbstractGenerateProcessor : GenerateProcessor {
         numOfElements: Int,
         type: KType,
         annotationList: List<Annotation>?
-    ): Any {
-        val elemType = type.arguments[0].type!!
-        return (1..numOfElements).map { generateParam(elemType.classifier as KClass<*>, elemType, annotationList) }
-            .toSet()
+    ): Set<Any?> {
+        return generateCollection(numOfElements, type, annotationList).toSet()
     }
 
     private fun generateArray(
         numOfElements: Int,
         type: KType,
         annotationList: List<Annotation>?
-    ): Any {
+    ): Array<Any?> {
         val elemType = type.arguments[0].type!!
         return (1..numOfElements).map { generateParam(elemType.classifier as KClass<*>, elemType, annotationList) }
             .toTypedArray()

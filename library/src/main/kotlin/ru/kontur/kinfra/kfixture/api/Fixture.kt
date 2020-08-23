@@ -1,3 +1,6 @@
 package ru.kontur.kinfra.kfixture.api
 
-annotation class Fixture
+@Target(AnnotationTarget.CLASS, AnnotationTarget.VALUE_PARAMETER)
+annotation class Fixture(
+    val group: String = "default"
+)
