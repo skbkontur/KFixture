@@ -1,6 +1,7 @@
 package ru.kontur.kinfra.kfixture.processor.impl
 
 import ru.kontur.kinfra.kfixture.api.ParamConstructor
+import ru.kontur.kinfra.kfixture.context.FixtureContext
 import ru.kontur.kinfra.kfixture.exceptions.NoOptionalRecursiveException
 import ru.kontur.kinfra.kfixture.extensions.isSimple
 import ru.kontur.kinfra.kfixture.model.CollectionSettings
@@ -21,6 +22,7 @@ class FixtureProcessor(
 ) : AbstractGenerateProcessor() {
     private val cachedConstructors = CachedConstructors(generatorAnnotationScanner)
     private val constructors: Map<KClass<*>, ParamConstructor<*>> = generatorAnnotationScanner.getConstructors()
+    private val context: FixtureContext = FixtureContext(this)
 
     override fun generateParam(clazz: KClass<*>, type: KType, annotation: List<Annotation>?): Any? {
         return when {
@@ -31,7 +33,7 @@ class FixtureProcessor(
             }
             else -> {
                 when {
-                    constructors.containsKey(clazz) -> constructors[clazz]?.call()
+                    constructors.containsKey(clazz) -> constructors[clazz]?.call(context)
                     else -> {
                         createClazz(clazz)
                     }
