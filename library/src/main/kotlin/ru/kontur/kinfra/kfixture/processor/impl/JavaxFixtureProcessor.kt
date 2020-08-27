@@ -2,6 +2,7 @@ package ru.kontur.kinfra.kfixture.processor.impl
 
 import ru.kontur.kinfra.kfixture.api.ParamConstructor
 import ru.kontur.kinfra.kfixture.api.ValidationConstructor
+import ru.kontur.kinfra.kfixture.context.FixtureContext
 import ru.kontur.kinfra.kfixture.exceptions.NoOptionalRecursiveException
 import ru.kontur.kinfra.kfixture.exceptions.NoSuchValidAnnotationException
 import ru.kontur.kinfra.kfixture.extensions.isSimple
@@ -27,6 +28,7 @@ class JavaxFixtureProcessor(
     private val generatorAnnotationScanner: GeneratorAnnotationScanner,
     private val fixtureProcessor: FixtureProcessor
 ) : AbstractGenerateProcessor() {
+    private val context: FixtureContext = FixtureContext(this)
 
     private val defaultPriority: Map<KClass<out Annotation>, Long> = mapOf(
         AssertFalse::class to 0L,
@@ -89,7 +91,7 @@ class JavaxFixtureProcessor(
     private fun createClazz(clazz: KClass<*>): Any {
         val userConstructor = constructors[clazz]
         if (userConstructor != null) {
-            return userConstructor.call()
+            return userConstructor.call(context)
         }
 
         val constructor = FixtureUtils.getCreatorFunction(clazz, generatorAnnotationScanner)
