@@ -32,7 +32,6 @@ class FixtureParameterResolver : ParameterResolver {
             parameterContext.isAnnotated(OldJavaxFixture::class.java) ||
             extensionContext.requiredTestClass.isAnnotationPresent(Fixture::class.java) ||
             extensionContext.requiredTestClass.isAnnotationPresent(JavaxFixture::class.java)
-
     }
 
     override fun resolveParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Any {
