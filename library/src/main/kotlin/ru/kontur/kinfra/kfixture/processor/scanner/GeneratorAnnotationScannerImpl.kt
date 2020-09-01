@@ -3,6 +3,7 @@ package ru.kontur.kinfra.kfixture.processor.scanner
 import org.reflections.Reflections
 import ru.kontur.kinfra.kfixture.api.ParamConstructor
 import ru.kontur.kinfra.kfixture.api.ValidationConstructor
+import ru.kontur.kinfra.kfixture.context.FixtureContext
 import ru.kontur.kinfra.kfixture.routers.ValidRouter
 import kotlin.reflect.KClass
 
@@ -38,7 +39,7 @@ class GeneratorAnnotationScannerImpl(
         return constructors.associate<KClass<out ParamConstructor<*>>, KClass<out Any>, ParamConstructor<*>> {
             val constructor = it.constructors.toMutableList()[0]
             val paramConstructor = constructor.call()
-            it.java.getDeclaredMethod("call").returnType.kotlin to paramConstructor
+            it.java.getDeclaredMethod("call", FixtureContext::class.java).returnType.kotlin to paramConstructor
         }
     }
 
