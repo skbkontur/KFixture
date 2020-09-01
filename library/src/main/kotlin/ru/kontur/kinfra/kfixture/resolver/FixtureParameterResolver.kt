@@ -4,12 +4,9 @@ import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterContext
 import org.junit.jupiter.api.extension.ParameterResolver
 import org.slf4j.LoggerFactory
-import ru.kontur.kinfra.kfixture.api.Fixture
-import ru.kontur.kinfra.kfixture.api.JavaxFixture
+import ru.kontur.kinfra.kfixture.api.*
 import ru.kontur.kinfra.kfixture.annotations.Fixture as OldFixture
 import ru.kontur.kinfra.kfixture.annotations.JavaxFixture as OldJavaxFixture
-import ru.kontur.kinfra.kfixture.api.FixtureGeneratorMeta
-import ru.kontur.kinfra.kfixture.api.GenerationSettings
 import ru.kontur.kinfra.kfixture.converter.CollectionSettingsConverter
 import ru.kontur.kinfra.kfixture.exceptions.NotAnnotatedException
 import ru.kontur.kinfra.kfixture.model.CollectionSettings
@@ -19,6 +16,7 @@ import ru.kontur.kinfra.kfixture.scanner.CachedScanner
 import kotlin.reflect.KClass
 import kotlin.reflect.full.allSuperclasses
 import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.full.primaryConstructor
 
 /**
  * @author Konstantin Volivach
@@ -49,13 +47,16 @@ class FixtureParameterResolver : ParameterResolver {
             extensionContext = extensionContext
         )
 
-        val fixture = parameterContext.parameter.getAnnotation(Fixture::class.java)
-            ?: parameterContext.parameter.getAnnotation(OldFixture::class.java)
+        val fixture = parameterContext.findAnnotation(Fixture::class.java).orElse(null)
+            ?: parameterContext.findAnnotation(OldFixture::class.java).orElse(null)
             ?: extensionContext.requiredTestClass.getAnnotation(Fixture::class.java)
-        val javaxFixture = parameterContext.parameter.getAnnotation(JavaxFixture::class.java)
-            ?: parameterContext.parameter.getAnnotation(OldJavaxFixture::class.java)
+        val javaxFixture = parameterContext.findAnnotation(JavaxFixture::class.java).orElse(null)
+            ?: parameterContext.findAnnotation(OldJavaxFixture::class.java).orElse(null)
             ?: extensionContext.requiredTestClass.getAnnotation(JavaxFixture::class.java)
 
+        val fixtureCustomizations = parameterContext.findAnnotation(Customized::class.java).orElse(null)?.takeIf {
+            it.sequence.isNotEmpty()
+        }?.let { resolveCustomizationsClasses(it) } ?: listOf()
         return when {
             fixture != null -> {
                 val fixtureProcessor =
@@ -63,17 +64,25 @@ class FixtureParameterResolver : ParameterResolver {
                         paths,
                         meta?.collection?.let { CollectionSettingsConverter.convert(it) } ?: CollectionSettings(),
                         extensionContext)
-                FixtureResolverStrategy(fixtureProcessor).resolve(parameterContext, extensionContext)
+                FixtureResolverStrategy(fixtureProcessor).resolve(
+                    parameterContext,
+                    extensionContext,
+                    fixtureCustomizations
+                )
             }
             javaxFixture != null -> {
                 JavaxFixtureResolverStrategy(
                     annotationScanner
-                ).resolve(parameterContext, extensionContext)
+                ).resolve(parameterContext, extensionContext, fixtureCustomizations)
             }
             else -> {
                 throw NotAnnotatedException(parameterContext.parameter.name)
             }
         }
+    }
+
+    private fun resolveCustomizationsClasses(customized: Customized): List<Customizer<Any>> {
+        return customized.sequence.mapNotNull { it.primaryConstructor?.call() as? Customizer<Any> }
     }
 
     private inline fun <reified T : Annotation> KClass<*>.findAnnotationEverywhere(): T? {
