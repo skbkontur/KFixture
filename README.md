@@ -18,7 +18,7 @@ which can be used to generate valid data for your class to pass validation of yo
 <dependency>
     <groupId>ru.kontur.kinfra.kfixture</groupId>
     <artifactId>kfixture</artifactId>
-    <version>0.5.0</version>
+    <version>0.6.0</version>
 </dependency>
 ```
 
@@ -49,7 +49,7 @@ fun `should just generate valid data`(@JavaxFixture fixture: JavaxData) {}
 #### If kfixture can't generate your class, you can use ParamConstructor
 ```kotlin
 class DurationConstructor: ParamConstructor<Duration> {
-    override fun call(): Duration {
+    override fun call(context: FixtureContext): Duration {
         return Duration.ofSeconds(10)
     }
 }
@@ -72,8 +72,29 @@ class EmailRouter<T> : ValidRouter<T, Email> where T : Any {
 #### If you need just construct object in validation and do not process annotation generation, you can use ValidationConstructor
 ```kotlin
 class DurationConstructor: ValidationConstructor<Duration> {
-    override fun call(): Duration {
+    override fun call(context: FixtureContext): Duration {
         return Duration.ofSeconds(10)
     }
 }
+```
+
+#### Create business fixtures just use Customized and Cusomizer
+```kotlin
+data class TestDto(
+    val param: String,
+    val param1: String
+)
+
+class TestCustomizer: Customizer<TestDto>{
+    override fun customize(value: TestDto, context: FixtureContext): TestDto {
+          return value.copy(param="AAAA")    
+    }  
+}
+
+@Fixture
+@Customized(sequence=[TestCustomizer::class])
+annotation class BusinessFixture
+
+@Test
+fun `should generate fixture`(@BusinessFixture fixture: TestDto) {}
 ```
