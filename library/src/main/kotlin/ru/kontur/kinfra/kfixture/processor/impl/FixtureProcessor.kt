@@ -29,8 +29,9 @@ class FixtureProcessor(
         return when {
             clazz.isSimple() -> generatePrimitiveValue(clazz, type, null)
             clazz.java.isEnum -> {
-                if (clazz.java.enumConstants.isNotEmpty()) {
-                    val x = Random.nextInt(clazz.java.enumConstants.size)
+                val enumClass = clazz.java.enumConstants
+                if (enumClass.isNotEmpty()) {
+                    val x = Random.nextInt(enumClass.size)
                     clazz.java.enumConstants[x]
                 } else {
                     throw NotFilledEnumClass(className = clazz.java.name)
