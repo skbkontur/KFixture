@@ -25,18 +25,17 @@ class FixtureParameterResolver : ParameterResolver {
 
     override fun supportsParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Boolean {
         return parameterContext.isAnnotated(Fixture::class.java) ||
-            parameterContext.isAnnotated(JavaxFixture::class.java) ||
-            extensionContext.requiredTestClass.isAnnotationPresent(Fixture::class.java) ||
-            extensionContext.requiredTestClass.isAnnotationPresent(JavaxFixture::class.java)
+                parameterContext.isAnnotated(JavaxFixture::class.java) ||
+                extensionContext.requiredTestClass.isAnnotationPresent(Fixture::class.java) ||
+                extensionContext.requiredTestClass.isAnnotationPresent(JavaxFixture::class.java)
     }
 
     override fun resolveParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Any {
-        val meta =
-            extensionContext.testInstance.get()::class.findAnnotationEverywhere<FixtureGeneratorMeta>()?.also {
-                logger.info("Found fixture meta")
-            }
+        val meta = extensionContext.testInstance.get()::class.findAnnotationEverywhere<FixtureGeneratorMeta>()?.also {
+            logger.info("Found fixture meta")
+        }
 
-        val paths = (meta?.pathes?.toList() ?: listOf()) + (meta?.scanner?.paths?.toList() ?: listOf())
+        val paths = (meta?.scanner?.paths?.toList() ?: listOf())
         val annotationScanner = cachedReflections.getScanner(
             paths = paths,
             extensionContext = extensionContext
@@ -75,7 +74,10 @@ class FixtureParameterResolver : ParameterResolver {
     }
 
     private fun resolveCustomizationsClasses(customized: Customized): List<Customizer<Any>> {
-        return customized.sequence.mapNotNull { it.primaryConstructor?.call() as? Customizer<Any> }
+        return customized.sequence.map {
+            val primaryConstructor = requireNotNull(it.primaryConstructor) { "Customized supports only primary constructors" }
+            primaryConstructor as Customizer<Any>
+        }
     }
 
     private inline fun <reified T : Annotation> KClass<*>.findAnnotationEverywhere(): T? {

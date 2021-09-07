@@ -55,7 +55,9 @@ class FixtureProcessor(
         val arguments = Array<Any?>(parameters.size) {}
         for (i in arguments.indices) {
             val param = parameters[i]
-            val paramClazz = param.type.classifier as KClass<*>
+            val paramClazz =
+                param.type.classifier as? KClass<*> ?: throw RuntimeException("param ${param.name} isn't KClass")
+
             if (paramClazz == clazz) {
                 if (param.isOptional) {
                     arguments[i] = null
@@ -70,6 +72,7 @@ class FixtureProcessor(
                     continue
                 }
             }
+            // TODO support Map, Set and other List classes for recursion
             arguments[i] = generateParam(paramClazz, param.type, null)
         }
         return requireNotNull(constructor.call(*arguments)) {

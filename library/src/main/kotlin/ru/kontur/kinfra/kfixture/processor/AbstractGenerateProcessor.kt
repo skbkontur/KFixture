@@ -37,13 +37,22 @@ abstract class AbstractGenerateProcessor : GenerateProcessor {
                 generateString(10)
             }
             kclass == List::class -> {
-                generateCollection(collectionSettings.size, type!!, annotationList)
+                val collectionType = requireNotNull(type) {
+                    "collectionType must be not null"
+                }
+                generateCollection(collectionSettings.size, collectionType, annotationList)
             }
             kclass == Map::class -> {
-                generateMap(collectionSettings.size, type!!, annotationList)
+                val mapType = requireNotNull(type) {
+                    "mapType must not be null"
+                }
+                generateMap(collectionSettings.size, mapType, annotationList)
             }
             kclass == Set::class -> {
-                generateSet(collectionSettings.size, type!!, annotationList)
+                val setType = requireNotNull(type) {
+                    "setType must not be null"
+                }
+                generateSet(collectionSettings.size, setType, annotationList)
             }
             kclass == Boolean::class -> {
                 Random.nextBoolean()
@@ -70,8 +79,10 @@ abstract class AbstractGenerateProcessor : GenerateProcessor {
                 ShortArray(collectionSettings.size)
             }
             kclass.simpleName == "Array" -> {
-                val array = generateArray(collectionSettings.size, type!!, annotationList)
-                array
+                val arrayType = requireNotNull(type) {
+                    "arrayType must not be null"
+                }
+                generateCollection(collectionSettings.size, arrayType, annotationList).toTypedArray()
             }
             else -> null
         }
@@ -112,15 +123,5 @@ abstract class AbstractGenerateProcessor : GenerateProcessor {
         annotationList: List<Annotation>?
     ): Set<Any?> {
         return generateCollection(numOfElements, type, annotationList).toSet()
-    }
-
-    private fun generateArray(
-        numOfElements: Int,
-        type: KType,
-        annotationList: List<Annotation>?
-    ): Array<Any?> {
-        val elemType = type.arguments[0].type!!
-        return (1..numOfElements).map { generateParam(elemType.classifier as KClass<*>, elemType, annotationList) }
-            .toTypedArray()
     }
 }
