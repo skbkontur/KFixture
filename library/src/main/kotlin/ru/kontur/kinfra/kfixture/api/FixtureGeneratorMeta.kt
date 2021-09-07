@@ -4,8 +4,6 @@ package ru.kontur.kinfra.kfixture.api
  * This class used to provide extra path and settings for generation
  */
 annotation class FixtureGeneratorMeta(
-    @Deprecated("Please use scanner.paths instead")
-    val pathes: Array<String>,
     val scanner: ScannerSettings = ScannerSettings(paths = arrayOf()),
     val generation: GenerationSettings = GenerationSettings(),
     val collection: CollectionSettings = CollectionSettings()
