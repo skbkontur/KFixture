@@ -10,7 +10,7 @@ import ru.kontur.kinfra.kfixture.exceptions.NotAnnotatedException
 import ru.kontur.kinfra.kfixture.model.CollectionSettings
 import ru.kontur.kinfra.kfixture.resolver.strategy.FixtureResolverStrategy
 import ru.kontur.kinfra.kfixture.resolver.strategy.JavaxFixtureResolverStrategy
-import ru.kontur.kinfra.kfixture.scanner.CachedScanner
+import ru.kontur.kinfra.kfixture.scanner.GlobalJunitCache
 import kotlin.reflect.KClass
 import kotlin.reflect.full.allSuperclasses
 import kotlin.reflect.full.findAnnotation
@@ -21,7 +21,7 @@ import kotlin.reflect.full.primaryConstructor
  */
 class FixtureParameterResolver : ParameterResolver {
     private val logger = LoggerFactory.getLogger(this::class.java)
-    private val cachedReflections: CachedScanner = CachedScanner()
+    private val globalCache: GlobalJunitCache = GlobalJunitCache()
 
     override fun supportsParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Boolean {
         return parameterContext.isAnnotated(Fixture::class.java) ||
@@ -36,10 +36,6 @@ class FixtureParameterResolver : ParameterResolver {
         }
 
         val paths = (meta?.scanner?.paths?.toList() ?: listOf())
-        val annotationScanner = cachedReflections.getScanner(
-            paths = paths,
-            extensionContext = extensionContext
-        )
 
         val fixture = parameterContext.findAnnotation(Fixture::class.java).orElse(null)
             ?: extensionContext.requiredTestClass.getAnnotation(Fixture::class.java)
@@ -51,11 +47,10 @@ class FixtureParameterResolver : ParameterResolver {
         }?.let { resolveCustomizationsClasses(it) } ?: listOf()
         return when {
             fixture != null -> {
-                val fixtureProcessor =
-                    cachedReflections.getFixtureProcessor(
-                        paths,
-                        meta?.collection?.let { CollectionSettingsConverter.convert(it) } ?: CollectionSettings(),
-                        extensionContext)
+                val fixtureProcessor = globalCache.getFixtureProcessor(
+                    paths,
+                    meta?.collection?.let { CollectionSettingsConverter.convert(it) } ?: CollectionSettings(),
+                    extensionContext)
                 FixtureResolverStrategy(fixtureProcessor).resolve(
                     parameterContext,
                     extensionContext,
@@ -63,6 +58,10 @@ class FixtureParameterResolver : ParameterResolver {
                 )
             }
             javaxFixture != null -> {
+                val annotationScanner = globalCache.getScanner(
+                    paths = paths,
+                    extensionContext = extensionContext
+                )
                 JavaxFixtureResolverStrategy(
                     annotationScanner
                 ).resolve(parameterContext, extensionContext, fixtureCustomizations)
@@ -75,7 +74,8 @@ class FixtureParameterResolver : ParameterResolver {
 
     private fun resolveCustomizationsClasses(customized: Customized): List<Customizer<Any>> {
         return customized.sequence.map {
-            val primaryConstructor = requireNotNull(it.primaryConstructor) { "Customized supports only primary constructors" }
+            val primaryConstructor =
+                requireNotNull(it.primaryConstructor) { "Customized supports only primary constructors" }
             primaryConstructor as Customizer<Any>
         }
     }
