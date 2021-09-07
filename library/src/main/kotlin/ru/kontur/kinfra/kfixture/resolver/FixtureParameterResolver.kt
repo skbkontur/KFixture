@@ -5,8 +5,6 @@ import org.junit.jupiter.api.extension.ParameterContext
 import org.junit.jupiter.api.extension.ParameterResolver
 import org.slf4j.LoggerFactory
 import ru.kontur.kinfra.kfixture.api.*
-import ru.kontur.kinfra.kfixture.annotations.Fixture as OldFixture
-import ru.kontur.kinfra.kfixture.annotations.JavaxFixture as OldJavaxFixture
 import ru.kontur.kinfra.kfixture.converter.CollectionSettingsConverter
 import ru.kontur.kinfra.kfixture.exceptions.NotAnnotatedException
 import ru.kontur.kinfra.kfixture.model.CollectionSettings
@@ -28,8 +26,6 @@ class FixtureParameterResolver : ParameterResolver {
     override fun supportsParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Boolean {
         return parameterContext.isAnnotated(Fixture::class.java) ||
             parameterContext.isAnnotated(JavaxFixture::class.java) ||
-            parameterContext.isAnnotated(OldFixture::class.java) ||
-            parameterContext.isAnnotated(OldJavaxFixture::class.java) ||
             extensionContext.requiredTestClass.isAnnotationPresent(Fixture::class.java) ||
             extensionContext.requiredTestClass.isAnnotationPresent(JavaxFixture::class.java)
     }
@@ -47,10 +43,8 @@ class FixtureParameterResolver : ParameterResolver {
         )
 
         val fixture = parameterContext.findAnnotation(Fixture::class.java).orElse(null)
-            ?: parameterContext.findAnnotation(OldFixture::class.java).orElse(null)
             ?: extensionContext.requiredTestClass.getAnnotation(Fixture::class.java)
         val javaxFixture = parameterContext.findAnnotation(JavaxFixture::class.java).orElse(null)
-            ?: parameterContext.findAnnotation(OldJavaxFixture::class.java).orElse(null)
             ?: extensionContext.requiredTestClass.getAnnotation(JavaxFixture::class.java)
 
         val fixtureCustomizations = parameterContext.findAnnotation(Customized::class.java).orElse(null)?.takeIf {
