@@ -47,9 +47,17 @@ class GlobalJunitCache {
         }
     }
 
+    fun getDataCache(extensionContext: ExtensionContext): Map<String, Any>? {
+        val stored = extensionContext.getStore(ExtensionContext.Namespace.GLOBAL)
+            .get(DATA_CACHE_KEY, Map::class.java)
+
+        return stored as? Map<String, Any>
+    }
+
     private companion object {
         const val FIXTURE_KEY = "FIXTURE_REFERENCE"
         const val DEFAULT_REFLECTION_KEY = "REFLECTIONS_REFERENCES"
+        const val DATA_CACHE_KEY = "TEST_DATA_CACHE"
         const val LIBRARY_PATH = "ru.kontur.kinfra.kfixture"
         const val JAVAX_PATH = "javax.validation.constraints"
     }

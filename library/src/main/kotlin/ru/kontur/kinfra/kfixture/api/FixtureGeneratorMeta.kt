@@ -6,7 +6,12 @@ package ru.kontur.kinfra.kfixture.api
 annotation class FixtureGeneratorMeta(
     val scanner: ScannerSettings = ScannerSettings(paths = arrayOf()),
     val generation: GenerationSettings = GenerationSettings(),
-    val collection: CollectionSettings = CollectionSettings()
+    val collection: CollectionSettings = CollectionSettings(),
+    val cacheSettings: CacheSettings = CacheSettings(type = CacheType.WITHOUT_CACHE)
+)
+
+annotation class CacheSettings(
+    val type: CacheType
 )
 
 annotation class ScannerSettings(

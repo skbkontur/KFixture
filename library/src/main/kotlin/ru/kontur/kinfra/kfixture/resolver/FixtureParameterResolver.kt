@@ -35,6 +35,16 @@ class FixtureParameterResolver : ParameterResolver {
             logger.info("Found fixture meta")
         }
 
+        if (meta != null && meta.cacheSettings.type == CacheType.FILE_SYSTEM) {
+            val keyString = ""
+            val cacheData = globalCache.getDataCache(extensionContext)?.get(keyString)
+            if (cacheData == null) {
+                // TODO генерим и заполняем первым значением кеш
+            } else {
+                return cacheData
+            }
+        }
+
         val paths = (meta?.scanner?.paths?.toList() ?: listOf())
 
         val fixture = parameterContext.findAnnotation(Fixture::class.java).orElse(null)
@@ -70,6 +80,10 @@ class FixtureParameterResolver : ParameterResolver {
                 throw NotAnnotatedException(parameterContext.parameter.name)
             }
         }
+    }
+
+    private fun getCacheKey(parameterContext: ParameterContext, extensionContext: ExtensionContext): String {
+        TODO()
     }
 
     private fun resolveCustomizationsClasses(customized: Customized): List<Customizer<Any>> {
