@@ -83,7 +83,7 @@ class FixtureParameterResolver : ParameterResolver {
     }
 
     private fun getCacheKey(parameterContext: ParameterContext, extensionContext: ExtensionContext): String {
-        TODO()
+        return "${extensionContext.requiredTestClass.name}:${extensionContext.requiredTestMethod.name}:${parameterContext.parameter.type.name}"
     }
 
     private fun resolveCustomizationsClasses(customized: Customized): List<Customizer<Any>> {
