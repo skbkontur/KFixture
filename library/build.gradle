@@ -15,6 +15,10 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-reflect"
     implementation "org.junit.jupiter:junit-jupiter-engine:${versions.junitJupiter}"
 
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.5'
+    implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: '2.11.5'
+
+
     jmh 'org.openjdk.jmh:jmh-core:1.23'
     jmh 'org.openjdk.jmh:jmh-generator-annprocess:1.23'
 
