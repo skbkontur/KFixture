@@ -1,6 +1,6 @@
 package ru.kontur.kinfra.kfixture.misc
 
-import java.lang.RuntimeException
+import ru.kontur.kinfra.kfixture.exceptions.NotFilledEnumClass
 import kotlin.random.Random
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -60,8 +60,13 @@ fun generateRandomInstanceForParam(paramType: KType, classRef: KClass<*>, type: 
 }
 
 fun generateEnum(clazz: KClass<*>): Any {
-    val x = Random.nextInt(clazz.java.enumConstants.size)
-    return clazz.java.enumConstants[x]
+    val enumClass = clazz.java.enumConstants
+    if (enumClass.isNotEmpty()) {
+        val x = Random.nextInt(clazz.java.enumConstants.size)
+        return clazz.java.enumConstants[x]
+    } else {
+        throw NotFilledEnumClass(className = clazz.java.name)
+    }
 }
 
 fun generateRandomInstance(classRef: KClass<*>, type: KType): Any? {

@@ -35,14 +35,12 @@ class FixtureParameterResolver : ParameterResolver {
             logger.info("Found fixture meta")
         }
 
-        if (meta != null && meta.cacheSettings.type == CacheType.FILE_SYSTEM) {
-            val keyString = ""
-            val cacheData = globalCache.getDataCache(extensionContext)?.get(keyString)
-            if (cacheData == null) {
-                // TODO генерим и заполняем первым значением кеш
-            } else {
-                return cacheData
-            }
+        val withCache = meta!=null && meta.cacheSettings.type == CacheType.WITHOUT_CACHE
+
+        if (withCache) {
+            val key = getCacheKey(parameterContext, extensionContext)
+            val cacheData = globalCache.getDataCache(extensionContext)?.get(key)
+            if (cacheData != null) return cacheData
         }
 
         val paths = (meta?.scanner?.paths?.toList() ?: listOf())
@@ -55,7 +53,7 @@ class FixtureParameterResolver : ParameterResolver {
         val fixtureCustomizations = parameterContext.findAnnotation(Customized::class.java).orElse(null)?.takeIf {
             it.sequence.isNotEmpty()
         }?.let { resolveCustomizationsClasses(it) } ?: listOf()
-        return when {
+        val generated = when {
             fixture != null -> {
                 val fixtureProcessor = globalCache.getFixtureProcessor(
                     paths,
@@ -80,6 +78,11 @@ class FixtureParameterResolver : ParameterResolver {
                 throw NotAnnotatedException(parameterContext.parameter.name)
             }
         }
+        if (withCache) {
+            val key = getCacheKey(parameterContext, extensionContext)
+            val cacheData = globalCache.getDataCache(extensionContext)
+        }
+        return generated
     }
 
     private fun getCacheKey(parameterContext: ParameterContext, extensionContext: ExtensionContext): String {

@@ -3,13 +3,12 @@ package ru.kontur.kinfra.kfixture.processor.impl
 import ru.kontur.kinfra.kfixture.api.ParamConstructor
 import ru.kontur.kinfra.kfixture.context.FixtureContext
 import ru.kontur.kinfra.kfixture.exceptions.NoOptionalRecursiveException
-import ru.kontur.kinfra.kfixture.exceptions.NotFilledEnumClass
+import ru.kontur.kinfra.kfixture.misc.generateEnum
 import ru.kontur.kinfra.kfixture.misc.isSimple
 import ru.kontur.kinfra.kfixture.model.CollectionSettings
 import ru.kontur.kinfra.kfixture.processor.AbstractGenerateProcessor
 import ru.kontur.kinfra.kfixture.processor.CachedConstructors
 import ru.kontur.kinfra.kfixture.processor.scanner.GeneratorAnnotationScanner
-import kotlin.random.Random
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.jvm.isAccessible
@@ -29,13 +28,7 @@ class FixtureProcessor(
         return when {
             clazz.isSimple() -> generatePrimitiveValue(clazz, type, null)
             clazz.java.isEnum -> {
-                val enumClass = clazz.java.enumConstants
-                if (enumClass.isNotEmpty()) {
-                    val x = Random.nextInt(enumClass.size)
-                    clazz.java.enumConstants[x]
-                } else {
-                    throw NotFilledEnumClass(className = clazz.java.name)
-                }
+                generateEnum(clazz)
             }
             else -> {
                 when {

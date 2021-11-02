@@ -51,7 +51,11 @@ class GlobalJunitCache {
         val stored = extensionContext.getStore(ExtensionContext.Namespace.GLOBAL)
             .get(DATA_CACHE_KEY, Map::class.java)
 
-        return stored as? Map<String, Any>
+        return stored as? MutableMap<String, Any>
+    }
+
+    fun putDataCache(extensionContext: ExtensionContext) {
+        extensionContext.
     }
 
     private companion object {
