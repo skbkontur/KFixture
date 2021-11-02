@@ -2,6 +2,7 @@ package ru.kontur.kinfra.kfixture.utils
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import ru.kontur.kinfra.kfixture.misc.FixtureUtils
 
 internal class FixtureUtilsTest {
 

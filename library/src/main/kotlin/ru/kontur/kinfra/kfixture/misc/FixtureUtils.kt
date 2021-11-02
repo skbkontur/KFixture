@@ -1,4 +1,4 @@
-package ru.kontur.kinfra.kfixture.utils
+package ru.kontur.kinfra.kfixture.misc
 
 import ru.kontur.kinfra.kfixture.model.CollectionSettings
 import ru.kontur.kinfra.kfixture.processor.impl.FixtureProcessor

@@ -5,12 +5,12 @@ import ru.kontur.kinfra.kfixture.api.ValidationConstructor
 import ru.kontur.kinfra.kfixture.context.FixtureContext
 import ru.kontur.kinfra.kfixture.exceptions.NoOptionalRecursiveException
 import ru.kontur.kinfra.kfixture.exceptions.NoSuchValidAnnotationException
-import ru.kontur.kinfra.kfixture.extensions.isSimple
+import ru.kontur.kinfra.kfixture.misc.isSimple
 import ru.kontur.kinfra.kfixture.model.CollectionSettings
 import ru.kontur.kinfra.kfixture.processor.AbstractGenerateProcessor
 import ru.kontur.kinfra.kfixture.processor.scanner.GeneratorAnnotationScanner
 import ru.kontur.kinfra.kfixture.routers.ValidRouter
-import ru.kontur.kinfra.kfixture.utils.FixtureUtils
+import ru.kontur.kinfra.kfixture.misc.FixtureUtils
 import javax.validation.Constraint
 import javax.validation.constraints.*
 import kotlin.random.Random

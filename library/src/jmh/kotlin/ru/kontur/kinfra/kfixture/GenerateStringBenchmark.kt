@@ -1,7 +1,7 @@
 package ru.kontur.kinfra.kfixture
 
 import org.openjdk.jmh.annotations.*
-import ru.kontur.kinfra.kfixture.utils.generateString
+import ru.kontur.kinfra.kfixture.misc.generateString
 
 @BenchmarkMode(Mode.Throughput)
 @Warmup(iterations = 0)

@@ -7,7 +7,7 @@ import ru.kontur.kinfra.kfixture.api.JavaxFixture
 import ru.kontur.kinfra.kfixture.api.FixtureGeneratorMeta
 import ru.kontur.kinfra.kfixture.resolver.FixtureParameterResolver
 import ru.kontur.kinfra.kfixture.routers.ValidRouter
-import ru.kontur.kinfra.kfixture.utils.generateString
+import ru.kontur.kinfra.kfixture.misc.generateString
 import javax.validation.Constraint
 import javax.validation.ConstraintValidator
 import javax.validation.ConstraintValidatorContext

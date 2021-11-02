@@ -7,7 +7,7 @@ import ru.kontur.kinfra.kfixture.model.CollectionSettings
 import ru.kontur.kinfra.kfixture.processor.impl.FixtureProcessor
 import ru.kontur.kinfra.kfixture.processor.scanner.CachedAnnotationScanner
 import ru.kontur.kinfra.kfixture.processor.scanner.GeneratorAnnotationScannerImpl
-import ru.kontur.kinfra.kfixture.utils.toKType
+import ru.kontur.kinfra.kfixture.misc.toKType
 
 @BenchmarkMode(Mode.AverageTime)
 @Warmup(iterations = 0)

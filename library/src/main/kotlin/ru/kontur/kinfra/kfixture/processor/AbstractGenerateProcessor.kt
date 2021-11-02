@@ -1,8 +1,8 @@
 package ru.kontur.kinfra.kfixture.processor
 
 import ru.kontur.kinfra.kfixture.model.CollectionSettings
-import ru.kontur.kinfra.kfixture.utils.generateRandomChar
-import ru.kontur.kinfra.kfixture.utils.generateString
+import ru.kontur.kinfra.kfixture.misc.generateRandomChar
+import ru.kontur.kinfra.kfixture.misc.generateString
 import kotlin.random.Random
 import kotlin.reflect.KClass
 import kotlin.reflect.KType

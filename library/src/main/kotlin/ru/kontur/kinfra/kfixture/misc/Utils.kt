@@ -1,4 +1,4 @@
-package ru.kontur.kinfra.kfixture.utils
+package ru.kontur.kinfra.kfixture.misc
 
 import java.lang.RuntimeException
 import kotlin.random.Random
@@ -27,26 +27,26 @@ fun generateRandomChar(): Int {
 fun generateMap(numOfElements: Int, classRef: KClass<*>, type: KType): Map<Any, Any> {
     val keyType = type.arguments[0].type!!
     val valueType = type.arguments[1].type!!
-    val keys = (1..numOfElements).map { makeRandomInstanceForParam(keyType, classRef, type) }
-    val values = (1..numOfElements).map { makeRandomInstanceForParam(valueType, classRef, type) }
+    val keys = (1..numOfElements).map { generateRandomInstanceForParam(keyType, classRef, type) }
+    val values = (1..numOfElements).map { generateRandomInstanceForParam(valueType, classRef, type) }
     return keys.zip(values).toMap()
 }
 
 fun generateCollection(numOfElements: Int, classRef: KClass<*>, type: KType): Any {
     val elemType = type.arguments[0].type!!
-    return (1..numOfElements).map { makeRandomInstanceForParam(elemType, classRef, type) }
+    return (1..numOfElements).map { generateRandomInstanceForParam(elemType, classRef, type) }
 }
 
-fun makeRandomInstanceForParam(paramType: KType, classRef: KClass<*>, type: KType): Any {
+fun generateRandomInstanceForParam(paramType: KType, classRef: KClass<*>, type: KType): Any {
     val classifier = paramType.classifier
 
     if ((classifier as? KClass<*>) != null && classifier.java.isEnum) {
-        return makeEnum(classifier)
+        return generateEnum(classifier)
     }
 
     return when (classifier) {
         is KClass<*> -> {
-            makeRandomInstance(classifier, type) ?: throw RuntimeException("Not generated")
+            generateRandomInstance(classifier, type) ?: throw RuntimeException("Not generated")
         }
         is KTypeParameter -> {
             val typeParamterName = classifier.name
@@ -59,12 +59,12 @@ fun makeRandomInstanceForParam(paramType: KType, classRef: KClass<*>, type: KTyp
     }
 }
 
-fun makeEnum(clazz: KClass<*>): Any {
+fun generateEnum(clazz: KClass<*>): Any {
     val x = Random.nextInt(clazz.java.enumConstants.size)
     return clazz.java.enumConstants[x]
 }
 
-fun makeRandomInstance(classRef: KClass<*>, type: KType): Any? {
+fun generateRandomInstance(classRef: KClass<*>, type: KType): Any? {
     val primitive = generatePrimitiveValue(classRef, type)
     if (primitive != null) {
         return primitive
@@ -75,7 +75,7 @@ fun makeRandomInstance(classRef: KClass<*>, type: KType): Any? {
     for (constructor in constructors) {
         try {
             val arguments = constructor.parameters
-                .map { makeRandomInstanceForParam(it.type, classRef, type) }
+                .map { generateRandomInstanceForParam(it.type, classRef, type) }
                 .toTypedArray()
 
             return constructor.call(*arguments)

@@ -1,9 +1,9 @@
 package ru.kontur.kinfra.kfixture.generators
 
 import ru.kontur.kinfra.kfixture.api.ValidParamGenerator
-import ru.kontur.kinfra.kfixture.utils.generateCollection
-import ru.kontur.kinfra.kfixture.utils.generateMap
-import ru.kontur.kinfra.kfixture.utils.generateString
+import ru.kontur.kinfra.kfixture.misc.generateCollection
+import ru.kontur.kinfra.kfixture.misc.generateMap
+import ru.kontur.kinfra.kfixture.misc.generateString
 import java.lang.IllegalArgumentException
 import javax.validation.constraints.Size
 import kotlin.random.Random

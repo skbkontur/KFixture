@@ -1,7 +1,7 @@
 package ru.kontur.kinfra.kfixture.generators
 
 import ru.kontur.kinfra.kfixture.api.ValidParamGenerator
-import ru.kontur.kinfra.kfixture.utils.generateString
+import ru.kontur.kinfra.kfixture.misc.generateString
 import javax.validation.constraints.NotBlank
 import kotlin.reflect.KClass
 import kotlin.reflect.KType

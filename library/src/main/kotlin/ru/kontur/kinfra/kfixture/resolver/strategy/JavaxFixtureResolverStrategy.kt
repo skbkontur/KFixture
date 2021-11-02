@@ -10,7 +10,7 @@ import ru.kontur.kinfra.kfixture.processor.impl.FixtureProcessor
 import ru.kontur.kinfra.kfixture.processor.impl.JavaxFixtureProcessor
 import ru.kontur.kinfra.kfixture.processor.scanner.GeneratorAnnotationScanner
 import ru.kontur.kinfra.kfixture.resolver.ResolverStrategy
-import ru.kontur.kinfra.kfixture.utils.toKType
+import ru.kontur.kinfra.kfixture.misc.toKType
 
 class JavaxFixtureResolverStrategy(
     private val generatorAnnotationScanner: GeneratorAnnotationScanner

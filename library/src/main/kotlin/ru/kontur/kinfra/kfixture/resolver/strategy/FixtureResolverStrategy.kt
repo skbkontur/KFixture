@@ -7,7 +7,7 @@ import ru.kontur.kinfra.kfixture.context.FixtureContext
 import ru.kontur.kinfra.kfixture.exceptions.FixtureGenerationException
 import ru.kontur.kinfra.kfixture.processor.impl.FixtureProcessor
 import ru.kontur.kinfra.kfixture.resolver.ResolverStrategy
-import ru.kontur.kinfra.kfixture.utils.toKType
+import ru.kontur.kinfra.kfixture.misc.toKType
 
 class FixtureResolverStrategy(
     private val fixtureProcessor: FixtureProcessor

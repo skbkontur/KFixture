@@ -1,4 +1,4 @@
-package ru.kontur.kinfra.kfixture.extensions
+package ru.kontur.kinfra.kfixture.misc
 
 import kotlin.reflect.KClass
 
