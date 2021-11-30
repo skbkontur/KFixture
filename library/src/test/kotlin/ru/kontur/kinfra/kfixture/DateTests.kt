@@ -4,13 +4,14 @@ import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.extension.ExtendWith
 import ru.kontur.kinfra.kfixture.api.Fixture
 import ru.kontur.kinfra.kfixture.api.FixtureGeneratorMeta
+import ru.kontur.kinfra.kfixture.api.ScannerSettings
 import ru.kontur.kinfra.kfixture.resolver.FixtureParameterResolver
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.util.*
 
 @ExtendWith(FixtureParameterResolver::class)
-@FixtureGeneratorMeta(pathes = ["ru.kontur.kinfra.kfixture"])
+@FixtureGeneratorMeta(scanner = ScannerSettings(paths = ["ru.kontur.kinfra.kfixture"]))
 class DateTests {
 
     @RepeatedTest(100)

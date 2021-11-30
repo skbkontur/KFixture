@@ -14,7 +14,7 @@ class GlobalJunitCache {
         val stored = extensionContext.getStore(ExtensionContext.Namespace.GLOBAL)
             .get(FIXTURE_KEY, FixtureWrapper::class.java)
 
-        return if (stored.paths.containsAll(paths)) {
+        return if (stored!=null && stored.paths.containsAll(paths)) {
             stored.fixtureProcessor
         } else {
             val wrapper = FixtureWrapper(

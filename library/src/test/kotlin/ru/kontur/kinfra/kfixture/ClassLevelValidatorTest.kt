@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import ru.kontur.kinfra.kfixture.api.JavaxFixture
 import ru.kontur.kinfra.kfixture.api.FixtureGeneratorMeta
+import ru.kontur.kinfra.kfixture.api.ScannerSettings
 import ru.kontur.kinfra.kfixture.resolver.FixtureParameterResolver
 import ru.kontur.kinfra.kfixture.routers.ValidRouter
 import ru.kontur.kinfra.kfixture.misc.generateString
@@ -30,7 +31,7 @@ class CustomResolver : ValidRouter<ClassLevelValidatorTest.Data, ClassLevelValid
 }
 
 @ExtendWith(FixtureParameterResolver::class)
-@FixtureGeneratorMeta(pathes = ["ru.kontur.kinfra.kfixture"])
+@FixtureGeneratorMeta(ScannerSettings( paths = ["ru.kontur.kinfra.kfixture"]))
 class ClassLevelValidatorTest {
     @SomeValidation
     data class Data(

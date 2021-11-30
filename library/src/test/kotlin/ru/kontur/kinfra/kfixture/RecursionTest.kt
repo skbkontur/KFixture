@@ -6,10 +6,11 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import ru.kontur.kinfra.kfixture.api.JavaxFixture
 import ru.kontur.kinfra.kfixture.api.FixtureGeneratorMeta
+import ru.kontur.kinfra.kfixture.api.ScannerSettings
 import ru.kontur.kinfra.kfixture.resolver.FixtureParameterResolver
 
 @ExtendWith(FixtureParameterResolver::class)
-@FixtureGeneratorMeta(pathes = ["ru.kontur.kinfra.kfixture"])
+@FixtureGeneratorMeta(ScannerSettings(paths = ["ru.kontur.kinfra.kfixture"]))
 class RecursionTest {
 
     data class RecursionData(
